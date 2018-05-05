@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Contacter Nous</title>
+</head>
+<body>
+	<div ng-controller="ContactController">
+		<div class="row" >
+			<div class="col-sm-6" ng-repeat="contact1 in contacts">
+			  <div 
+			style="border-bottom: 2px solid #337ab7; color: #2e6da4; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 20px; margin-top: 5px; margin-bottom: 5px;">
+			{{contact1.city}}</div>
+			<form class="form-horizontal" role="form">
+			  <div ng-repeat="contact2 in contact1.contact">
+			       <div class="form-group">
+				    <label class="col-sm-3 control-label">Nom</label>
+				    <div class="col-sm-9"><p class="form-control-static">{{contact2.name}}</p></div>
+				    <label class="col-sm-3 control-label">E-mail</label>
+				    <div class="col-sm-9"><p class="form-control-static">{{contact2.mail}}</p></div>
+				    <label class="col-sm-3 control-label">Téléphone</label>
+				    <div class="col-sm-9"><p class="form-control-static">{{contact2.phone}}</p></div>
+			       </div>
+			  </div>
+			</form>
+		  </div>
+		</div>
+	</div>
+</body>
+</html>
