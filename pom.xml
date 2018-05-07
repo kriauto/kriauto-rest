@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>ma</groupId>
-	<artifactId>KriAuto</artifactId>
+	<artifactId>kriauto-rest</artifactId>
 	<version>1.0</version>
 
 	<packaging>war</packaging>
@@ -121,7 +121,7 @@
 	</dependencies>
 	<build>
 		<!-- Name of the generated WAR file -->
-		<finalName>KriAuto</finalName>
+		<finalName>kriauto-rest</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
