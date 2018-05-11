@@ -33,10 +33,10 @@ public class SpringEnableSchedulingExample {
 	@Scheduled(fixedDelay = 60000)
     public void executeStopEngine() {
         System.out.println("Start Start/Stop Job " + new Date());
-        List<Notification> notifs = carservice.getDataNotification(1);
+        List<Notification> notifs = carservice.getDataNotification(1,null);
         for(int i =0; i < notifs.size() ; i++){
         	Notification notif = notifs.get(i);
-        	Location location = carservice.getLastLocationByCar(notif.getDeviceid());
+        	Location location = carservice.getLastLocationByCar(notif.getDeviceid(),null);
         	if(null != location && location.getSpeed() <= 10){
         		String message = "voiture arrete "+notif.getMark()+notif.getModel()+notif.getColor()+notif.getImmatriculation();
         		senderservice.sendSms("KriAuto.ma", notif.getSimnumber(), "stop135791");
@@ -47,9 +47,9 @@ public class SpringEnableSchedulingExample {
 					e.printStackTrace();
 				}
         		senderservice.sendSms("KriAuto.ma", notif.getPhone(), message);
-        		Car car = carservice.getCarByDevice(notif.getDeviceid());
+        		Car car = carservice.getCarByDevice(notif.getDeviceid(),null);
         		car.setStatus(1);
-        		carservice.updateCar(car);
+        		carservice.updateCar(car,null);
         		notif.setTexte(message);
         		notificationservice.addNotification(notif);
         		System.out.println(message);
@@ -66,18 +66,18 @@ public class SpringEnableSchedulingExample {
 	    now1.add(Calendar.DAY_OF_YEAR, -120);
 	    Date now2 = now1.getTime(); 
 	    String time = df.format(now2);
-        List<Notification> notifs = carservice.getDataNotification(3);
+        List<Notification> notifs = carservice.getDataNotification(3,null);
         for(int i =0; i < notifs.size() ; i++){
         	Notification notif = notifs.get(i);
-        	List<Location> locations = carservice.getAllLocationByCarTime(notif.getDeviceid(), time);
+        	List<Location> locations = carservice.getAllLocationByCarTime(notif.getDeviceid(), time,null);
         	for(int j=0 ; j<locations.size() ; j++){
         		Location location = locations.get(j);
         		if(isInCeuta(location.getLatitude(), location.getLongitude())){
         			String message = "La"+notif.getMark()+notif.getModel()+notif.getColor()+notif.getImmatriculation()+"est+a+ceuta";
         			senderservice.sendSms("KriAuto.ma", notif.getPhone(), message);
-            		Car car = carservice.getCarByDevice(notif.getDeviceid());
+            		Car car = carservice.getCarByDevice(notif.getDeviceid(),null);
             		car.setIsnotifdefaultgeofence(true);
-            		carservice.updateCar(car);
+            		carservice.updateCar(car,null);
             		notif.setTexte(message);
             		notificationservice.addNotification(notif);
             		System.out.println(message);
@@ -86,9 +86,9 @@ public class SpringEnableSchedulingExample {
         		if(isInMelilea(location.getLatitude(), location.getLongitude())){
         			String message = "La"+notif.getMark()+notif.getModel()+notif.getColor()+notif.getImmatriculation()+"est+a+melilia";
         			senderservice.sendSms("KriAuto.ma", notif.getPhone(), message);
-            		Car car = carservice.getCarByDevice(notif.getDeviceid());
+            		Car car = carservice.getCarByDevice(notif.getDeviceid(),null);
             		car.setIsnotifdefaultgeofence(true);
-            		carservice.updateCar(car);
+            		carservice.updateCar(car,null);
             		notif.setTexte(message);
             		notificationservice.addNotification(notif);
             		System.out.println(message);
@@ -97,9 +97,9 @@ public class SpringEnableSchedulingExample {
         		if(isInAlgerie(location.getLatitude(), location.getLongitude())){
         			String message = "La"+notif.getMark()+notif.getModel()+notif.getColor()+notif.getImmatriculation()+"est+en+algerie";
         			senderservice.sendSms("KriAuto.ma", notif.getPhone(), message);
-            		Car car = carservice.getCarByDevice(notif.getDeviceid());
+            		Car car = carservice.getCarByDevice(notif.getDeviceid(),null);
             		car.setIsnotifdefaultgeofence(true);
-            		carservice.updateCar(car);
+            		carservice.updateCar(car,null);
             		notif.setTexte(message);
             		notificationservice.addNotification(notif);
             		System.out.println(message);
@@ -108,9 +108,9 @@ public class SpringEnableSchedulingExample {
         		if(isInMauritanie(location.getLatitude(), location.getLongitude())){
         			String message = "La"+notif.getMark()+notif.getModel()+notif.getColor()+notif.getImmatriculation()+"est+en+mauritanie";
         			senderservice.sendSms("KriAuto.ma", notif.getPhone(), message);
-            		Car car = carservice.getCarByDevice(notif.getDeviceid());
+            		Car car = carservice.getCarByDevice(notif.getDeviceid(),null);
             		car.setIsnotifdefaultgeofence(true);
-            		carservice.updateCar(car);
+            		carservice.updateCar(car,null);
             		notif.setTexte(message);
             		notificationservice.addNotification(notif);
             		System.out.println(message);
@@ -129,18 +129,18 @@ public class SpringEnableSchedulingExample {
 	    now1.add(Calendar.DAY_OF_YEAR, -120);
 	    Date now2 = now1.getTime();
 	    String time = df.format(now2);
-        List<Notification> notifs = carservice.getDataNotification(2);
+        List<Notification> notifs = carservice.getDataNotification(2,null);
         for(int i =0; i < notifs.size() ; i++){
         	Notification notif = notifs.get(i);
-        	List<Location> locations = carservice.getAllLocationByCarTime(notif.getDeviceid(), time);
+        	List<Location> locations = carservice.getAllLocationByCarTime(notif.getDeviceid(), time,null);
         	for(int j=0 ; j<locations.size() ; j++){
         		Location location = locations.get(j);
         		if(!isInZone(notif, location.getLatitude(), location.getLongitude())){
         			String message = "La"+notif.getMark()+notif.getModel()+notif.getColor()+notif.getImmatriculation()+"a+quitter+la+zone+virtuelle";
         			senderservice.sendSms("KriAuto.ma", notif.getPhone(), message);
-            		Car car = carservice.getCarByDevice(notif.getDeviceid());
+            		Car car = carservice.getCarByDevice(notif.getDeviceid(),null);
             		car.setIsnotifgeofence(true);
-            		carservice.updateCar(car);
+            		carservice.updateCar(car,null);
             		notif.setTexte(message);
             		notificationservice.addNotification(notif);
             		System.out.println(message);

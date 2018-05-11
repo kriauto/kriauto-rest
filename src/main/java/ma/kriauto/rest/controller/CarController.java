@@ -72,7 +72,7 @@ public class CarController {
     	if(null == profile){
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
-    	Car car = carService.getCarByDevice(deviceid);
+    	Car car = carService.getCarByDevice(deviceid,token);
     	return car;
     }
 	
@@ -85,7 +85,7 @@ public class CarController {
     	if(null == profile){
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
-    	carService.updateCar(car);
+    	carService.updateCar(car,token);
     	return new ResponseMessage(ResponseMessage.Type.success, "GEOFENCE_SUCCES",Constant.getLabels().get("GEOFENCE_SUCCES").toString());
     }
 	
@@ -102,7 +102,7 @@ public class CarController {
     	if("111111".equals(String.valueOf(deviceid))){
     		dates = carService.getAllDatesByToken(token);
     	}else{
-    		dates = carService.getAllDatesByCar(deviceid);
+    		dates = carService.getAllDatesByCar(deviceid,token);
     	}
     	return dates;
     }
@@ -117,7 +117,7 @@ public class CarController {
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
     	List<Course> cours = new ArrayList<Course>();
-    	cours = carService.getTotalCourseByCar(deviceid);
+    	cours = carService.getTotalCourseByCar(deviceid,token);
     	return cours;
     }
 	
@@ -131,7 +131,7 @@ public class CarController {
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
     	List<Speed> speed = new ArrayList<Speed>();
-    	speed = carService.getMaxSpeedByCar(deviceid);
+    	speed = carService.getMaxSpeedByCar(deviceid,token);
     	return speed;
     }
 	
@@ -145,7 +145,7 @@ public class CarController {
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
     	List<Consumption> consumption = new ArrayList<Consumption>();
-    	consumption = carService.getTotalConsumptionByCar(deviceid);
+    	consumption = carService.getTotalConsumptionByCar(deviceid,token);
     	return consumption;
     }
 	
@@ -172,7 +172,7 @@ public class CarController {
     	if(null == profile){
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
-    	Statistic statistic = carService.getCarStatistic(device.getDeviceid(), device.getDate());
+    	Statistic statistic = carService.getCarStatistic(device.getDeviceid(), device.getDate(),token);
     	return statistic;
     }
 	
@@ -185,8 +185,8 @@ public class CarController {
     	if(null == profile){
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
-    	Car car = carService.getCarByDevice(deviceid);
-    	Location location = carService.getLastLocationByCar(deviceid);
+    	Car car = carService.getCarByDevice(deviceid,token);
+    	Location location = carService.getLastLocationByCar(deviceid,token);
     	if(null != location && location.getSpeed() <= 10){
     		int status = senderService.sendSms("KriAuto.ma", car.getSimnumber(), "stop135791");
     		if(status == 0){
@@ -198,15 +198,15 @@ public class CarController {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-    		    carService.updateCar(car);
+    		    carService.updateCar(car,token);
     		    System.out.println("voiture arreté : "+car.getMark()+car.getModel()+car.getColor()+" "+car.getImmatriculation()+" ");
     		}else{
     			car.setStatus(2);
-          	    carService.updateCar(car);
+          	    carService.updateCar(car,token);
     		}
     	}else{
     		car.setStatus(2);
-      	    carService.updateCar(car);
+      	    carService.updateCar(car,token);
     	}
     	return new ResponseMessage(ResponseMessage.Type.success, "STOP_CAR",Constant.getLabels().get("STOP_CAR").toString());
 
@@ -221,7 +221,7 @@ public class CarController {
     	if(null == profile){
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
-    	Car car = carService.getCarByDevice(deviceid);
+    	Car car = carService.getCarByDevice(deviceid,token);
     	int status = senderService.sendSms("KriAuto.ma", car.getSimnumber(), "resume135791");
     	if(status == 0){
     	  //senderService.sendSms("KriAuto.ma", profile.getPhone(), "Voiture+Demarre+"+car.getMark()+"+"+car.getModel()+"+"+car.getColor()+"+"+car.getImmatriculation());
@@ -232,10 +232,10 @@ public class CarController {
 				e.printStackTrace();
 			}
     	  car.setStatus(0);
-    	  carService.updateCar(car);
+    	  carService.updateCar(car,token);
     	}else{
     	  car.setStatus(3);
-      	  carService.updateCar(car);
+      	  carService.updateCar(car,token);
     	}
     	return new ResponseMessage(ResponseMessage.Type.success, "START_CAR",Constant.getLabels().get("START_CAR").toString());
     }
@@ -264,7 +264,7 @@ public class CarController {
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
     	List<Location> locations = new ArrayList<Location>();
-    	locations = carService.getAllLocationsByCar(Integer.valueOf(search.getDeviceid()), search.getDate());
+    	locations = carService.getAllLocationsByCar(Integer.valueOf(search.getDeviceid()), search.getDate(),token);
     	return locations;
     }
 }
