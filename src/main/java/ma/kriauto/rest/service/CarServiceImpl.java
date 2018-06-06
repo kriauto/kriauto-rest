@@ -23,15 +23,15 @@ public class CarServiceImpl implements CarService {
 	CarDao cardao;
 	
 	@Override
-	public Car getCarByDevice(Integer deviceid, String token) {
+	public Car getCarByDevice(Integer deviceid) {
 		// TODO Auto-generated method stub
-		return cardao.getCarByDevice(deviceid,token);
+		return cardao.getCarByDevice(deviceid);
 	}
 	
 	@Override
-	public void updateCar(Car car, String token) {
+	public void updateCar(Car car) {
 		// TODO Auto-generated method stub
-		cardao.updateCar(car, token);
+		cardao.updateCar(car);
 	}
 
 	@Override
@@ -41,9 +41,9 @@ public class CarServiceImpl implements CarService {
 	}
 
 	@Override
-	public List<Item> getAllDatesByCar(Integer deviceid, String token) {
+	public List<Item> getAllDatesByCar(Integer deviceid) {
 		// TODO Auto-generated method stub
-		return cardao.getAllDatesByCar(deviceid,token);
+		return cardao.getAllDatesByCar(deviceid);
 	}
 	
 	@Override
@@ -59,51 +59,51 @@ public class CarServiceImpl implements CarService {
 	}
 
 	@Override
-	public List<Location> getAllLocationsByCar(Integer deviceid, String date, String token) {
+	public List<Location> getAllLocationsByCar(Integer deviceid, String date) {
 		// TODO Auto-generated method stub
-		return cardao.getAllLocationsByCar(deviceid,date,token);
+		return cardao.getAllLocationsByCar(deviceid,date);
 	}
 
 	@Override
-	public List<Course> getTotalCourseByCar(Integer deviceid, String token) {
+	public List<Course> getTotalCourseByCar(Integer deviceid) {
 		// TODO Auto-generated method stub
-		return cardao.getTotalCourseByCar(deviceid,token);
+		return cardao.getTotalCourseByCar(deviceid);
 	}
 
 	@Override
-	public List<Speed> getMaxSpeedByCar(Integer deviceid, String token) {
+	public List<Speed> getMaxSpeedByCar(Integer deviceid) {
 		// TODO Auto-generated method stub
-		return cardao.getMaxSpeedByCar(deviceid,token);
+		return cardao.getMaxSpeedByCar(deviceid);
 	}
 
 	@Override
-	public List<Consumption> getTotalConsumptionByCar(Integer deviceid, String token) {
+	public List<Consumption> getTotalConsumptionByCar(Integer deviceid) {
 		// TODO Auto-generated method stub
-		return cardao.getTotalConsumptionByCar(deviceid,token);
+		return cardao.getTotalConsumptionByCar(deviceid);
 	}
 
 	@Override
-	public Statistic getCarStatistic(Integer deviceid, String date, String token) {
+	public Statistic getCarStatistic(Integer deviceid, String date) {
 		// TODO Auto-generated method stub
-		return cardao.getCarStatistic(deviceid, date, token);
+		return cardao.getCarStatistic(deviceid, date);
 	}
 
 	@Override
-	public List<Notification> getDataNotification(int type, String token) {
+	public List<Notification> getDataNotification(int type) {
 		// TODO Auto-generated method stub
-		return cardao.getDataNotification(type,token);
+		return cardao.getDataNotification(type);
 	}
 
 	@Override
-	public Location getLastPositionByCar(Integer deviceid, String token) {
+	public Location getLastPositionByCar(Integer deviceid) {
 		// TODO Auto-generated method stub
-		return cardao.getLastLocationByCar(deviceid,token);
+		return cardao.getLastLocationByCar(deviceid);
 	}
 
 	@Override
-	public List<Location> getAllLocationByCarTime(Integer deviceid, String time, String token) {
+	public List<Location> getAllLocationByCarTime(Integer deviceid, String time) {
 		// TODO Auto-generated method stub
-		return cardao.getAllLocationByCarTime(deviceid, time,token);
+		return cardao.getAllLocationByCarTime(deviceid, time);
 	}
 
 	@Override
@@ -113,45 +113,46 @@ public class CarServiceImpl implements CarService {
 	}
 
 	@Override
-	public Event getLastEvent(Integer deviceid, String date, String token) {
+	public Event getLastEvent(Integer deviceid, String date) {
 		// TODO Auto-generated method stub
-		return cardao.getLastEvent(deviceid, date,token);
+		return cardao.getLastEvent(deviceid, date);
 	}
 
 	@Override
-	public List<Location> getLocationsBefore(Integer deviceid, Integer to, String date, String token) {
+	public List<Location> getLocationsBefore(Integer deviceid, Integer to, String date) {
 		// TODO Auto-generated method stub
-		return cardao.getLocationsBefore(deviceid, to, date,token);
+		return cardao.getLocationsBefore(deviceid, to, date);
 	}
 
 	@Override
-	public List<Location> getLocationsAfter(Integer deviceid, Integer from, String date, String token) {
+	public List<Location> getLocationsAfter(Integer deviceid, Integer from, String date) {
 		// TODO Auto-generated method stub
-		return cardao.getLocationsAfter(deviceid, from, date,token);
+		return cardao.getLocationsAfter(deviceid, from, date);
 	}
 
 	@Override
-	public List<Location> getLocationsByDate(Integer deviceid, String date, String token) {
+	public List<Location> getLocationsByDate(Integer deviceid, String date) {
 		// TODO Auto-generated method stub
-		return cardao.getLocationsByDate(deviceid, date,token);
+		return cardao.getLocationsByDate(deviceid, date);
 	}
 
 	@Override
-	public List<Location> getLocationsBetween(Integer deviceid, Integer from,Integer to, String date, String token) {
+	public List<Location> getLocationsBetween(Integer deviceid, Integer from,
+			Integer to, String date) {
 		// TODO Auto-generated method stub
-		return cardao.getLocationsBetween(deviceid, from, to, date,token);
+		return cardao.getLocationsBetween(deviceid, from, to, date);
 	}
 
 	@Override
-	public Location getLocationById(Integer id, String token) {
+	public Location getLocationById(Integer id) {
 		// TODO Auto-generated method stub
-		return cardao.getLocationById(id,token);
+		return cardao.getLocationById(id);
 	}
 
 	@Override
-	public Location getLastLocationByCar(Integer deviceid, String date, String token) {
+	public Location getLastLocationByCar(Integer deviceid, String date) {
 		// TODO Auto-generated method stub
-		return cardao.getLastLocationByCar(deviceid,date,token);
+		return cardao.getLastLocationByCar(deviceid,date);
 	}
 
 	@Override
@@ -161,14 +162,14 @@ public class CarServiceImpl implements CarService {
 	}
 
 	@Override
-	public Event getLastEvent(Integer deviceid, String token) {
+	public Event getLastEvent(Integer deviceid) {
 		// TODO Auto-generated method stub
-		return cardao.getLastEvent(deviceid,token);
+		return cardao.getLastEvent(deviceid);
 	}
 
 	@Override
-	public Location getLastLocationByCar(Integer deviceid, String token) {
+	public Location getLastLocationByCar(Integer deviceid) {
 		// TODO Auto-generated method stub
-		return cardao.getLastLocationByCar(deviceid,token);
+		return cardao.getLastLocationByCar(deviceid);
 	}
 }

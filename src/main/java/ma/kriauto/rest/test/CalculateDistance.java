@@ -32,9 +32,9 @@ public class CalculateDistance {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		System.out.println(distance(33.972861, -6.842999, 33.972585, -6.843181, 'M') + " Miles\n");
-	    System.out.println(distance(33.972861, -6.842999, 33.972585, -6.843181, 'K') + " Kilometers\n");
-	    System.out.println(distance(33.972861, -6.842999, 33.972585, -6.843181, 'N') + " Nautical Miles\n");
+		System.out.println(distance(35.76482, -5.79825833333333, 35.76477, -5.798515, 'M') + " Miles\n");
+	    System.out.println(distance(35.76482, -5.79825833333333, 35.76477, -5.798515, 'K') + " Kilometers\n");
+	    System.out.println(distance(35.76482, -5.79825833333333, 35.76477, -5.798515, 'N') + " Nautical Miles\n");
 
 	}
 
