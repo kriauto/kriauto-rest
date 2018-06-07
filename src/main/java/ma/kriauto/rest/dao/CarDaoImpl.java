@@ -145,54 +145,62 @@ public class CarDaoImpl implements CarDao {
 		List<Location> locations1 = new ArrayList<Location>();
 		List<Location> tmplocations = new ArrayList<Location>();
 		List<Event> events = new ArrayList<Event>();
+		
+		locations = jdbcTemplate.query(" select distinct ps.longitude, ps.latitude, ps.speed, ps.course, ps.fixtime -'1 hour'::interval AS servertime,ps.attributes, c.immatriculation, c.vin, c.mark, c.model, c.photo, c.color, ps.deviceid, c.colorCode" 
+				+ " from positions ps, car c "
+				+ " where c.deviceid = ps.deviceid" 
+				+ " and   ps.deviceid = ? "
+				+ " and   ps.attributes not like '%alarm%' "
+				+ " and   ps.network = 'null' "
+				+ " and   to_char(ps.fixtime -'1 hour'::interval,'YYYY-MM-DD') = '"+ date + "'"
+				+ " order by servertime ",new Object[] { deviceid}, new BeanPropertyRowMapper(Location.class));
 
-		events = jdbcTemplate.query(" select distinct positionid, attributes from events where to_char(servertime - interval '1 hour', 'yyyy-mm-dd') = ? and deviceid = ? and attributes like '%powerO%' order by positionid ",new Object[] {date, deviceid}, new BeanPropertyRowMapper(Event.class));
-		if(events.size() > 0){
-		  for(int i = 0; i < events.size() ; i++){
-			Event event1 = (null != events.get(i) ? events.get(i) : null);
-			if(null != event1 &&  "{\"alarm\":\"powerOff\"}".equals(event1.getAttributes()) && i == 0){
-				tmplocations = getLocationsBefore(deviceid,event1.getPositionid(), date);
-				locations.addAll(tmplocations);
-				tmplocations.clear();
-			}
-			if(null != event1 && "{\"alarm\":\"powerOn\"}".equals(event1.getAttributes())){
-				boolean exist = false;
-				for(int j = i+1 ; j < events.size(); j++){
-					Event event2 = (j < events.size() ? events.get(j) : null);
-					Event event22 = ((j+1) < events.size() ? events.get(j+1) : null);
-					if(null != event2 && "{\"alarm\":\"powerOff\"}".equals(event2.getAttributes()) && ((null != event22 && "{\"alarm\":\"powerOn\"}".equals(event22.getAttributes())) || null == event22)){
-						tmplocations = getLocationsBetween(deviceid,event1.getPositionid(),event2.getPositionid(), date);
-						locations.addAll(tmplocations);
-						tmplocations.clear();
-						i = j ;
-						exist = true;
-						break;
-					}
-					
-				}
-				if(!exist){
-					tmplocations = getLocationsAfter(deviceid, event1.getPositionid(), date);
-					locations.addAll(tmplocations);
-					tmplocations.clear();
-				}
-				
-			}
-		 }
-		}else{
-			 Event event3 = getLastEvent(deviceid, date);
-			  if(null != event3 && "{\"alarm\":\"powerOff\"}".equals(event3.getAttributes())){
-				  Location location = getLocationById(event3.getPositionid());
-				  locations.add(location);
-			  }else if(null != event3 && "{\"alarm\":\"powerOn\"}".equals(event3.getAttributes())) {
-				  locations = getLocationsAfter(deviceid, event3.getPositionid(), date);
-				  if(locations.size() == 0){
-					  Location location = getLocationById(event3.getPositionid());
-					  locations.add(location);
-				  }
-			  }else{
-				  locations = getLocationsByDate(deviceid,date);
-			  }
-		}
+//		events = jdbcTemplate.query(" select distinct positionid, attributes,servertime from events where to_char(servertime - interval '1 hour', 'yyyy-mm-dd') = ? and deviceid = ? and attributes like '%powerO%' order by positionid ",new Object[] {date, deviceid}, new BeanPropertyRowMapper(Event.class));
+//		if(events.size() > 0){
+//		  for(int i = 0; i < events.size() ; i++){
+//			Event event1 = (null != events.get(i) ? events.get(i) : null);
+//			if(null != event1 &&  "{\"alarm\":\"powerOff\"}".equals(event1.getAttributes()) && i == 0){
+//				tmplocations = getLocationsBefore(deviceid,event1.getPositionid(), date);
+//				locations.addAll(tmplocations);
+//				tmplocations.clear();
+//			}
+//			if(null != event1 && "{\"alarm\":\"powerOn\"}".equals(event1.getAttributes())){
+//				boolean exist = false;
+//				for(int j = i+1 ; j < events.size(); j++){
+//					Event event2 = (j < events.size() ? events.get(j) : null);
+//					Event event22 = ((j+1) < events.size() ? events.get(j+1) : null);
+//					if(null != event2 && "{\"alarm\":\"powerOff\"}".equals(event2.getAttributes()) && ((null != event22 && "{\"alarm\":\"powerOn\"}".equals(event22.getAttributes())) || null == event22)){
+//						tmplocations = getLocationsBetween(deviceid,event1.getPositionid(),event2.getPositionid(), date);
+//						locations.addAll(tmplocations);
+//						tmplocations.clear();
+//						i = j ;
+//						exist = true;
+//						break;
+//					}
+//				}
+//				if(!exist){
+//					tmplocations = getLocationsAfter(deviceid, event1.getPositionid(), date);
+//					locations.addAll(tmplocations);
+//					tmplocations.clear();
+//				}
+//				
+//			}
+//		 }
+//		}else{
+//			 Event event3 = getLastEvent(deviceid, date);
+//			  if(null != event3 && "{\"alarm\":\"powerOff\"}".equals(event3.getAttributes())){
+//				  Location location = getLocationById(event3.getPositionid());
+//				  locations.add(location);
+//			  }else if(null != event3 && "{\"alarm\":\"powerOn\"}".equals(event3.getAttributes())) {
+//				  locations = getLocationsAfter(deviceid, event3.getPositionid(), date);
+//				  if(locations.size() == 0){
+//					  Location location = getLocationById(event3.getPositionid());
+//					  locations.add(location);
+//				  }
+//			  }else{
+//				  locations = getLocationsByDate(deviceid,date);
+//			  }
+//		}
 		double log = 0,lat = 0;
 		for(int i = 0 ; i< locations.size(); i++){
 			if(0 == i){
@@ -207,6 +215,10 @@ public class CarDaoImpl implements CarDao {
 				}else{
 					log = locations.get(i).getLongitude();
 					lat = locations.get(i).getLatitude();
+					double dist = distance(locations.get(i-1).getLatitude(), locations.get(i-1).getLongitude(), locations.get(i).getLatitude(), locations.get(i).getLongitude(), 'K');
+					  if(dist <= 1){
+						  locations1.add(locations.get(i));
+					  }
 					if(null != locations.get(i).getAttributes() && getDistance(locations.get(i).getAttributes()) <= 500){
 						   locations1.add(locations.get(i));
 					}
