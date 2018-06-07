@@ -119,16 +119,16 @@ public class CarDaoImpl implements CarDao {
 		List<Car> cars = getAllCarsByToken(false, token);
 		for(int i = 0; i<cars.size(); i++){
 			Car car = cars.get(i);
-			Event event3 = getLastEvent(car.getDeviceid(), date);
-			  if(null != event3 && "{\"alarm\":\"powerOff\"}".equals(event3.getAttributes())){
-				  Location location = getLocationById(event3.getPositionid());
-				  locations.add(location);
-			  }else{
+//			Event event3 = getLastEvent(car.getDeviceid(), date);
+//			  if(null != event3 && "{\"alarm\":\"powerOff\"}".equals(event3.getAttributes())){
+//				  Location location = getLocationById(event3.getPositionid());
+//				  locations.add(location);
+//			  }else{
 				  Location location = getLastLocationByCar(car.getDeviceid(),date);
 				  if(null != location){
 				     locations.add(location);
 				  }
-			  }
+//			  }
 		}
 				
 		for(int i = 0; i<locations.size(); i++){
@@ -216,12 +216,12 @@ public class CarDaoImpl implements CarDao {
 					log = locations.get(i).getLongitude();
 					lat = locations.get(i).getLatitude();
 					double dist = distance(locations.get(i-1).getLatitude(), locations.get(i-1).getLongitude(), locations.get(i).getLatitude(), locations.get(i).getLongitude(), 'K');
-					  if(dist <= 1){
+					  if(dist <= 0.1){
 						  locations1.add(locations.get(i));
 					  }
-					if(null != locations.get(i).getAttributes() && getDistance(locations.get(i).getAttributes()) <= 500){
-						   locations1.add(locations.get(i));
-					}
+//					if(null != locations.get(i).getAttributes() && getDistance(locations.get(i).getAttributes()) <= 500){
+//						   locations1.add(locations.get(i));
+//					}
 				}
 			}
 		}
