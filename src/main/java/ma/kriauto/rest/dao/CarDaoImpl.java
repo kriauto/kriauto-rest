@@ -202,7 +202,8 @@ public class CarDaoImpl implements CarDao {
 //			  }
 //		}
 		double log = 0,lat = 0;
-		for(int i = 0 ; i< locations.size(); i++){
+		if(locations.size() > 0){
+		  for(int i = 0 ; i< locations.size(); i++){
 			if(0 == i){
 				log = locations.get(i).getLongitude();
 				lat = locations.get(i).getLatitude();
@@ -216,15 +217,21 @@ public class CarDaoImpl implements CarDao {
 					log = locations.get(i).getLongitude();
 					lat = locations.get(i).getLatitude();
 					double dist = distance(locations.get(i-1).getLatitude(), locations.get(i-1).getLongitude(), locations.get(i).getLatitude(), locations.get(i).getLongitude(), 'K');
-					  if(dist <= 0.1){
+					  if(dist <= 1){
 						  locations1.add(locations.get(i));
 					  }
 //					if(null != locations.get(i).getAttributes() && getDistance(locations.get(i).getAttributes()) <= 500){
 //						   locations1.add(locations.get(i));
 //					}
 				}
+			  }
 			}
-		}
+		  }else{
+			  Location location = getLastLocationByCar(deviceid,date);
+			  if(null != location){
+			    locations1.add(location);
+			  }
+		  }
 		return locations1;
 	}
 	
@@ -465,7 +472,7 @@ public class CarDaoImpl implements CarDao {
         {
         	Location location = (Location) jdbcTemplate.queryForObject(" select distinct ps.longitude, ps.latitude, ps.speed, ps.course, ps.address, ps.fixtime -'1 hour'::interval AS servertime,ps.attributes , c.immatriculation, c.vin, c.mark, c.model, c.photo, c.color, c.deviceid, c.colorCode "
 				    + " from positions ps, car c "
-				    + " where   ps.id =  (select MAX(id) from positions where deviceid = ?  and to_char(fixtime,'YYYY-MM-DD') <= ? and valid =true) "
+				    + " where   ps.id =  (select MAX(id) from positions where deviceid = ?  and to_char(fixtime,'YYYY-MM-DD') <= ? and valid =true and network = 'null') "
 				    + " and   ps.deviceid = c.deviceid ",new Object[] { deviceid, date}, new BeanPropertyRowMapper(Location.class));
         	return location;
         } catch (EmptyResultDataAccessException e) {
