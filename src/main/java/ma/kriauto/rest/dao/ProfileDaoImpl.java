@@ -77,7 +77,7 @@ public class ProfileDaoImpl implements ProfileDao {
 	@Override
 	public void deletePushNotifProfile(Profile profile) {
 		System.out.println("deletePushNotifProfile "+profile);
-		jdbcTemplate.update("DELETE pushnotification WHERE login = ? and pushnotiftoken = ?", new Object[] {profile.getLogin(), profile.getPushnotiftoken()});
+		jdbcTemplate.update("DELETE FROM pushnotification WHERE login = ? and pushnotiftoken = ?", new Object[] {profile.getLogin(), profile.getPushnotiftoken()});
 		
 	}
 }

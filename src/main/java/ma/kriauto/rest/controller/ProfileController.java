@@ -95,7 +95,7 @@ public class ProfileController {
     	}
     }
 	
-	@RequestMapping(value = "/logoutpushnotif", method = RequestMethod.GET)
+	@RequestMapping(value = "/logoutpushnotif", method = RequestMethod.POST)
     @ResponseBody
     public ResponseMessage logoutpushnotif(@RequestBody Profile profile ,@RequestHeader(value="Authorization") String authorization) {
     	System.out.println("Begin logoutpushnotif -->"+authorization);
