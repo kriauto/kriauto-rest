@@ -8,6 +8,8 @@ public interface ProfileService {
 	public Profile getProfileByMail(String mail);
 	public Profile getProfileById(int id);
 	public void updateProfile (Profile profile);
+	public void addPushNotifProfile (Profile profile);
+	public void deletePushNotifProfile (Profile profile);
 	public String sendPassword(String to, String from, String subject, String content);
 	public String hash256Profile(Profile profile);
 	public String getKeyMap();

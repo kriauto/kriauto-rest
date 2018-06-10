@@ -48,6 +48,18 @@ public class ProfileServiceImpl implements ProfileService {
 		// TODO Auto-generated method stub
 		profiledao.updateProfile(profile);
 	}
+	
+	@Override
+	public void addPushNotifProfile(Profile profile) {
+		// TODO Auto-generated method stub
+		profiledao.addPushNotifProfile(profile);
+	}
+
+	@Override
+	public void deletePushNotifProfile(Profile profile) {
+		// TODO Auto-generated method stub
+		profiledao.deletePushNotifProfile(profile);
+	}
 
 	@Override
 	public String sendPassword(String to, String from, String subject,
@@ -89,5 +101,7 @@ public class ProfileServiceImpl implements ProfileService {
 		}
 		return key ;
 	}
+
+	
 
 }

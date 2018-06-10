@@ -102,6 +102,11 @@ CREATE TABLE messages (
     texte varchar(1000)
 );
 
+CREATE TABLE pushnotification (
+    login varchar(1000),
+    pushnotiftoken varchar(1000)
+);
+
 --
 -- Name: agency_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --

@@ -11,15 +11,18 @@ public class Profile {
 	private Integer job;
 	private String label;
 	private String token;
+	private String pushnotiftoken;
 	private String googlekey;
 	
 	public Profile() {
 		super();
 	}
 
+	
+
 	public Profile(Integer id, Integer agencyid, String login, String password,
 			String name, String mail, String phone, Integer job, String label,
-			String token, String googlekey) {
+			String token, String pushnotiftoken, String googlekey) {
 		super();
 		this.id = id;
 		this.agencyid = agencyid;
@@ -31,6 +34,7 @@ public class Profile {
 		this.job = job;
 		this.label = label;
 		this.token = token;
+		this.pushnotiftoken = pushnotiftoken;
 		this.googlekey = googlekey;
 	}
 
@@ -113,6 +117,14 @@ public class Profile {
 	public void setToken(String token) {
 		this.token = token;
 	}
+	
+	public String getPushnotiftoken() {
+		return pushnotiftoken;
+	}
+
+	public void setPushnotiftoken(String pushnotiftoken) {
+		this.pushnotiftoken = pushnotiftoken;
+	}
 
 	public String getGooglekey() {
 		return googlekey;
@@ -127,7 +139,7 @@ public class Profile {
 		return "Profile [id=" + id + ", agencyid=" + agencyid + ", login="
 				+ login + ", password=" + password + ", name=" + name
 				+ ", mail=" + mail + ", phone=" + phone + ", job=" + job
-				+ ", label=" + label + ", token=" + token + ", googlekey="
-				+ googlekey + "]";
+				+ ", label=" + label + ", token=" + token + ", pushnotiftoken="
+				+ pushnotiftoken + ", googlekey=" + googlekey + "]";
 	}
 }

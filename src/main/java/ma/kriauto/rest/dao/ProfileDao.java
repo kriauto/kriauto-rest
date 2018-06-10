@@ -8,4 +8,6 @@ public interface ProfileDao {
 	public Profile getProfileByMail(String mail);
 	public Profile getProfileById(int id);
 	public void updateProfile (Profile profile);
+	public void addPushNotifProfile (Profile profile);
+	public void deletePushNotifProfile (Profile profile);
 }

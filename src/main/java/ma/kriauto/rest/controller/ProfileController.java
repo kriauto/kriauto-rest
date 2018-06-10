@@ -68,6 +68,47 @@ public class ProfileController {
         return new ResponseMessage(ResponseMessage.Type.success, "LOGOUT_SUCCES",Constant.getLabels().get("LOGOUT_SUCCES").toString());
     }
 	
+	@RequestMapping(value = "/loginpushnotif", method = RequestMethod.POST)
+    @ResponseBody
+    public Profile loginpushnotif(@RequestBody Profile profile) {
+    	System.out.println("Begin loginpushnotif -->"+profile);
+    	if(profile.getLogin() == null || profile.getLogin().equals("")){
+    		throw new IllegalArgumentException("LOGIN_REQUIRED");
+    	}else if(profile.getPassword() == null || profile.getPassword().equals("")){
+    		throw new IllegalArgumentException("PASSWORD_REQUIRED");
+    	}
+    	
+    	Profile currentprofile = profileService.getProfileByLogin(profile.getLogin());
+    	if(null == currentprofile){
+    		throw new IllegalArgumentException("LOGIN_NOT_FOUND");
+    	}else if(!currentprofile.getPassword().equals(profile.getPassword())){
+    		throw new IllegalArgumentException("PASSWORD_FAILED");
+    	}else{
+    		String token = profileService.hash256Profile(currentprofile);
+    		String key = profileService.getKeyMap();
+    		currentprofile.setToken(token);
+    		currentprofile.setGooglekey(key);
+    		profileService.updateProfile(currentprofile);
+    		profileService.addPushNotifProfile(profile);
+        	System.out.println("End loginpushnotif -->"+profile);
+    		return currentprofile;
+    	}
+    }
+	
+	@RequestMapping(value = "/logoutpushnotif", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseMessage logoutpushnotif(@RequestBody Profile profile ,@RequestHeader(value="Authorization") String authorization) {
+    	System.out.println("Begin logoutpushnotif -->"+authorization);
+    	String token = authorization.replaceAll("Basic", "");
+    	Profile profile1 = profileService.getProfileByToken(token);
+    	if(null == profile1){
+    		throw new IllegalArgumentException("ACTION_FAILED");
+    	}
+    	profileService.deletePushNotifProfile(profile);
+    	System.out.println("End logoutpushnotif -->");
+        return new ResponseMessage(ResponseMessage.Type.success, "LOGOUT_SUCCES",Constant.getLabels().get("LOGOUT_SUCCES").toString());
+    }
+	
 	@RequestMapping(value = "/getProfile", method = RequestMethod.GET)
     @ResponseBody
     public Profile getProfile(@RequestHeader(value="Authorization") String authorization) {

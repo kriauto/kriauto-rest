@@ -66,4 +66,18 @@ public class ProfileDaoImpl implements ProfileDao {
 		jdbcTemplate.update("UPDATE profile set agencyid =  ?, login =  ?, password =  ?, name =  ?, mail =  ?, phone =  ?, job =  ?, label =  ?, token =  ?, googlekey =  ? WHERE id = ?  ", new Object[] { profile.getAgencyid(), profile.getLogin(), profile.getPassword(), profile.getName(), profile.getMail(), profile.getPhone(), profile.getJob(), profile.getLabel(), profile.getToken(), profile.getGooglekey(), profile.getId()});
 		
 	}
+
+	@Override
+	public void addPushNotifProfile(Profile profile) {
+		System.out.println("addPushNotifProfile "+profile);
+		jdbcTemplate.update("INSERT INTO pushnotification(login, pushnotiftoken) VALUES(?,?) ", new Object[] {profile.getLogin(), profile.getPushnotiftoken()});
+		
+	}
+
+	@Override
+	public void deletePushNotifProfile(Profile profile) {
+		System.out.println("deletePushNotifProfile "+profile);
+		jdbcTemplate.update("DELETE pushnotification WHERE login = ? and pushnotiftoken = ?", new Object[] {profile.getLogin(), profile.getPushnotiftoken()});
+		
+	}
 }
