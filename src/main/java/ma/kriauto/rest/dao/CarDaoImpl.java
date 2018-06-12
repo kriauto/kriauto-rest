@@ -38,10 +38,10 @@ public class CarDaoImpl implements CarDao {
 	private static int countkey = 0 ;  
 	
 	@Override
-	public Car getCarByDevice(Integer deviceid) {
+	public Car getCarByDevice(Integer deviceid, String token) {
 		System.out.println("getCarByDevice "+deviceid);
 		try{
-		   Car car = (Car) jdbcTemplate.queryForObject("SELECT * FROM car where deviceid = ?", new Object[] { deviceid }, new BeanPropertyRowMapper(Car.class));
+		   Car car = (Car) jdbcTemplate.queryForObject("SELECT * FROM profile p, agency a, car c where p.token = ? and p.agencyid = a.id and a.id = c.agencyid and c.deviceid = ?", new Object[] {token,deviceid}, new BeanPropertyRowMapper(Car.class));
 		   return car;
 		} catch (EmptyResultDataAccessException e) {
 			return null;
@@ -124,7 +124,7 @@ public class CarDaoImpl implements CarDao {
 //				  Location location = getLocationById(event3.getPositionid());
 //				  locations.add(location);
 //			  }else{
-				  Location location = getLastLocationByCar(car.getDeviceid(),date);
+				  Location location = getLastLocationByCar(car.getDeviceid(),date,token);
 				  if(null != location){
 				     locations.add(location);
 				  }
@@ -139,7 +139,7 @@ public class CarDaoImpl implements CarDao {
 	}
 
 	@Override
-	public List<Location> getAllLocationsByCar(Integer deviceid, String date) {
+	public List<Location> getAllLocationsByCar(Integer deviceid, String date, String token) {
 		System.out.println("getAllLocationsByCar " + deviceid);
 		List<Location> locations = new ArrayList<Location>();
 		List<Location> locations1 = new ArrayList<Location>();
@@ -147,13 +147,16 @@ public class CarDaoImpl implements CarDao {
 		List<Event> events = new ArrayList<Event>();
 		
 		locations = jdbcTemplate.query(" select distinct ps.longitude, ps.latitude, ps.speed, ps.course, ps.fixtime -'1 hour'::interval AS servertime,ps.attributes, c.immatriculation, c.vin, c.mark, c.model, c.photo, c.color, ps.deviceid, c.colorCode" 
-				+ " from positions ps, car c "
-				+ " where c.deviceid = ps.deviceid" 
+				+ " from profile p, agency a,car c , positions ps "
+				+ " where p.token = ? "
+				+ " and   p.agencyid = a.id "
+				+ " and   a.id = c.agencyid "
+				+ " and   c.deviceid = ps.deviceid" 
 				+ " and   ps.deviceid = ? "
 				+ " and   ps.attributes not like '%alarm%' "
 				+ " and   ps.network = 'null' "
 				+ " and   to_char(ps.fixtime -'1 hour'::interval,'YYYY-MM-DD') = '"+ date + "'"
-				+ " order by servertime ",new Object[] { deviceid}, new BeanPropertyRowMapper(Location.class));
+				+ " order by servertime ",new Object[] {token,deviceid}, new BeanPropertyRowMapper(Location.class));
 
 //		events = jdbcTemplate.query(" select distinct positionid, attributes,servertime from events where to_char(servertime - interval '1 hour', 'yyyy-mm-dd') = ? and deviceid = ? and attributes like '%powerO%' order by positionid ",new Object[] {date, deviceid}, new BeanPropertyRowMapper(Event.class));
 //		if(events.size() > 0){
@@ -227,7 +230,7 @@ public class CarDaoImpl implements CarDao {
 			  }
 			}
 		  }else{
-			  Location location = getLastLocationByCar(deviceid,date);
+			  Location location = getLastLocationByCar(deviceid,date,token);
 			  if(null != location){
 			    locations1.add(location);
 			  }
@@ -420,12 +423,12 @@ public class CarDaoImpl implements CarDao {
 	}
 	
 	@Override
-	public Statistic getCarStatistic(Integer deviceid, String date) {
+	public Statistic getCarStatistic(Integer deviceid, String date, String token) {
 		System.out.println("getCarStatistic " + deviceid+date);
 		Statistic statistic = new Statistic();
 		double speed = 0, cours=0;
-		Car car = getCarByDevice(deviceid);		
-		List<Location> locations = getAllLocationsByCar(deviceid, date);
+		Car car = getCarByDevice(deviceid,token);		
+		List<Location> locations = getAllLocationsByCar(deviceid, date, token);
 		
 		for(int i =0; i < locations.size(); i++){
 			if(locations.get(i).getSpeed() < 97 && locations.get(i).getSpeed() > speed){
@@ -466,14 +469,17 @@ public class CarDaoImpl implements CarDao {
 	}
 	
 	@Override
-	public Location getLastLocationByCar(Integer deviceid, String date) {
+	public Location getLastLocationByCar(Integer deviceid, String date, String token) {
 		System.out.println("getAllLocationsByCar " + deviceid);
         try
         {
         	Location location = (Location) jdbcTemplate.queryForObject(" select distinct ps.longitude, ps.latitude, ps.speed, ps.course, ps.address, ps.fixtime -'1 hour'::interval AS servertime,ps.attributes , c.immatriculation, c.vin, c.mark, c.model, c.photo, c.color, c.deviceid, c.colorCode "
-				    + " from positions ps, car c "
-				    + " where   ps.id =  (select MAX(id) from positions where deviceid = ?  and to_char(fixtime,'YYYY-MM-DD') <= ? and valid =true and network = 'null') "
-				    + " and   ps.deviceid = c.deviceid ",new Object[] { deviceid, date}, new BeanPropertyRowMapper(Location.class));
+				    + " from profile p, agency a, car c, positions ps "
+				    + " where   ps.id =  (select MAX(ps.id) from profile p, agency a, car c, positions ps where p.token = ? and p.agencyid = a.id and a.id = c.agencyid and c.deviceid = ps.deviceid and ps.deviceid = ?  and to_char(fixtime,'YYYY-MM-DD') <= ? and valid =true and network = 'null') "
+				    + " and p.token = ? "
+				    + " and p.agencyid = a.id "
+				    + " and a.id = c.agencyid "
+				    + " and c.deviceid = ps.deviceid ",new Object[] {token, deviceid, date, token}, new BeanPropertyRowMapper(Location.class));
         	return location;
         } catch (EmptyResultDataAccessException e) {
 			return null;

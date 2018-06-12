@@ -72,7 +72,7 @@ public class CarController {
     	if(null == profile){
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
-    	Car car = carService.getCarByDevice(deviceid);
+    	Car car = carService.getCarByDevice(deviceid,token);
     	return car;
     }
 	
@@ -172,7 +172,7 @@ public class CarController {
     	if(null == profile){
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
-    	Statistic statistic = carService.getCarStatistic(device.getDeviceid(), device.getDate());
+    	Statistic statistic = carService.getCarStatistic(device.getDeviceid(), device.getDate(),token);
     	return statistic;
     }
 	
@@ -185,7 +185,7 @@ public class CarController {
     	if(null == profile){
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
-    	Car car = carService.getCarByDevice(deviceid);
+    	Car car = carService.getCarByDevice(deviceid,token);
     	Location location = carService.getLastLocationByCar(deviceid);
     	if(null != location && location.getSpeed() <= 10){
     		int status = senderService.sendSms("KriAuto.ma", car.getSimnumber(), "stop135791");
@@ -221,7 +221,7 @@ public class CarController {
     	if(null == profile){
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
-    	Car car = carService.getCarByDevice(deviceid);
+    	Car car = carService.getCarByDevice(deviceid,token);
     	int status = senderService.sendSms("KriAuto.ma", car.getSimnumber(), "resume135791");
     	if(status == 0){
     	  //senderService.sendSms("KriAuto.ma", profile.getPhone(), "Voiture+Demarre+"+car.getMark()+"+"+car.getModel()+"+"+car.getColor()+"+"+car.getImmatriculation());
@@ -264,7 +264,7 @@ public class CarController {
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
     	List<Location> locations = new ArrayList<Location>();
-    	locations = carService.getAllLocationsByCar(Integer.valueOf(search.getDeviceid()), search.getDate());
+    	locations = carService.getAllLocationsByCar(Integer.valueOf(search.getDeviceid()), search.getDate(),token);
     	return locations;
     }
 }

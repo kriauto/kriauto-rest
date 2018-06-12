@@ -23,9 +23,9 @@ public class CarServiceImpl implements CarService {
 	CarDao cardao;
 	
 	@Override
-	public Car getCarByDevice(Integer deviceid) {
+	public Car getCarByDevice(Integer deviceid, String token) {
 		// TODO Auto-generated method stub
-		return cardao.getCarByDevice(deviceid);
+		return cardao.getCarByDevice(deviceid,token);
 	}
 	
 	@Override
@@ -59,9 +59,9 @@ public class CarServiceImpl implements CarService {
 	}
 
 	@Override
-	public List<Location> getAllLocationsByCar(Integer deviceid, String date) {
+	public List<Location> getAllLocationsByCar(Integer deviceid, String date, String token) {
 		// TODO Auto-generated method stub
-		return cardao.getAllLocationsByCar(deviceid,date);
+		return cardao.getAllLocationsByCar(deviceid,date,token);
 	}
 
 	@Override
@@ -83,9 +83,9 @@ public class CarServiceImpl implements CarService {
 	}
 
 	@Override
-	public Statistic getCarStatistic(Integer deviceid, String date) {
+	public Statistic getCarStatistic(Integer deviceid, String date, String token) {
 		// TODO Auto-generated method stub
-		return cardao.getCarStatistic(deviceid, date);
+		return cardao.getCarStatistic(deviceid, date,token);
 	}
 
 	@Override
@@ -150,9 +150,9 @@ public class CarServiceImpl implements CarService {
 	}
 
 	@Override
-	public Location getLastLocationByCar(Integer deviceid, String date) {
+	public Location getLastLocationByCar(Integer deviceid, String date, String token) {
 		// TODO Auto-generated method stub
-		return cardao.getLastLocationByCar(deviceid,date);
+		return cardao.getLastLocationByCar(deviceid,date,token);
 	}
 
 	@Override
