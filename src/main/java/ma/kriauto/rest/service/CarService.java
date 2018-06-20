@@ -25,7 +25,7 @@ public interface CarService {
 	public List<Consumption> getTotalConsumptionByCar(Integer deviceid);
 	public Statistic getCarStatistic(Integer deviceid, String date, String token);
 	public List<Notification> getDataNotification(int type);
-	public Location getLastPositionByCar(Integer deviceid);
+	//public Location getLastPositionByCar(Integer deviceid);
 	public List<Location> getAllLocationByCarTime(Integer deviceid, String time);
 	public void initGeoFence();
 	public Event getLastEvent(Integer deviceid, String date);
@@ -35,7 +35,7 @@ public interface CarService {
 	public List<Location> getLocationsBetween(Integer deviceid, Integer from, Integer to, String date);
 	public Location getLocationById(Integer id);
 	public Location getLastLocationByCar(Integer deviceid, String date, String token);
-	public Location getLastLocationByCar(Integer deviceid);
+	public Location getLastLocationByCar(Integer deviceid, String token);
 	public String getGoodleAdresse(Double Lat, Double Lng);
 	public Event getLastEvent(Integer deviceid);
 }

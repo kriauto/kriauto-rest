@@ -17,9 +17,9 @@ public class NexmoSms {
 		System.out.println("FROM_NUMBER");
 
 		SmsSubmissionResult[] responses = client.getSmsClient().submitMessage(new TextMessage(
-		        "FROM_NUMBER",
-		        "TO_NUMBER",
-		        "Hello from Nexmo!"));
+		        "kriauto",
+		        "0033617638348",
+		        "la voiture est arreté "));
 		for (SmsSubmissionResult response : responses) {
 		    System.out.println(response);
 		}

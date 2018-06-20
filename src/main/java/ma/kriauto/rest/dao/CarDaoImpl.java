@@ -519,16 +519,20 @@ public class CarDaoImpl implements CarDao {
 	}
 
 	@Override
-	public Location getLastLocationByCar(Integer deviceid) {
+	public Location getLastLocationByCar(Integer deviceid, String token) {
 		System.out.println("getAllLocationsByCar " + deviceid);
         try
         {
         	Location location = (Location) jdbcTemplate.queryForObject(" select distinct ps.longitude, ps.latitude, ps.speed, ps.course, ps.address, ps.fixtime -'1 hour'::interval AS servertime,ps.attributes , c.immatriculation, c.vin, c.mark, c.model, c.photo, c.color, c.deviceid, c.colorCode "
-				    + " from positions ps, car c "
-				    + " where   ps.attributes not like '%alarm%' "
+				    + " from profile p, agency a, car c, positions ps "
+				    + " where p.token = ? "
+				    + " and   p.agencyid = a.id "
+				    + " and   a.id = c.agencyid "
+				    + " and   c.deviceid = ps.deviceid "
+				    + " and   ps.attributes not like '%alarm%' "
 				    + " and   ps.network = 'null' "
 				    + " and   ps.id =  (select MAX(id) from positions where deviceid = ? ) "
-				    + " and   ps.deviceid = c.deviceid ",new Object[] { deviceid}, new BeanPropertyRowMapper(Location.class));
+				    + " and   ps.deviceid = c.deviceid ",new Object[] {token,deviceid}, new BeanPropertyRowMapper(Location.class));
         	return location;
         } catch (EmptyResultDataAccessException e) {
 			return null;

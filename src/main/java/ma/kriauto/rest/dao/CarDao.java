@@ -25,7 +25,7 @@ public interface CarDao {
 	public List<Consumption> getTotalConsumptionByCar(Integer deviceid);
 	public Statistic getCarStatistic(Integer deviceid, String date, String token);
 	public List<Notification> getDataNotification(int type);
-	public Location getLastLocationByCar(Integer deviceid);
+	public Location getLastLocationByCar(Integer deviceid, String token);
 	public List<Location> getAllLocationByCarTime(Integer deviceid, String time);
 	public void initGeoFence();
 	public Event getLastEvent(Integer deviceid, String date);

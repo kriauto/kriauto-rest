@@ -94,11 +94,11 @@ public class CarServiceImpl implements CarService {
 		return cardao.getDataNotification(type);
 	}
 
-	@Override
-	public Location getLastPositionByCar(Integer deviceid) {
-		// TODO Auto-generated method stub
-		return cardao.getLastLocationByCar(deviceid);
-	}
+//	@Override
+//	public Location getLastPositionByCar(Integer deviceid) {
+//		// TODO Auto-generated method stub
+//		return cardao.getLastLocationByCar(deviceid);
+//	}
 
 	@Override
 	public List<Location> getAllLocationByCarTime(Integer deviceid, String time) {
@@ -168,8 +168,8 @@ public class CarServiceImpl implements CarService {
 	}
 
 	@Override
-	public Location getLastLocationByCar(Integer deviceid) {
+	public Location getLastLocationByCar(Integer deviceid,String token) {
 		// TODO Auto-generated method stub
-		return cardao.getLastLocationByCar(deviceid);
+		return cardao.getLastLocationByCar(deviceid,token);
 	}
 }

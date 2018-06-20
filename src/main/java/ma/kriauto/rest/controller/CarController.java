@@ -186,7 +186,7 @@ public class CarController {
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
     	Car car = carService.getCarByDevice(deviceid,token);
-    	Location location = carService.getLastLocationByCar(deviceid);
+    	Location location = carService.getLastLocationByCar(deviceid,token);
     	if(null != location && location.getSpeed() <= 10){
     		int status = senderService.sendSms("KriAuto.ma", car.getSimnumber(), "stop135791");
     		if(status == 0){
