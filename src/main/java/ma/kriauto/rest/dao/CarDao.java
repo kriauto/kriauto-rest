@@ -43,4 +43,5 @@ public interface CarDao {
 	public Location getMinTotalDistanceByCar(Integer deviceid);
 	public double getDistance(String distance);
 	public double getTotalDistance(String distance);
+	public double distance(double lat1, double lon1, double lat2, double lon2, char unit);
 }

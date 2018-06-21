@@ -63,6 +63,35 @@ CREATE TABLE car (
 	devicetype character varying(10)
 );
 
+ALTER TABLE car DROP COLUMN maxspeed RESTRICT;
+ALTER TABLE car DROP COLUMN isgeofence RESTRICT;
+ALTER TABLE car DROP COLUMN isnotifgeofence RESTRICT;
+ALTER TABLE car DROP COLUMN isnotifdefaultgeofence RESTRICT;
+
+ALTER TABLE car ADD COLUMN totaldistance decimal;
+ALTER TABLE car ADD COLUMN enable boolean;
+ALTER TABLE car ADD COLUMN technicalcontroldate date;
+ALTER TABLE car ADD COLUMN emptyingkilometre decimal;
+ALTER TABLE car ADD COLUMN emptyingkilometredate date;
+ALTER TABLE car ADD COLUMN insuranceenddate date;
+ALTER TABLE car ADD COLUMN maxspeed decimal;
+ALTER TABLE car ADD COLUMN maxcourse decimal;
+ALTER TABLE car ADD COLUMN minlevelfuel decimal;
+ALTER TABLE car ADD COLUMN maxenginetemperature decimal;
+ALTER TABLE car ADD COLUMN minfridgetemperature decimal;
+ALTER TABLE car ADD COLUMN maxfridgetemperature decimal;
+
+ALTER TABLE car ADD COLUMN notiftechnicalcontroldate boolean;
+ALTER TABLE car ADD COLUMN notifemptyingkilometre boolean;
+ALTER TABLE car ADD COLUMN emptyingkilometredate boolean;
+ALTER TABLE car ADD COLUMN notifinsuranceenddate boolean;
+ALTER TABLE car ADD COLUMN notifmaxspeed boolean;
+ALTER TABLE car ADD COLUMN notifmaxcourse boolean;
+ALTER TABLE car ADD COLUMN notifminlevelfuel boolean;
+ALTER TABLE car ADD COLUMN notifmaxenginetemperature boolean;
+ALTER TABLE car ADD COLUMN notifminfridgetemperature boolean;
+ALTER TABLE car ADD COLUMN notifmaxfridgetemperature boolean;
+
 --
 -- Name: agency; Type: TABLE; Schema: public; Owner: postgres
 --

@@ -76,6 +76,78 @@ public class CarController {
     	return car;
     }
 	
+	@RequestMapping(value = "/updateMaintenance", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseMessage updateMaintenance(@RequestHeader(value="Authorization") String authorization, @RequestBody Car car) {
+    	System.out.println("Begin updateCar -->"+car);
+    	String token = authorization.replaceAll("Basic", "");
+    	Profile profile = profileService.getProfileByToken(token);
+    	if(null == profile){
+    		throw new IllegalArgumentException("ACTION_FAILED");
+    	}
+    	Car cartmp = carService.getCarByDevice(car.getDeviceid(),token);
+    	cartmp.setTechnicalcontroldate(car.getTechnicalcontroldate());
+    	cartmp.setNotiftechnicalcontroldate(car.getNotiftechnicalcontroldate());
+    	cartmp.setEmptyingkilometre(car.getEmptyingkilometre());
+    	cartmp.setNotifemptyingkilometre(car.getNotifemptyingkilometre());
+    	cartmp.setInsuranceenddate(car.getInsuranceenddate());
+    	cartmp.setNotifinsuranceenddate(car.getNotifinsuranceenddate());
+    	carService.updateCar(cartmp);
+    	return new ResponseMessage(ResponseMessage.Type.success, "GEOFENCE_SUCCES",Constant.getLabels().get("GEOFENCE_SUCCES").toString());
+    }
+	
+	@RequestMapping(value = "/updateDaily", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseMessage updateDaily(@RequestHeader(value="Authorization") String authorization, @RequestBody Car car) {
+    	System.out.println("Begin updateCar -->"+car);
+    	String token = authorization.replaceAll("Basic", "");
+    	Profile profile = profileService.getProfileByToken(token);
+    	if(null == profile){
+    		throw new IllegalArgumentException("ACTION_FAILED");
+    	}
+    	Car cartmp = carService.getCarByDevice(car.getDeviceid(),token);
+    	cartmp.setMaxspeed(car.getMaxspeed());
+    	cartmp.setNotifmaxspeed(car.getNotifmaxspeed());
+    	cartmp.setMaxcourse(car.getMaxcourse());
+    	cartmp.setNotifmaxcourse(car.getNotifmaxcourse());
+    	cartmp.setMinlevelfuel(car.getMinlevelfuel());
+    	cartmp.setNotifminlevelfuel(car.getNotifminlevelfuel());
+    	cartmp.setMaxenginetemperature(car.getMaxenginetemperature());
+    	cartmp.setNotifmaxenginetemperature(car.getNotifmaxenginetemperature());
+    	cartmp.setMaxfridgetemperature(car.getMaxfridgetemperature());
+    	cartmp.setNotifmaxfridgetemperature(car.getNotifmaxfridgetemperature());
+    	cartmp.setMinfridgetemperature(car.getMinfridgetemperature());
+    	cartmp.setNotifminfridgetemperature(car.getNotifminfridgetemperature());
+    	carService.updateCar(car);
+    	return new ResponseMessage(ResponseMessage.Type.success, "GEOFENCE_SUCCES",Constant.getLabels().get("GEOFENCE_SUCCES").toString());
+    }
+	
+	@RequestMapping(value = "/updateGeofence", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseMessage updateGeofence(@RequestHeader(value="Authorization") String authorization, @RequestBody Car car) {
+    	System.out.println("Begin updateCar -->"+car);
+    	String token = authorization.replaceAll("Basic", "");
+    	Profile profile = profileService.getProfileByToken(token);
+    	if(null == profile){
+    		throw new IllegalArgumentException("ACTION_FAILED");
+    	}
+    	Car cartmp = carService.getCarByDevice(car.getDeviceid(),token);
+    	cartmp.setLongitude1(car.getLongitude1());
+    	cartmp.setLatitude1(car.getLatitude1());
+    	cartmp.setLongitude2(car.getLongitude2());
+    	cartmp.setLatitude2(car.getLatitude2());
+    	cartmp.setLongitude3(car.getLongitude3());
+    	cartmp.setLatitude3(car.getLatitude3());
+    	cartmp.setLongitude4(car.getLongitude4());
+    	cartmp.setLatitude4(car.getLatitude4());
+    	cartmp.setLongitude5(car.getLongitude5());
+    	cartmp.setLatitude5(car.getLatitude5());
+    	cartmp.setLongitude6(car.getLongitude6());
+    	cartmp.setLatitude6(car.getLatitude6());
+    	carService.updateCar(car);
+    	return new ResponseMessage(ResponseMessage.Type.success, "GEOFENCE_SUCCES",Constant.getLabels().get("GEOFENCE_SUCCES").toString());
+    }
+	
 	@RequestMapping(value = "/updateCar", method = RequestMethod.POST)
     @ResponseBody
     public ResponseMessage updateCar(@RequestHeader(value="Authorization") String authorization, @RequestBody Car car) {

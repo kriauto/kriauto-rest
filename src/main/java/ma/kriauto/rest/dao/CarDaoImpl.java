@@ -15,6 +15,7 @@ import ma.kriauto.rest.domain.Location;
 import ma.kriauto.rest.domain.Notification;
 import ma.kriauto.rest.domain.Speed;
 import ma.kriauto.rest.domain.Statistic;
+import ma.kriauto.rest.domain.StatisticValues;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -51,7 +52,32 @@ public class CarDaoImpl implements CarDao {
 	@Override
 	public void updateCar(Car car) {
 	     System.out.println("updateCar "+car);
-	     jdbcTemplate.update("UPDATE car set agencyid =  ?, imei =  ?, simnumber =  ?, immatriculation =  ?, vin =  ?, mark =  ?, model =  ?, color =  ?, photo =  ?, status =  ?, deviceid =  ? , maxspeed =  ? , mileage =  ? , fuel =  ?, latitude1 =  ?, longitude1 =  ?, latitude2 =  ?, longitude2 =  ?, latitude3 =  ?, longitude3 =  ?, latitude4 =  ?, longitude4 =  ?, latitude5 =  ?, longitude5 =  ?, latitude6 =  ?, longitude6 =  ?, isgeofence =  ?, isnotifgeofence =  ?, isnotifdefaultgeofence =  ?  WHERE id = ?  ", new Object[] { car.getAgencyid(), car.getImei(), car.getSimnumber(), car.getImmatriculation(), car.getVin(), car.getMark(), car.getModel(), car.getColor(), car.getPhoto(), car.getStatus(), car.getDeviceid(), car.getMaxspeed(), car.getMileage(), car.getFuel(), car.getLatitude1(), car.getLongitude1(), car.getLatitude2(), car.getLongitude2(), car.getLatitude3(), car.getLongitude3(), car.getLatitude4(), car.getLongitude4(), car.getLatitude5(), car.getLongitude5(), car.getLatitude6(), car.getLongitude6(), car.isIsgeofence(), car.isIsnotifgeofence(), car.isIsnotifdefaultgeofence(), car.getId()});
+	     jdbcTemplate.update("UPDATE car set agencyid =  ?, imei =  ?, simnumber =  ?"
+	     		+ ", immatriculation =  ?, vin =  ?, mark =  ?, model =  ?"
+	     		+ ", color =  ?, photo =  ?, status =  ?, deviceid =  ? "
+	     		+ ", mileage =  ? , fuel =  ?, latitude1 =  ?, longitude1 =  ?, latitude2 =  ?"
+	     		+ ", longitude2 =  ?, latitude3 =  ?, longitude3 =  ?, latitude4 =  ?"
+	     		+ ", longitude4 =  ?, latitude5 =  ?, longitude5 =  ?, latitude6 =  ?"
+	     		+ ", longitude6 =  ?, technicalcontroldate = ?, emptyingkilometre = ?, emptyingkilometredate = ?"
+	     		+ ", insuranceenddate = ?, maxspeed = ?, maxcourse = ?, minlevelfuel = ?, maxenginetemperature = ?"
+	     		+ ", minfridgetemperature = ?, maxfridgetemperature = ?, notiftechnicalcontroldate = ?, notifemptyingkilometre = ?"
+	     		+ ", notifinsuranceenddate = ?, notifmaxspeed = ?, notifmaxcourse = ?"  
+	     		+ ", notifminlevelfuel = ?, notifmaxenginetemperature = ?, notifminfridgetemperature = ?, notifmaxfridgetemperature = ?"   
+	     		+ "  WHERE id = ?  "
+	     		, new Object[] { car.getAgencyid(), car.getImei(), car.getSimnumber()
+	     		, car.getImmatriculation(), car.getVin(), car.getMark(), car.getModel()
+	     		, car.getColor(), car.getPhoto(), car.getStatus(), car.getDeviceid()
+	     		, car.getMileage(), car.getFuel(), car.getLatitude1()
+	     		, car.getLongitude1(), car.getLatitude2(), car.getLongitude2(), car.getLatitude3()
+	     		, car.getLongitude3(), car.getLatitude4(), car.getLongitude4(), car.getLatitude5()
+	     		, car.getLongitude5(), car.getLatitude6(), car.getLongitude6(), car.getTechnicalcontroldate()
+	     		, car.getEmptyingkilometre(), car.getEmptyingkilometredate(), car.getInsuranceenddate()
+	     		, car.getMaxspeed(), car.getMaxcourse(), car.getMinlevelfuel(), car.getMaxenginetemperature()
+	     		, car.getMinfridgetemperature(), car.getMaxfridgetemperature(), car.getNotiftechnicalcontroldate()
+	     		, car.getEmptyingkilometre(), car.getNotifinsuranceenddate(), car.getNotifmaxspeed(), car.getNotifmaxcourse()
+	     		, car.getNotifminlevelfuel(), car.getNotifmaxenginetemperature(), car.getNotifminfridgetemperature()
+	     		, car.getNotifmaxfridgetemperature()
+	     		, car.getId()});
 	}
 
 	@Override
@@ -451,6 +477,43 @@ public class CarDaoImpl implements CarDao {
 		   statistic.setSpeed(0.0);
 		   statistic.setCourse(0.0);
 		}
+		statistic.setEnable(car.getEnable());
+		StatisticValues maximalspeed = new StatisticValues();
+		maximalspeed.setV00(20.0);maximalspeed.setV01(15.3);maximalspeed.setV02(23.0);maximalspeed.setV03(23.5);maximalspeed.setV04(45.0);maximalspeed.setV05(63.0);
+		maximalspeed.setV06(12.0);maximalspeed.setV07(52.0);maximalspeed.setV08(63.0);maximalspeed.setV09(45.0);maximalspeed.setV10(63.0);maximalspeed.setV11(63.2);
+		maximalspeed.setV12(14.0);maximalspeed.setV13(21.0);maximalspeed.setV14(63.0);maximalspeed.setV15(45.0);maximalspeed.setV16(63.0);maximalspeed.setV17(45.3);
+		maximalspeed.setV18(23.0);maximalspeed.setV19(52.0);maximalspeed.setV20(36.2);maximalspeed.setV21(36.5);maximalspeed.setV22(12.0);maximalspeed.setV23(63.0);
+		StatisticValues maximalcourse = new StatisticValues();
+		maximalcourse.setV00(20.0);maximalcourse.setV01(15.3);maximalcourse.setV02(23.0);maximalcourse.setV03(23.5);maximalcourse.setV04(45.0);maximalcourse.setV05(63.0);
+		maximalcourse.setV06(12.0);maximalcourse.setV07(52.0);maximalcourse.setV08(63.0);maximalcourse.setV09(45.0);maximalcourse.setV10(63.0);maximalcourse.setV11(63.2);
+		maximalcourse.setV12(14.0);maximalcourse.setV13(21.0);maximalcourse.setV14(63.0);maximalcourse.setV15(45.0);maximalcourse.setV16(63.0);maximalcourse.setV17(45.3);
+		maximalcourse.setV18(23.0);maximalcourse.setV19(52.0);maximalcourse.setV20(36.2);maximalcourse.setV21(36.5);maximalcourse.setV22(12.0);maximalcourse.setV23(63.0);
+		StatisticValues fuelconsommation = new StatisticValues();
+		fuelconsommation.setV00(20.0);fuelconsommation.setV01(15.3);fuelconsommation.setV02(23.0);fuelconsommation.setV03(23.5);fuelconsommation.setV04(45.0);fuelconsommation.setV05(63.0);
+		fuelconsommation.setV06(1.0);fuelconsommation.setV07(52.0);fuelconsommation.setV08(63.0);fuelconsommation.setV09(45.0);fuelconsommation.setV10(63.0);fuelconsommation.setV11(63.2);
+		fuelconsommation.setV12(14.0);fuelconsommation.setV13(21.0);fuelconsommation.setV14(63.0);fuelconsommation.setV15(45.0);fuelconsommation.setV16(63.0);fuelconsommation.setV17(45.3);
+		fuelconsommation.setV18(23.0);fuelconsommation.setV19(52.0);fuelconsommation.setV20(36.2);fuelconsommation.setV21(36.5);fuelconsommation.setV22(12.0);fuelconsommation.setV23(63.0);
+		StatisticValues fuellevel = new StatisticValues();
+		fuellevel.setV00(20.0);fuellevel.setV01(15.3);fuellevel.setV02(23.0);fuellevel.setV03(23.5);fuellevel.setV04(45.0);fuellevel.setV05(63.0);
+		fuellevel.setV06(12.0);fuellevel.setV07(52.0);fuellevel.setV08(63.0);fuellevel.setV09(45.0);fuellevel.setV10(63.0);fuellevel.setV11(63.2);
+		fuellevel.setV12(14.0);fuellevel.setV13(21.0);fuellevel.setV14(63.0);fuellevel.setV15(45.0);fuellevel.setV16(63.0);fuellevel.setV17(45.3);
+		fuellevel.setV18(23.0);fuellevel.setV19(52.0);fuellevel.setV20(36.2);fuellevel.setV21(36.5);fuellevel.setV22(12.0);fuellevel.setV23(63.0);
+		StatisticValues enginetemperature = new StatisticValues();
+		enginetemperature.setV00(20.0);enginetemperature.setV01(15.3);enginetemperature.setV02(23.0);enginetemperature.setV03(23.5);enginetemperature.setV04(45.0);enginetemperature.setV05(63.0);
+		enginetemperature.setV06(12.0);enginetemperature.setV07(52.0);enginetemperature.setV08(63.0);enginetemperature.setV09(45.0);enginetemperature.setV10(63.0);enginetemperature.setV11(63.2);
+		enginetemperature.setV12(14.0);enginetemperature.setV13(21.0);enginetemperature.setV14(63.0);enginetemperature.setV15(45.0);enginetemperature.setV16(63.0);enginetemperature.setV17(45.3);
+		enginetemperature.setV18(23.0);enginetemperature.setV19(53.0);enginetemperature.setV20(36.2);enginetemperature.setV21(36.5);enginetemperature.setV22(12.0);enginetemperature.setV23(63.0);
+		StatisticValues fridgetemperature = new StatisticValues();
+		fridgetemperature.setV00(20.0);fridgetemperature.setV01(15.3);fridgetemperature.setV02(23.0);fridgetemperature.setV03(23.5);fridgetemperature.setV04(45.0);fridgetemperature.setV05(63.0);
+		fridgetemperature.setV06(12.0);fridgetemperature.setV07(52.0);fridgetemperature.setV08(66.0);fridgetemperature.setV09(40.0);fridgetemperature.setV10(63.0);fridgetemperature.setV11(63.2);
+		fridgetemperature.setV12(14.0);fridgetemperature.setV13(21.0);fridgetemperature.setV14(63.0);fridgetemperature.setV15(40.0);fridgetemperature.setV16(63.0);fridgetemperature.setV17(45.3);
+		fridgetemperature.setV18(23.0);fridgetemperature.setV19(52.0);fridgetemperature.setV20(36.2);fridgetemperature.setV21(36.5);fridgetemperature.setV22(12.0);fridgetemperature.setV23(63.0);
+		statistic.setMaximalspeed(maximalspeed);
+		statistic.setMaximalcourse(maximalcourse);
+		statistic.setFuelconsommation(fuelconsommation);
+		statistic.setFuellevel(fuellevel);
+		statistic.setEnginetemperature(enginetemperature);
+		statistic.setFridgetemperature(fridgetemperature);
 		return statistic;
 	}
 	
@@ -681,6 +744,7 @@ public class CarDaoImpl implements CarDao {
 			}
 	}
 	
+	@Override
 	public double distance(double lat1, double lon1, double lat2, double lon2, char unit) {
 	      double theta = lon1 - lon2;
 	      double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
