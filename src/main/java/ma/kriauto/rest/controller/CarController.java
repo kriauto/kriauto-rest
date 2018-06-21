@@ -252,6 +252,7 @@ public class CarController {
     @ResponseBody
     public ResponseMessage stopCar(@RequestHeader(value="Authorization") String authorization, @RequestBody Integer deviceid) {
     	System.out.println("Begin stopCar -->"+deviceid);
+    	int status;
     	String token = authorization.replaceAll("Basic", "");
     	Profile profile = profileService.getProfileByToken(token);
     	if(null == profile){
@@ -260,7 +261,12 @@ public class CarController {
     	Car car = carService.getCarByDevice(deviceid,token);
     	Location location = carService.getLastLocationByCar(deviceid,token);
     	if(null != location && location.getSpeed() <= 10){
-    		int status = senderService.sendSms("KriAuto.ma", car.getSimnumber(), "stop135791");
+    		if(car.getDevicetype().equals("TK103")){
+    			status = senderService.sendSms("KriAuto.ma", car.getSimnumber(), "stop135791");
+    	    }else{
+    	    	status = senderService.sendSms("KriAuto.ma", car.getSimnumber(), "  setdigout 00");
+    	    }
+    		
     		if(status == 0){
     		    //senderService.sendSms("KriAuto.ma", profile.getPhone(), "Voiture+Arrete+"+car.getMark()+"+"+car.getModel()+"+"+car.getColor()+"+"+car.getImmatriculation());
     		    car.setStatus(1);
@@ -288,13 +294,18 @@ public class CarController {
     @ResponseBody
     public ResponseMessage startCar(@RequestHeader(value="Authorization") String authorization, @RequestBody Integer deviceid) {
     	System.out.println("Begin startCar -->"+deviceid);
+    	int status;
     	String token = authorization.replaceAll("Basic", "");
     	Profile profile = profileService.getProfileByToken(token);
     	if(null == profile){
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
     	Car car = carService.getCarByDevice(deviceid,token);
-    	int status = senderService.sendSms("KriAuto.ma", car.getSimnumber(), "resume135791");
+    	if(car.getDevicetype().equals("TK103")){
+    	  status = senderService.sendSms("KriAuto.ma", car.getSimnumber(), "resume135791");
+    	}else{
+    	  status = senderService.sendSms("KriAuto.ma", car.getSimnumber(), "  setdigout 11");
+    	}
     	if(status == 0){
     	  //senderService.sendSms("KriAuto.ma", profile.getPhone(), "Voiture+Demarre+"+car.getMark()+"+"+car.getModel()+"+"+car.getColor()+"+"+car.getImmatriculation());
     		try {

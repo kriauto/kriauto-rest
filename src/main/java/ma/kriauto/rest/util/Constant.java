@@ -31,8 +31,8 @@ public class Constant {
 		labels.put("MAIL_NOT_FOUND", "l'email n'existe pas.");
 		labels.put("PASSWORD_SEND", "le nouveau mot de passe vient d'être envoyer");
 		labels.put("LOGOUT_SUCCES", "vous êtes déconnectés");
-		labels.put("STOP_CAR", "vous seriez notifié par sms une fois la demande d'arrêt est traitée");
-		labels.put("START_CAR", "vous seriez notifié par sms une fois la demande de démarrage est traitée");
+		labels.put("STOP_CAR", "la demande d'arret est encours, veuillez attendre 2 minutes.");
+		labels.put("START_CAR","la demande de démarrage est encours, veuillez attendre 2 minutes.");
 		labels.put("GEOFENCE_SUCCES", "Les coordonnées sont enregistrées avec succès");
 		labels.put("ACTION_FAILED", "cette action n'est pas autorisée");
 

@@ -33,6 +33,7 @@ public class Car {
 	private Double latitude6;
 	private Double longitude6;
 	private String colorcode;
+	private String devicetype;
 	private Boolean enable;
 	private String  technicalcontroldate;
 	private String emptyingkilometre;
@@ -60,7 +61,6 @@ public class Car {
 		super();
 	}
 	
-
 	public Car(String immatriculation, Integer deviceid) {
 		super();
 		this.immatriculation = immatriculation;
@@ -76,7 +76,7 @@ public class Car {
 			Double latitude3, Double longitude3, Double latitude4,
 			Double longitude4, Double latitude5, Double longitude5,
 			Double latitude6, Double longitude6, String colorcode,
-			Boolean enable, String technicalcontroldate,
+			String devicetype, Boolean enable, String technicalcontroldate,
 			String emptyingkilometre, String emptyingkilometredate,
 			String insuranceenddate, Double maxspeed, Double maxcourse,
 			Double minlevelfuel, Double maxenginetemperature,
@@ -118,6 +118,7 @@ public class Car {
 		this.latitude6 = latitude6;
 		this.longitude6 = longitude6;
 		this.colorcode = colorcode;
+		this.devicetype = devicetype;
 		this.enable = enable;
 		this.technicalcontroldate = technicalcontroldate;
 		this.emptyingkilometre = emptyingkilometre;
@@ -616,7 +617,6 @@ public class Car {
 		return longitude6;
 	}
 
-
 	public void setLongitude6(Double longitude6) {
 		this.longitude6 = longitude6;
 	}
@@ -624,7 +624,6 @@ public class Car {
 	public Double getCourse() {
 		return course;
 	}
-
 
 	public void setCourse(Double course) {
 		this.course = course;
@@ -635,7 +634,6 @@ public class Car {
 		return speed;
 	}
 
-
 	public void setSpeed(Double speed) {
 		this.speed = speed;
 	}
@@ -644,12 +642,27 @@ public class Car {
 		return emptyingkilometre;
 	}
 
-
 	public void setEmptyingkilometre(String emptyingkilometre) {
 		this.emptyingkilometre = emptyingkilometre;
 	}
 
-    
+	public String getDevicetype() {
+		return devicetype;
+	}
+
+	public void setDevicetype(String devicetype) {
+		this.devicetype = devicetype;
+	}
+
+	public String getColorcode() {
+		return colorcode;
+	}
+
+
+	public void setColorcode(String colorcode) {
+		this.colorcode = colorcode;
+	}
+
 	@Override
 	public String toString() {
 		return "Car [id=" + id + ", agencyid=" + agencyid + ", imei=" + imei
@@ -666,35 +679,25 @@ public class Car {
 				+ ", longitude4=" + longitude4 + ", latitude5=" + latitude5
 				+ ", longitude5=" + longitude5 + ", latitude6=" + latitude6
 				+ ", longitude6=" + longitude6 + ", colorcode=" + colorcode
-				+ ", enable=" + enable + ", technicalcontroldate="
-				+ technicalcontroldate + ", emptyingkilometre="
-				+ emptyingkilometre + ", emptyingkilometredate="
-				+ emptyingkilometredate + ", insuranceenddate="
-				+ insuranceenddate + ", maxspeed=" + maxspeed + ", maxcourse="
-				+ maxcourse + ", minlevelfuel=" + minlevelfuel
-				+ ", maxenginetemperature=" + maxenginetemperature
-				+ ", minfridgetemperature=" + minfridgetemperature
-				+ ", maxfridgetemperature=" + maxfridgetemperature
-				+ ", notiftechnicalcontroldate=" + notiftechnicalcontroldate
-				+ ", notifemptyingkilometre=" + notifemptyingkilometre
-				+ ", notifemptyingkilometredate=" + notifemptyingkilometredate
-				+ ", notifinsuranceenddate=" + notifinsuranceenddate
-				+ ", notifmaxspeed=" + notifmaxspeed + ", notifmaxcourse="
-				+ notifmaxcourse + ", notifminlevelfuel=" + notifminlevelfuel
-				+ ", notifmaxenginetemperature=" + notifmaxenginetemperature
-				+ ", notifminfridgetemperature=" + notifminfridgetemperature
-				+ ", notifmaxfridgetemperature=" + notifmaxfridgetemperature
-				+ "]";
-	}
-
-
-	public String getColorcode() {
-		return colorcode;
-	}
-
-
-	public void setColorcode(String colorcode) {
-		this.colorcode = colorcode;
+				+ ", devicetype=" + devicetype + ", enable=" + enable
+				+ ", technicalcontroldate=" + technicalcontroldate
+				+ ", emptyingkilometre=" + emptyingkilometre
+				+ ", emptyingkilometredate=" + emptyingkilometredate
+				+ ", insuranceenddate=" + insuranceenddate + ", maxspeed="
+				+ maxspeed + ", maxcourse=" + maxcourse + ", minlevelfuel="
+				+ minlevelfuel + ", maxenginetemperature="
+				+ maxenginetemperature + ", minfridgetemperature="
+				+ minfridgetemperature + ", maxfridgetemperature="
+				+ maxfridgetemperature + ", notiftechnicalcontroldate="
+				+ notiftechnicalcontroldate + ", notifemptyingkilometre="
+				+ notifemptyingkilometre + ", notifemptyingkilometredate="
+				+ notifemptyingkilometredate + ", notifinsuranceenddate="
+				+ notifinsuranceenddate + ", notifmaxspeed=" + notifmaxspeed
+				+ ", notifmaxcourse=" + notifmaxcourse + ", notifminlevelfuel="
+				+ notifminlevelfuel + ", notifmaxenginetemperature="
+				+ notifmaxenginetemperature + ", notifminfridgetemperature="
+				+ notifminfridgetemperature + ", notifmaxfridgetemperature="
+				+ notifmaxfridgetemperature + "]";
 	}
 
 }

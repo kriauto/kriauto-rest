@@ -592,10 +592,7 @@ public class CarDaoImpl implements CarDao {
 				    + " and   p.agencyid = a.id "
 				    + " and   a.id = c.agencyid "
 				    + " and   c.deviceid = ps.deviceid "
-				    + " and   ps.attributes not like '%alarm%' "
-				    + " and   ps.network = 'null' "
-				    + " and   ps.id =  (select MAX(id) from positions where deviceid = ? ) "
-				    + " and   ps.deviceid = c.deviceid ",new Object[] {token,deviceid}, new BeanPropertyRowMapper(Location.class));
+				    + " and   ps.id =  (select MAX(id) from positions where deviceid = ? and   attributes not like '%alarm%' and network = 'null')",new Object[] {token,deviceid}, new BeanPropertyRowMapper(Location.class));
         	return location;
         } catch (EmptyResultDataAccessException e) {
 			return null;

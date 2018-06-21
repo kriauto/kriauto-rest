@@ -1,5 +1,6 @@
 package ma.kriauto.rest.service;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -20,33 +21,57 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.stereotype.Service;
 
+import com.nexmo.client.NexmoClient;
+import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.auth.AuthMethod;
+import com.nexmo.client.auth.TokenAuthMethod;
+import com.nexmo.client.sms.SmsSubmissionResult;
+import com.nexmo.client.sms.messages.TextMessage;
+
 @Service("senderService")
 public class SenderServiceImpl implements SenderService {
 
 	@Override
 	public int sendSms(String from, String to, String message) {
 		System.out.println("from -> "+from+"to -> "+to+"message -> "+message);
-		HttpClient httpClient = HttpClientBuilder.create().build(); //Use this instead 
-		HttpPost request ;
-		HttpResponse response;
-		int status = 0 ;
+//		HttpClient httpClient = HttpClientBuilder.create().build(); //Use this instead 
+//		HttpPost request ;
+//		HttpResponse response;
+//		int status = 0 ;
+//
+//		try {
+//		    request = new HttpPost("http://panel.smspm.com/gateway/c9ecee9259af98dccfef3603371fea26e267739a/api.v1/send?phone="+to+"&sender="+from+"&message="+message+"&output=json");
+//		    response = httpClient.execute(request);
+//		    status = response.getStatusLine().getStatusCode();
+//		    System.out.println("status -> "+response.getStatusLine().getStatusCode());
+//		    // handle response here...
+//		}catch (Exception ex) {
+//		    // handle exception here
+//		} finally {
+//		    httpClient.getConnectionManager().shutdown(); //Deprecated
+//		}
+		AuthMethod auth = new TokenAuthMethod("9db9ffd9", "DKADpFPTj0RJbRq2");
+		NexmoClient client = new NexmoClient(auth);
+		System.out.println("FROM_NUMBER");
 
+		SmsSubmissionResult[] responses;
 		try {
-		    request = new HttpPost("http://panel.smspm.com/gateway/c9ecee9259af98dccfef3603371fea26e267739a/api.v1/send?phone="+to+"&sender="+from+"&message="+message+"&output=json");
-		    response = httpClient.execute(request);
-		    status = response.getStatusLine().getStatusCode();
-		    System.out.println("status -> "+response.getStatusLine().getStatusCode());
-		    // handle response here...
-		}catch (Exception ex) {
-		    // handle exception here
-		} finally {
-		    httpClient.getConnectionManager().shutdown(); //Deprecated
+			responses = client.getSmsClient().submitMessage(new TextMessage(
+			        "kriauto",
+			        to,
+			        message));
+		} catch (IOException | NexmoClientException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		if(status == 200){
+//		for (SmsSubmissionResult response : responses) {
+//		    System.out.println(response);
+//		}
+		//if(responses. == 200){
 		   return 0;
-		}else{
-		   return 1;
-		}
+//		}else{
+//		   return 1;
+//		}
 	}
 
 	@Override
