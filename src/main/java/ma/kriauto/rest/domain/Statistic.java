@@ -2,9 +2,9 @@ package ma.kriauto.rest.domain;
 
 public class Statistic {
 	
-	private Double course;
-	private Double speed;
-	private Double consumption;
+	private double course;
+	private double speed;
+	private double consumption;
 	private Boolean enable;
 	private StatisticValues maximalspeed ;
 	private StatisticValues maximalcourse ;
@@ -17,14 +17,14 @@ public class Statistic {
 		super();
 	}
 
-	public Statistic(Double course, Double speed, Double consumption) {
+	public Statistic(double course, double speed, double consumption) {
 		super();
 		this.course = course;
 		this.speed = speed;
 		this.consumption = consumption;
 	}
 	
-	public Statistic(Double course, Double speed, Double consumption,
+	public Statistic(double course, double speed, double consumption,
 			Boolean enable, StatisticValues maximalspeed,
 			StatisticValues maximalcourse, StatisticValues fuelconsommation,
 			StatisticValues fuellevel, StatisticValues enginetemperature,
@@ -42,27 +42,27 @@ public class Statistic {
 		this.fridgetemperature = fridgetemperature;
 	}
 
-	public Double getCourse() {
+	public double getCourse() {
 		return course;
 	}
 
-	public void setCourse(Double course) {
+	public void setCourse(double course) {
 		this.course = course;
 	}
 
-	public Double getSpeed() {
+	public double getSpeed() {
 		return speed;
 	}
 
-	public void setSpeed(Double speed) {
+	public void setSpeed(double speed) {
 		this.speed = speed;
 	}
 
-	public Double getConsumption() {
+	public double getConsumption() {
 		return consumption;
 	}
 
-	public void setConsumption(Double consumption) {
+	public void setConsumption(double consumption) {
 		this.consumption = consumption;
 	}
 
