@@ -13,6 +13,7 @@ public class Car {
 	private String color;
 	private String photo;
 	private Integer status;
+	private Integer rolling;
 	private Integer deviceid;
 	private Integer mileage;
 	private Double totaldistance;
@@ -56,7 +57,6 @@ public class Car {
 	private Boolean notifminfridgetemperature;
 	private Boolean notifmaxfridgetemperature;
 	
-	
 	public Car() {
 		super();
 	}
@@ -69,22 +69,23 @@ public class Car {
 
 	public Car(Integer id, Integer agencyid, String imei, String simnumber,
 			String immatriculation, String vin, String mark, String model,
-			String color, String photo, Integer status, Integer deviceid,
-			Integer mileage, Double totaldistance, Double course, Double speed,
-			Double consumption, String fuel, Double latitude1,
-			Double longitude1, Double latitude2, Double longitude2,
-			Double latitude3, Double longitude3, Double latitude4,
-			Double longitude4, Double latitude5, Double longitude5,
-			Double latitude6, Double longitude6, String colorcode,
-			String devicetype, Boolean enable, String technicalcontroldate,
-			String emptyingkilometre, String emptyingkilometredate,
-			String insuranceenddate, Double maxspeed, Double maxcourse,
-			Double minlevelfuel, Double maxenginetemperature,
-			Double minfridgetemperature, Double maxfridgetemperature,
-			Boolean notiftechnicalcontroldate, Boolean notifemptyingkilometre,
-			Boolean notifemptyingkilometredate, Boolean notifinsuranceenddate,
-			Boolean notifmaxspeed, Boolean notifmaxcourse,
-			Boolean notifminlevelfuel, Boolean notifmaxenginetemperature,
+			String color, String photo, Integer status, Integer rolling,
+			Integer deviceid, Integer mileage, Double totaldistance,
+			Double course, Double speed, Double consumption, String fuel,
+			Double latitude1, Double longitude1, Double latitude2,
+			Double longitude2, Double latitude3, Double longitude3,
+			Double latitude4, Double longitude4, Double latitude5,
+			Double longitude5, Double latitude6, Double longitude6,
+			String colorcode, String devicetype, Boolean enable,
+			String technicalcontroldate, String emptyingkilometre,
+			String emptyingkilometredate, String insuranceenddate,
+			Double maxspeed, Double maxcourse, Double minlevelfuel,
+			Double maxenginetemperature, Double minfridgetemperature,
+			Double maxfridgetemperature, Boolean notiftechnicalcontroldate,
+			Boolean notifemptyingkilometre, Boolean notifemptyingkilometredate,
+			Boolean notifinsuranceenddate, Boolean notifmaxspeed,
+			Boolean notifmaxcourse, Boolean notifminlevelfuel,
+			Boolean notifmaxenginetemperature,
 			Boolean notifminfridgetemperature, Boolean notifmaxfridgetemperature) {
 		super();
 		this.id = id;
@@ -98,6 +99,7 @@ public class Car {
 		this.color = color;
 		this.photo = photo;
 		this.status = status;
+		this.rolling = rolling;
 		this.deviceid = deviceid;
 		this.mileage = mileage;
 		this.totaldistance = totaldistance;
@@ -141,7 +143,6 @@ public class Car {
 		this.notifminfridgetemperature = notifminfridgetemperature;
 		this.notifmaxfridgetemperature = notifmaxfridgetemperature;
 	}
-
 
 	public Double getTotaldistance() {
 		return totaldistance;
@@ -658,9 +659,16 @@ public class Car {
 		return colorcode;
 	}
 
-
 	public void setColorcode(String colorcode) {
 		this.colorcode = colorcode;
+	}
+	
+	public Integer getRolling() {
+		return rolling;
+	}
+
+	public void setRolling(Integer rolling) {
+		this.rolling = rolling;
 	}
 
 	@Override
@@ -669,35 +677,35 @@ public class Car {
 				+ ", simnumber=" + simnumber + ", immatriculation="
 				+ immatriculation + ", vin=" + vin + ", mark=" + mark
 				+ ", model=" + model + ", color=" + color + ", photo=" + photo
-				+ ", status=" + status + ", deviceid=" + deviceid
-				+ ", mileage=" + mileage + ", totaldistance=" + totaldistance
-				+ ", course=" + course + ", speed=" + speed + ", consumption="
-				+ consumption + ", fuel=" + fuel + ", latitude1=" + latitude1
-				+ ", longitude1=" + longitude1 + ", latitude2=" + latitude2
-				+ ", longitude2=" + longitude2 + ", latitude3=" + latitude3
-				+ ", longitude3=" + longitude3 + ", latitude4=" + latitude4
-				+ ", longitude4=" + longitude4 + ", latitude5=" + latitude5
-				+ ", longitude5=" + longitude5 + ", latitude6=" + latitude6
-				+ ", longitude6=" + longitude6 + ", colorcode=" + colorcode
-				+ ", devicetype=" + devicetype + ", enable=" + enable
-				+ ", technicalcontroldate=" + technicalcontroldate
-				+ ", emptyingkilometre=" + emptyingkilometre
-				+ ", emptyingkilometredate=" + emptyingkilometredate
-				+ ", insuranceenddate=" + insuranceenddate + ", maxspeed="
-				+ maxspeed + ", maxcourse=" + maxcourse + ", minlevelfuel="
-				+ minlevelfuel + ", maxenginetemperature="
-				+ maxenginetemperature + ", minfridgetemperature="
-				+ minfridgetemperature + ", maxfridgetemperature="
-				+ maxfridgetemperature + ", notiftechnicalcontroldate="
-				+ notiftechnicalcontroldate + ", notifemptyingkilometre="
-				+ notifemptyingkilometre + ", notifemptyingkilometredate="
-				+ notifemptyingkilometredate + ", notifinsuranceenddate="
-				+ notifinsuranceenddate + ", notifmaxspeed=" + notifmaxspeed
-				+ ", notifmaxcourse=" + notifmaxcourse + ", notifminlevelfuel="
-				+ notifminlevelfuel + ", notifmaxenginetemperature="
-				+ notifmaxenginetemperature + ", notifminfridgetemperature="
-				+ notifminfridgetemperature + ", notifmaxfridgetemperature="
-				+ notifmaxfridgetemperature + "]";
+				+ ", status=" + status + ", rolling=" + rolling + ", deviceid="
+				+ deviceid + ", mileage=" + mileage + ", totaldistance="
+				+ totaldistance + ", course=" + course + ", speed=" + speed
+				+ ", consumption=" + consumption + ", fuel=" + fuel
+				+ ", latitude1=" + latitude1 + ", longitude1=" + longitude1
+				+ ", latitude2=" + latitude2 + ", longitude2=" + longitude2
+				+ ", latitude3=" + latitude3 + ", longitude3=" + longitude3
+				+ ", latitude4=" + latitude4 + ", longitude4=" + longitude4
+				+ ", latitude5=" + latitude5 + ", longitude5=" + longitude5
+				+ ", latitude6=" + latitude6 + ", longitude6=" + longitude6
+				+ ", colorcode=" + colorcode + ", devicetype=" + devicetype
+				+ ", enable=" + enable + ", technicalcontroldate="
+				+ technicalcontroldate + ", emptyingkilometre="
+				+ emptyingkilometre + ", emptyingkilometredate="
+				+ emptyingkilometredate + ", insuranceenddate="
+				+ insuranceenddate + ", maxspeed=" + maxspeed + ", maxcourse="
+				+ maxcourse + ", minlevelfuel=" + minlevelfuel
+				+ ", maxenginetemperature=" + maxenginetemperature
+				+ ", minfridgetemperature=" + minfridgetemperature
+				+ ", maxfridgetemperature=" + maxfridgetemperature
+				+ ", notiftechnicalcontroldate=" + notiftechnicalcontroldate
+				+ ", notifemptyingkilometre=" + notifemptyingkilometre
+				+ ", notifemptyingkilometredate=" + notifemptyingkilometredate
+				+ ", notifinsuranceenddate=" + notifinsuranceenddate
+				+ ", notifmaxspeed=" + notifmaxspeed + ", notifmaxcourse="
+				+ notifmaxcourse + ", notifminlevelfuel=" + notifminlevelfuel
+				+ ", notifmaxenginetemperature=" + notifmaxenginetemperature
+				+ ", notifminfridgetemperature=" + notifminfridgetemperature
+				+ ", notifmaxfridgetemperature=" + notifmaxfridgetemperature
+				+ "]";
 	}
-
 }
