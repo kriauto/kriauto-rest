@@ -90,6 +90,7 @@ public class ProfileController {
     		currentprofile.setGooglekey(key);
     		profileService.updateProfile(currentprofile);
     		profileService.addPushNotifProfile(profile);
+    		//currentprofile.setPushnotiftoken(profile.getPushnotiftoken());
         	System.out.println("End loginpushnotif -->"+profile);
     		return currentprofile;
     	}
