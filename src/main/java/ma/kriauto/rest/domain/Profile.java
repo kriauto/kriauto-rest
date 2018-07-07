@@ -12,17 +12,17 @@ public class Profile {
 	private String label;
 	private String token;
 	private String pushnotiftoken;
+	private String pushplateforme;
 	private String googlekey;
 	
 	public Profile() {
 		super();
 	}
 
-	
-
 	public Profile(Integer id, Integer agencyid, String login, String password,
 			String name, String mail, String phone, Integer job, String label,
-			String token, String pushnotiftoken, String googlekey) {
+			String token, String pushnotiftoken, String pushplateforme,
+			String googlekey) {
 		super();
 		this.id = id;
 		this.agencyid = agencyid;
@@ -35,6 +35,7 @@ public class Profile {
 		this.label = label;
 		this.token = token;
 		this.pushnotiftoken = pushnotiftoken;
+		this.pushplateforme = pushplateforme;
 		this.googlekey = googlekey;
 	}
 
@@ -125,6 +126,14 @@ public class Profile {
 	public void setPushnotiftoken(String pushnotiftoken) {
 		this.pushnotiftoken = pushnotiftoken;
 	}
+	
+	public String getPushplateforme() {
+		return pushplateforme;
+	}
+
+	public void setPushplateforme(String pushplateforme) {
+		this.pushplateforme = pushplateforme;
+	}
 
 	public String getGooglekey() {
 		return googlekey;
@@ -140,6 +149,7 @@ public class Profile {
 				+ login + ", password=" + password + ", name=" + name
 				+ ", mail=" + mail + ", phone=" + phone + ", job=" + job
 				+ ", label=" + label + ", token=" + token + ", pushnotiftoken="
-				+ pushnotiftoken + ", googlekey=" + googlekey + "]";
+				+ pushnotiftoken + ", pushplateforme=" + pushplateforme
+				+ ", googlekey=" + googlekey + "]";
 	}
 }

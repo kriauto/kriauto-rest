@@ -70,7 +70,7 @@ public class ProfileDaoImpl implements ProfileDao {
 	@Override
 	public void addPushNotifProfile(Profile profile) {
 		System.out.println("addPushNotifProfile "+profile);
-		jdbcTemplate.update("INSERT INTO pushnotification(login, pushnotiftoken) VALUES(?,?) ", new Object[] {profile.getLogin(), profile.getPushnotiftoken()});
+		jdbcTemplate.update("INSERT INTO pushnotification(login, pushnotiftoken,pushplateforme) VALUES(?,?,?) ", new Object[] {profile.getLogin(), profile.getPushnotiftoken(), profile.getPushplateforme()});
 		
 	}
 

@@ -135,6 +135,7 @@ CREATE TABLE pushnotification (
     login varchar(1000),
     pushnotiftoken varchar(1000)
 );
+ALTER TABLE pushnotification ADD COLUMN pushplateforme varchar(1000);
 
 --
 -- Name: agency_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
