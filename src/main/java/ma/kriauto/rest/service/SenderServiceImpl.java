@@ -1,24 +1,17 @@
 package ma.kriauto.rest.service;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
 import ma.kriauto.rest.test.Mailin;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import com.nexmo.client.NexmoClient;
@@ -30,26 +23,13 @@ import com.nexmo.client.sms.messages.TextMessage;
 
 @Service("senderService")
 public class SenderServiceImpl implements SenderService {
+	
+	public final static String AUTH_KEY_FCM = "AAAAGCh6u8g:APA91bGM-jPzZI1BIasa0IdW6SUNCXAa78mWXI0mACvYXmawU5ptyT3iCIjcEhS1_b7V6XaEwsuL-rppJ_AgH_O1Q_XBXttUYoVIlwVamJEr6grmo4qxWGWPMELZar1bRsXCpJCaEaFq";
+	public final static String API_URL_FCM = "https://fcm.googleapis.com/fcm/send";
 
 	@Override
 	public int sendSms(String from, String to, String message) {
 		System.out.println("from -> "+from+"to -> "+to+"message -> "+message);
-//		HttpClient httpClient = HttpClientBuilder.create().build(); //Use this instead 
-//		HttpPost request ;
-//		HttpResponse response;
-//		int status = 0 ;
-//
-//		try {
-//		    request = new HttpPost("http://panel.smspm.com/gateway/c9ecee9259af98dccfef3603371fea26e267739a/api.v1/send?phone="+to+"&sender="+from+"&message="+message+"&output=json");
-//		    response = httpClient.execute(request);
-//		    status = response.getStatusLine().getStatusCode();
-//		    System.out.println("status -> "+response.getStatusLine().getStatusCode());
-//		    // handle response here...
-//		}catch (Exception ex) {
-//		    // handle exception here
-//		} finally {
-//		    httpClient.getConnectionManager().shutdown(); //Deprecated
-//		}
 		AuthMethod auth = new TokenAuthMethod("9db9ffd9", "DKADpFPTj0RJbRq2");
 		NexmoClient client = new NexmoClient(auth);
 		System.out.println("FROM_NUMBER");
@@ -120,6 +100,52 @@ public class SenderServiceImpl implements SenderService {
 		String str = http.send_email(data);
 		System.out.println(str);
 		return 1;
+	}
+
+	@Override
+	public int sendPushNotification(String pushToken, String message) throws IOException {
+		int result = 1;
+        URL url = new URL(API_URL_FCM);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+ 
+        conn.setUseCaches(false);
+        conn.setDoInput(true);
+        conn.setDoOutput(true);
+ 
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Authorization", "key=" + AUTH_KEY_FCM);
+        conn.setRequestProperty("Content-Type", "application/json");
+ 
+        
+        try {
+        	JSONObject json = new JSONObject();
+        	 
+            json.put("to", pushToken.trim());
+            JSONObject info = new JSONObject();
+            //info.put("title", "notification title"); // Notification title
+            info.put("body", message); // Notification
+                                                                    // body
+            json.put("notification", info);
+            OutputStreamWriter wr = new OutputStreamWriter(
+                    conn.getOutputStream());
+            wr.write(json.toString());
+            wr.flush();
+ 
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+ 
+            String output;
+            System.out.println("Output from Server .... \n");
+            while ((output = br.readLine()) != null) {
+                System.out.println(output);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = 0;
+        }
+        System.out.println("GCM Notification is sent successfully");
+ 
+        return result;
 	}
 
 }

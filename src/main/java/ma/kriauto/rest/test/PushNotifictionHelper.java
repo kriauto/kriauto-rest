@@ -61,8 +61,8 @@ public final static String API_URL_FCM = "https://fcm.googleapis.com/fcm/send";
         return result;
 }
     public static void main(String[] args){
-    	String token = "dhUF18ynK_U:APA91bF-7O1HmueduVCl3HWIIW7yKXGW7z5DfM4z7Er698zTdgd0cWT_Q3newSCCWV_WHVOVQeOmiH0b9E8uCBm9G58z2pq2L6jKS4BKZu3SI9xKoqvPaouIEPt-Y7xd3Jxdxpxj"
-                       +"yLVxPJaCQ4qVh0l29TSjw-PNvg";
+    	String token = "dhUF18ynK_U:APA91bF-7O1HmueduVCl3HWIIW7yKXGW7z5DfM4z7Er698zTdgd0cWT_Q3newSCCWV_WHVOVQeOmiH0b9E8uCBm9G58z2pq2L6jKS4BKZu3SI9xKoqvPaouIEPt-Y7xd3"
+                       +"JxdxpxjyLVxPJaCQ4qVh0l29TSjw-PNvg";
 //    	String token = "8e44805c397a33b88b340730361b9bd674fd64a582219ee78cc57d597ba4a625";
     	try {
 			sendPushNotification(token);

@@ -1,5 +1,7 @@
 package ma.kriauto.rest.controller;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -156,6 +158,23 @@ public class ProfileController {
     	String message = "Bonjour "+profiletmp.getName()+", <br/><br/> Veuillez trouver vos identifiants de connexion : <br/><br/> - login : "+profiletmp.getLogin()+" <br/> - Mot de passe : "+profiletmp.getPassword()+" <br/><br/> l'équipe KriAuto.";
     	senderService.sendMail(from, to, subject, message);
     	return new ResponseMessage(ResponseMessage.Type.success, "PASSWORD_SEND",Constant.getLabels().get("PASSWORD_SEND").toString());
+    }
+	
+	@RequestMapping(value = "/pushnotification", method = RequestMethod.GET)
+    @ResponseBody
+    public void pushnotification() {
+    	System.out.println("Begin pushnotification -->");
+    	String token1 = "dhUF18ynK_U:APA91bF-7O1HmueduVCl3HWIIW7yKXGW7z5DfM4z7Er698zTdgd0cWT_Q3newSCCWV_WHVOVQeOmiH0b9E8uCBm9G58z2pq2L6jKS4BKZu3SI9xKoqvPaouIEPt-Y7xd3"
+                       +"JxdxpxjyLVxPJaCQ4qVh0l29TSjw-PNvg";
+    	String token2 = "eQpUHiw3Hfw:APA91bEFZnHHbyZYuTJSY7kHAbbrrPr-ldTmRT7BSY3knO78f2IJR1K590hVHFo54HWerlRSQ4DdPJDoljr15tArS13bVhn2tbGYtnwjNomQ7Xw8DPtblCWEAOC6OHRkM"
+    	               +"JrjF2xJlVoOc8a2FSA3F0udkwiyAtLdYg";
+    	try {
+			senderService.sendPushNotification(token1, "ceci est un teste de notif pour abdelhaq");
+			senderService.sendPushNotification(token2, "ceci est un teste de notif pour haitam");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
 }
