@@ -181,6 +181,7 @@ public class CarDaoImpl implements CarDao {
 				+ " and   ps.deviceid = ? "
 				+ " and   ps.attributes not like '%alarm%' "
 				+ " and   ps.network = 'null' "
+				+ " and   ps.valid = true "
 				+ " and   to_char(ps.fixtime -'1 hour'::interval,'YYYY-MM-DD') = '"+ date + "'"
 				+ " order by servertime ",new Object[] {token,deviceid}, new BeanPropertyRowMapper(Location.class));
 
