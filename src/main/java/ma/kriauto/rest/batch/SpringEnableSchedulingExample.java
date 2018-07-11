@@ -1,35 +1,125 @@
-//package ma.kriauto.rest.batch;
-//
-//import java.text.SimpleDateFormat;
-//import java.util.Calendar;
-//import java.util.Date;
-//import java.util.List;
-//
-//import ma.kriauto.rest.domain.Car;
-//import ma.kriauto.rest.domain.Location;
-//import ma.kriauto.rest.domain.Notification;
-//import ma.kriauto.rest.service.CarService;
-//import ma.kriauto.rest.service.NotificationService;
-//import ma.kriauto.rest.service.SenderService;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.scheduling.annotation.EnableScheduling;
-//import org.springframework.scheduling.annotation.Scheduled;
-// 
-//@Configuration
-//@EnableScheduling
-//public class SpringEnableSchedulingExample {
-//	
-//	@Autowired
-//	CarService carservice;
-//	
-//	@Autowired
-//	SenderService senderservice;
-//	
-//	@Autowired
-//	NotificationService notificationservice;
-// 
+package ma.kriauto.rest.batch;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
+import ma.kriauto.rest.domain.Car;
+import ma.kriauto.rest.domain.Location;
+import ma.kriauto.rest.domain.Notification;
+import ma.kriauto.rest.domain.Profile;
+import ma.kriauto.rest.service.CarService;
+import ma.kriauto.rest.service.NotificationService;
+import ma.kriauto.rest.service.ProfileService;
+import ma.kriauto.rest.service.SenderService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+ 
+@Configuration
+@EnableScheduling
+public class SpringEnableSchedulingExample {
+	
+	@Autowired
+	ProfileService profileservice;
+	
+	@Autowired
+	CarService carservice;
+	
+	@Autowired
+	NotificationService notificationservice;
+	
+	@Autowired
+	SenderService senderservice;
+	
+	/**** Technical Controle Notifications ***/
+	@Scheduled(cron = "00 00 12 * * *")
+    public void technicalControleNotifications() throws IOException {
+       List<Profile> profiles = profileservice.getAllProfiles();
+       for(int i=0; i < profiles.size(); i++){
+    	   Profile profile = profiles.get(i);
+    	   System.out.println("Profile --> " + profile);
+    	   if(null != profile && null != profile.getLogin()){
+    		   List<Notification> notifications = notificationservice.getPushTokenByUser(profile.getLogin());
+    		   List<Car> cars = carservice.getAllCarsByUser(profile.getLogin());
+    		   for(int j=0; j<cars.size(); j++){
+    			   Car car = cars.get(j);
+    			   if(null != car && null != car.getTechnicalcontroldate()){
+						try {
+							 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE);
+							 Date now = new Date();
+	    				     Date currentdate = sdf.parse(sdf.format(now));
+	    				     Date technicaldate = sdf.parse(car.getTechnicalcontroldate());
+							 long diffInMillies = technicaldate.getTime() - currentdate.getTime();
+		    				 long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+		    				 System.out.println("diff --> "+car.getTechnicalcontroldate()+" "+ diff);
+		    				 if(0<= diff && diff <=15 && car.getNotiftechnicalcontroldate()){
+		    					 for(int k=0; k<notifications.size(); k++){
+		    					   Notification notification = notifications.get(k);
+		    					   if(null != notification && null != notification.getPushnotiftoken()){
+		    						  String message = "La prochain date de controle technique est dans "+diff+" jour(s) : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
+		    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), "");
+		    					   }
+		    					 }
+		    				 }
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+    			   }
+    		   }
+    	   }
+       }
+    }
+	
+	/**** Empting kilometre ***/
+	@Scheduled(fixedDelay = 3600000)
+    public void EmptyKilometreNotifications() {
+       List<Profile> profiles = profileservice.getAllProfiles();
+       for(int i=0; i < profiles.size(); i++){
+    	   Profile profile = profiles.get(i);
+    	   System.out.println("Profile --> " + profile);
+    	   if(null != profile && null != profile.getLogin()){
+    		   List<Car> cars = carservice.getAllCarsByUser(profile.getLogin());
+    		   for(int j=0; j<cars.size(); j++){
+    			   Car car = cars.get(j);
+    			   if(null != car){
+    				   System.out.println("car --> " + car);
+					    Calendar calendar = Calendar.getInstance();
+					    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        Integer deviceid = car.getDeviceid();
+                        String token = profile.getToken();
+                        for(int k=0; k<200; k++){
+                        	calendar.add(Calendar.DATE, -(k+35));
+                        	String date = sdf.format(calendar.getTime());
+                        	double cours = 0.0;
+                        	List<Location> locations = carservice.getAllLocationsByCar(deviceid, date, token);
+                    		for(int v =0; v < locations.size(); v++){
+                    			if( v != 0){
+                    			  double dist = carservice.distance(locations.get(v-1).getLatitude(), locations.get(v-1).getLongitude(), locations.get(v).getLatitude(), locations.get(v).getLongitude(), 'K');
+                    			  if(dist <= 1){
+                    			    cours = cours + dist;
+                    			  }
+                    			}
+                    		}
+                    		Car currentcar = carservice.getCarByDevice(deviceid, token);
+                    		currentcar.setTotaldistance(cours);
+                    		carservice.updateCar(currentcar);
+                    		System.out.println("Profile --> " + profile);
+                        }
+    			   }
+    		   }
+    	   }
+       }
+    }
+ 
 //	@Scheduled(fixedDelay = 60000)
 //    public void executeStopEngine() {
 //        System.out.println("Start Start/Stop Job " + new Date());
@@ -254,4 +344,4 @@
 ////        }
 ////	    return inBound;
 ////	}
-//}
+}

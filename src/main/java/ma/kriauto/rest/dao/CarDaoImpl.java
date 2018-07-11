@@ -59,7 +59,7 @@ public class CarDaoImpl implements CarDao {
 	     		+ ", longitude2 =  ?, latitude3 =  ?, longitude3 =  ?, latitude4 =  ?"
 	     		+ ", longitude4 =  ?, latitude5 =  ?, longitude5 =  ?, latitude6 =  ?"
 	     		+ ", longitude6 =  ?, technicalcontroldate = ?, emptyingkilometre = ?, emptyingkilometredate = ?"
-	     		+ ", insuranceenddate = ?, maxspeed = ?, maxcourse = ?, minlevelfuel = ?, maxenginetemperature = ?"
+	     		+ ", insuranceenddate = ?, maxspeed = ?, maxcourse = ?, totaldistance = ?, minlevelfuel = ?, maxenginetemperature = ?"
 	     		+ ", minfridgetemperature = ?, maxfridgetemperature = ?, notiftechnicalcontroldate = ?, notifemptyingkilometre = ?"
 	     		+ ", notifinsuranceenddate = ?, notifmaxspeed = ?, notifmaxcourse = ?"  
 	     		+ ", notifminlevelfuel = ?, notifmaxenginetemperature = ?, notifminfridgetemperature = ?, notifmaxfridgetemperature = ?"   
@@ -72,7 +72,7 @@ public class CarDaoImpl implements CarDao {
 	     		, car.getLongitude3(), car.getLatitude4(), car.getLongitude4(), car.getLatitude5()
 	     		, car.getLongitude5(), car.getLatitude6(), car.getLongitude6(), car.getTechnicalcontroldate()
 	     		, car.getEmptyingkilometre(), car.getEmptyingkilometredate(), car.getInsuranceenddate()
-	     		, car.getMaxspeed(), car.getMaxcourse(), car.getMinlevelfuel(), car.getMaxenginetemperature()
+	     		, car.getMaxspeed(), car.getMaxcourse(), car.getTotaldistance(), car.getMinlevelfuel(), car.getMaxenginetemperature()
 	     		, car.getMinfridgetemperature(), car.getMaxfridgetemperature(), car.getNotiftechnicalcontroldate()
 	     		, car.getEmptyingkilometre(), car.getNotifinsuranceenddate(), car.getNotifmaxspeed(), car.getNotifmaxcourse()
 	     		, car.getNotifminlevelfuel(), car.getNotifmaxenginetemperature(), car.getNotifminfridgetemperature()
@@ -94,6 +94,15 @@ public class CarDaoImpl implements CarDao {
 				+ " and a.id = c.agencyid order by c.immatriculation",
 				new Object[] { token }, new BeanPropertyRowMapper(Car.class));
 		cars.addAll(carstmp);
+		return cars;
+	}
+	
+	@Override
+	public List<Car> getAllCarsByUser(String login) {
+		System.out.println("getAllCarsByUser " + login);
+		List<Car> cars = new ArrayList<Car>();
+		cars = jdbcTemplate.query("SELECT c.* "
+				+" FROM profile p, car c  WHERE p.login = ? and p.agencyid = c.agencyid ",new Object[] { login }, new BeanPropertyRowMapper(Car.class));
 		return cars;
 	}
 

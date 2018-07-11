@@ -1,5 +1,7 @@
 package ma.kriauto.rest.service;
 
+import java.util.List;
+
 import ma.kriauto.rest.domain.Profile;
 
 public interface ProfileService {
@@ -10,6 +12,7 @@ public interface ProfileService {
 	public void updateProfile (Profile profile);
 	public void addPushNotifProfile (Profile profile);
 	public void deletePushNotifProfile (Profile profile);
+	public List<Profile> getAllProfiles();
 	public String sendPassword(String to, String from, String subject, String content);
 	public String hash256Profile(Profile profile);
 	public String getKeyMap();
