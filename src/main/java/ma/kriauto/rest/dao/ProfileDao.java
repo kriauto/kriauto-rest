@@ -1,5 +1,7 @@
 package ma.kriauto.rest.dao;
 
+import java.util.List;
+
 import ma.kriauto.rest.domain.Profile;
 
 public interface ProfileDao {
@@ -10,4 +12,5 @@ public interface ProfileDao {
 	public void updateProfile (Profile profile);
 	public void addPushNotifProfile (Profile profile);
 	public void deletePushNotifProfile (Profile profile);
+	public List<Profile> getAllProfiles();
 }

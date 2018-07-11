@@ -6,5 +6,7 @@ import ma.kriauto.rest.domain.Notification;
 
 public interface NotificationService {
 	public void addNotification(Notification notification);
-	public List<Notification> getNotificationByDevice(Integer deviceid);
+	public List<Notification> getNotificationByDevice(Integer deviceid, String date);
+	public List<Notification> getPushTokenByUser(String login);
+
 }

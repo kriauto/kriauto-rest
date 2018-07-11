@@ -1,5 +1,9 @@
 package ma.kriauto.rest.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import ma.kriauto.rest.domain.Car;
 import ma.kriauto.rest.domain.Profile;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,5 +83,14 @@ public class ProfileDaoImpl implements ProfileDao {
 		System.out.println("deletePushNotifProfile "+profile);
 		jdbcTemplate.update("DELETE FROM pushnotification WHERE login = ? and pushnotiftoken = ?", new Object[] {profile.getLogin(), profile.getPushnotiftoken()});
 		
+	}
+
+	@Override
+	public List<Profile> getAllProfiles() {
+		// TODO Auto-generated method stub
+		System.out.println("getAllProfiles");
+		List<Profile> profiles = new ArrayList<Profile>();
+		profiles = jdbcTemplate.query("SELECT * FROM profile ",new Object[] {  }, new BeanPropertyRowMapper(Profile.class));
+		return profiles;
 	}
 }

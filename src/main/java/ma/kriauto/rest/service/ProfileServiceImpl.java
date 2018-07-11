@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.List;
 
 import ma.kriauto.rest.dao.ProfileDao;
 import ma.kriauto.rest.domain.Profile;
@@ -60,6 +61,12 @@ public class ProfileServiceImpl implements ProfileService {
 		// TODO Auto-generated method stub
 		profiledao.deletePushNotifProfile(profile);
 	}
+	
+	@Override
+	public List<Profile> getAllProfiles() {
+		// TODO Auto-generated method stub
+		return profiledao.getAllProfiles();
+	}
 
 	@Override
 	public String sendPassword(String to, String from, String subject,
@@ -101,7 +108,4 @@ public class ProfileServiceImpl implements ProfileService {
 		}
 		return key ;
 	}
-
-	
-
 }

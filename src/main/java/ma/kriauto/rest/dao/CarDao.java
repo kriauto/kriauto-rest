@@ -16,6 +16,7 @@ public interface CarDao {
 	public Car getCarByDevice(Integer deviceid, String token);
 	public void updateCar(Car car);
 	public List<Car> getAllCarsByToken(boolean group, String token);
+	public List<Car> getAllCarsByUser(String login);
 	public List<Item> getAllDatesByCar(Integer deviceid);
 	public List<Item> getAllDatesByToken(String token);
 	public List<Location> getAllLocationsByToken(String token, String date);

@@ -16,6 +16,7 @@ public interface CarService {
 	public Car getCarByDevice(Integer deviceid, String token);
 	public void updateCar(Car car);
 	public List<Car> getAllCarsByToken(boolean group, String token);
+	public List<Car> getAllCarsByUser(String login);
 	public List<Item> getAllDatesByCar(Integer deviceid);
 	public List<Item> getAllDatesByToken(String token);
 	public List<Location> getAllLocationsByToken(String token, String date);
@@ -38,4 +39,5 @@ public interface CarService {
 	public Location getLastLocationByCar(Integer deviceid, String token);
 	public String getGoodleAdresse(Double Lat, Double Lng);
 	public Event getLastEvent(Integer deviceid);
+	public double distance(double lat1, double lon1, double lat2, double lon2, char unit);
 }

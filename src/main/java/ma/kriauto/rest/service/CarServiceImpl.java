@@ -76,6 +76,12 @@ public class CarServiceImpl implements CarService {
 		}
 		return cars;
 	}
+	
+	@Override
+	public List<Car> getAllCarsByUser(String login) {
+		// TODO Auto-generated method stub
+		return cardao.getAllCarsByUser(login);
+	}
 
 	@Override
 	public List<Item> getAllDatesByCar(Integer deviceid) {
@@ -208,5 +214,11 @@ public class CarServiceImpl implements CarService {
 	public Location getLastLocationByCar(Integer deviceid,String token) {
 		// TODO Auto-generated method stub
 		return cardao.getLastLocationByCar(deviceid,token);
+	}
+
+	@Override
+	public double distance(double lat1, double lon1, double lat2, double lon2,char unit) {
+		// TODO Auto-generated method stub
+		return cardao.distance(lat1, lon1, lat2, lon2, unit);
 	}
 }

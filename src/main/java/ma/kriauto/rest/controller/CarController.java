@@ -231,7 +231,7 @@ public class CarController {
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
     	List<Notification> notification = new ArrayList<Notification>();
-    	notification = notificationService.getNotificationByDevice(deviceid);
+    	notification = notificationService.getNotificationByDevice(deviceid,null);
     	return notification;
     }
 	

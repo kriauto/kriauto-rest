@@ -30,18 +30,30 @@ public class NotificationDaoImpl implements NotificationDao {
 	}
 
 	@Override
-	public List<Notification> getNotificationByDevice(Integer deviceid) {
+	public List<Notification> getNotificationByDevice(Integer deviceid, String date) {
 		System.out.println("getNotificationByDevice " + deviceid);
-		GregorianCalendar date = new GregorianCalendar();
-		date.add(Calendar.MONTH, -1);
+		GregorianCalendar currentdate = new GregorianCalendar();
+		currentdate.add(Calendar.MONTH, -1);
 		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
-		String day = formater.format(date.getTime());
+		String day = formater.format(currentdate.getTime());
 		List<Notification> notifications = new ArrayList<Notification>();
 		notifications = jdbcTemplate.query(" select to_char(creationdate , 'YYYY-MM-DD HH24:MI:SS') AS creationdate, texte "
 						+ "  from  messages" 
 				        + "  where deviceid = ? "
 						+ "  and   to_char(creationdate,'YYYY-MM-DD') >= '"
 						+ day + "'" + " order by creationdate desc",new Object[] { deviceid }, new BeanPropertyRowMapper(Notification.class));
+		return notifications;
+	}
+
+	@Override
+	public List<Notification> getPushTokenByUser(String login) {
+		System.out.println("getPushTokenByUser " + login);
+		GregorianCalendar date = new GregorianCalendar();
+		date.add(Calendar.MONTH, -1);
+		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+		String day = formater.format(date.getTime());
+		List<Notification> notifications = new ArrayList<Notification>();
+		notifications = jdbcTemplate.query(" SELECT * FROM pushnotification WHERE login = ? ",new Object[] {login}, new BeanPropertyRowMapper(Notification.class));
 		return notifications;
 	}
 
