@@ -180,7 +180,6 @@ public class CarDaoImpl implements CarDao {
 				+ " and   c.deviceid = ps.deviceid" 
 				+ " and   ps.deviceid = ? "
 				+ " and   ps.attributes not like '%alarm%' "
-				+ " and   ps.network = 'null' "
 				+ " and   ps.valid = true "
 				+ " and   to_char(ps.fixtime -'1 hour'::interval,'YYYY-MM-DD') = '"+ date + "'"
 				+ " order by servertime ",new Object[] {token,deviceid}, new BeanPropertyRowMapper(Location.class));
@@ -237,7 +236,7 @@ public class CarDaoImpl implements CarDao {
 			if(0 == i){
 				log = locations.get(i).getLongitude();
 				lat = locations.get(i).getLatitude();
-				if(null != locations.get(i).getAttributes() && getDistance(locations.get(i).getAttributes()) <= 500){
+				if(null != locations.get(i).getAttributes() && locations.get(i).getAttributes().indexOf("temp1") == 0  && getDistance(locations.get(i).getAttributes()) <= 500){
 				   locations1.add(locations.get(i));
 				}
 			}else{
