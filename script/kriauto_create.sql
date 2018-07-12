@@ -69,10 +69,12 @@ ALTER TABLE car DROP COLUMN isnotifgeofence RESTRICT;
 ALTER TABLE car DROP COLUMN isnotifdefaultgeofence RESTRICT;
 
 ALTER TABLE car ADD COLUMN totaldistance decimal;
+ALTER TABLE car ADD COLUMN emptyingtotaldistance decimal;
 ALTER TABLE car ADD COLUMN enable boolean;
 ALTER TABLE car ADD COLUMN technicalcontroldate date;
 ALTER TABLE car ADD COLUMN emptyingkilometre decimal;
 ALTER TABLE car ADD COLUMN emptyingkilometredate date;
+ALTER TABLE car ADD COLUMN emptyingkilometreindex integer;
 ALTER TABLE car ADD COLUMN insuranceenddate date;
 ALTER TABLE car ADD COLUMN maxspeed decimal;
 ALTER TABLE car ADD COLUMN maxcourse decimal;
@@ -83,7 +85,6 @@ ALTER TABLE car ADD COLUMN maxfridgetemperature decimal;
 
 ALTER TABLE car ADD COLUMN notiftechnicalcontroldate boolean;
 ALTER TABLE car ADD COLUMN notifemptyingkilometre boolean;
-ALTER TABLE car ADD COLUMN emptyingkilometredate boolean;
 ALTER TABLE car ADD COLUMN notifinsuranceenddate boolean;
 ALTER TABLE car ADD COLUMN notifmaxspeed boolean;
 ALTER TABLE car ADD COLUMN notifmaxcourse boolean;

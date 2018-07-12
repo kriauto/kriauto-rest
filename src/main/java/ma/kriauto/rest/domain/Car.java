@@ -17,6 +17,7 @@ public class Car {
 	private Integer deviceid;
 	private Integer mileage;
 	private Double totaldistance;
+	private Double emptyingtotaldistance;
 	private Double course;
 	private Double speed;
 	private Double consumption;
@@ -37,8 +38,9 @@ public class Car {
 	private String devicetype;
 	private Boolean enable;
 	private String  technicalcontroldate;
-	private String emptyingkilometre;
-	private String emptyingkilometredate;
+	private Double  emptyingkilometre;
+	private Integer  emptyingkilometreindex;
+	private String  emptyingkilometredate; 
 	private String insuranceenddate;
 	private Double maxspeed;
 	private Double maxcourse;
@@ -71,13 +73,14 @@ public class Car {
 			String immatriculation, String vin, String mark, String model,
 			String color, String photo, Integer status, Integer rolling,
 			Integer deviceid, Integer mileage, Double totaldistance,
-			Double course, Double speed, Double consumption, String fuel,
-			Double latitude1, Double longitude1, Double latitude2,
-			Double longitude2, Double latitude3, Double longitude3,
-			Double latitude4, Double longitude4, Double latitude5,
-			Double longitude5, Double latitude6, Double longitude6,
-			String colorcode, String devicetype, Boolean enable,
-			String technicalcontroldate, String emptyingkilometre,
+			Double emptyingtotaldistance, Double course, Double speed,
+			Double consumption, String fuel, Double latitude1,
+			Double longitude1, Double latitude2, Double longitude2,
+			Double latitude3, Double longitude3, Double latitude4,
+			Double longitude4, Double latitude5, Double longitude5,
+			Double latitude6, Double longitude6, String colorcode,
+			String devicetype, Boolean enable, String technicalcontroldate,
+			Double emptyingkilometre, Integer emptyingkilometreindex,
 			String emptyingkilometredate, String insuranceenddate,
 			Double maxspeed, Double maxcourse, Double minlevelfuel,
 			Double maxenginetemperature, Double minfridgetemperature,
@@ -103,6 +106,7 @@ public class Car {
 		this.deviceid = deviceid;
 		this.mileage = mileage;
 		this.totaldistance = totaldistance;
+		this.emptyingtotaldistance = emptyingtotaldistance;
 		this.course = course;
 		this.speed = speed;
 		this.consumption = consumption;
@@ -124,6 +128,7 @@ public class Car {
 		this.enable = enable;
 		this.technicalcontroldate = technicalcontroldate;
 		this.emptyingkilometre = emptyingkilometre;
+		this.emptyingkilometreindex = emptyingkilometreindex;
 		this.emptyingkilometredate = emptyingkilometredate;
 		this.insuranceenddate = insuranceenddate;
 		this.maxspeed = maxspeed;
@@ -639,11 +644,11 @@ public class Car {
 		this.speed = speed;
 	}
 
-	public String getEmptyingkilometre() {
+	public Double getEmptyingkilometre() {
 		return emptyingkilometre;
 	}
 
-	public void setEmptyingkilometre(String emptyingkilometre) {
+	public void setEmptyingkilometre(Double emptyingkilometre) {
 		this.emptyingkilometre = emptyingkilometre;
 	}
 
@@ -670,6 +675,22 @@ public class Car {
 	public void setRolling(Integer rolling) {
 		this.rolling = rolling;
 	}
+	
+	public Double getEmptyingtotaldistance() {
+		return emptyingtotaldistance;
+	}
+
+	public void setEmptyingtotaldistance(Double emptyingtotaldistance) {
+		this.emptyingtotaldistance = emptyingtotaldistance;
+	}
+
+	public Integer getEmptyingkilometreindex() {
+		return emptyingkilometreindex;
+	}
+
+	public void setEmptyingkilometreindex(Integer emptyingkilometreindex) {
+		this.emptyingkilometreindex = emptyingkilometreindex;
+	}
 
 	@Override
 	public String toString() {
@@ -679,8 +700,9 @@ public class Car {
 				+ ", model=" + model + ", color=" + color + ", photo=" + photo
 				+ ", status=" + status + ", rolling=" + rolling + ", deviceid="
 				+ deviceid + ", mileage=" + mileage + ", totaldistance="
-				+ totaldistance + ", course=" + course + ", speed=" + speed
-				+ ", consumption=" + consumption + ", fuel=" + fuel
+				+ totaldistance + ", emptyingtotaldistance="
+				+ emptyingtotaldistance + ", course=" + course + ", speed="
+				+ speed + ", consumption=" + consumption + ", fuel=" + fuel
 				+ ", latitude1=" + latitude1 + ", longitude1=" + longitude1
 				+ ", latitude2=" + latitude2 + ", longitude2=" + longitude2
 				+ ", latitude3=" + latitude3 + ", longitude3=" + longitude3
@@ -690,7 +712,8 @@ public class Car {
 				+ ", colorcode=" + colorcode + ", devicetype=" + devicetype
 				+ ", enable=" + enable + ", technicalcontroldate="
 				+ technicalcontroldate + ", emptyingkilometre="
-				+ emptyingkilometre + ", emptyingkilometredate="
+				+ emptyingkilometre + ", emptyingkilometreindex="
+				+ emptyingkilometreindex + ", emptyingkilometredate="
 				+ emptyingkilometredate + ", insuranceenddate="
 				+ insuranceenddate + ", maxspeed=" + maxspeed + ", maxcourse="
 				+ maxcourse + ", minlevelfuel=" + minlevelfuel

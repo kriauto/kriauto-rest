@@ -81,10 +81,9 @@ public class SpringEnableSchedulingExample {
        }
     }
 	
-	/**** Empting kilometre 
-	 * @throws ParseException ***/
+	/**** Empting kilometre * @throws ParseException ***/
 	@Scheduled(cron = "00 00 01 * * *")
-    public void EmptyKilometreNotifications() throws ParseException {
+    public void calculateTotalDistance() throws ParseException {
        List<Profile> profiles = profileservice.getAllProfiles();
        for(int i=0; i < profiles.size(); i++){
     	   Profile profile = profiles.get(i);
@@ -94,6 +93,38 @@ public class SpringEnableSchedulingExample {
     		   for(int j=0; j<cars.size(); j++){
     			   Car car = cars.get(j);
     			   if(null != car){
+    				    //System.out.println("car --> " + car);
+					    Calendar calendar = Calendar.getInstance();
+					    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        Integer deviceid = car.getDeviceid();
+                        String token = profile.getToken();
+                        for(int k=1; k<=1; k++){
+                        	calendar = Calendar.getInstance();
+                        	calendar.add(Calendar.DATE, -k);
+                        	String date = sdf.format(calendar.getTime());
+                        	Statistic statistic = carservice.getCarStatistic(deviceid, date, token);
+                    		Car currentcar = carservice.getCarByDevice(deviceid, token);
+                    		currentcar.setTotaldistance(Double.valueOf(Math.round(statistic.getCourse()+currentcar.getTotaldistance())));
+                    		carservice.updateCar(currentcar);
+                    		//System.out.println("Profile --> " + profile+"course  "+statistic.getCourse()+" k"+k+"date "+date);
+                        }
+    			   }
+    		   }
+    	   }
+       }
+    }
+	
+	@Scheduled(cron = "00 00 01 * * *")
+    public void emptyKilometreNotifications() throws ParseException {
+       List<Profile> profiles = profileservice.getAllProfiles();
+       for(int i=0; i < profiles.size(); i++){
+    	   Profile profile = profiles.get(i);
+    	   //System.out.println("Profile --> " + profile);
+    	   if(null != profile && null != profile.getLogin()){
+    		   List<Car> cars = carservice.getAllCarsByUser(profile.getLogin());
+    		   for(int j=0; j<cars.size(); j++){
+    			   Car car = cars.get(j);
+    			   if(null != car && car.getNotifemptyingkilometre() == true && car.getTotaldistance() > 0 && car.getEmptyingkilometre() >0){
     				   System.out.println("car --> " + car);
 					    Calendar calendar = Calendar.getInstance();
 					    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
