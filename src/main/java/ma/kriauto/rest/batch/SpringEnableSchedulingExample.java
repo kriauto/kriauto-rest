@@ -110,7 +110,7 @@ public class SpringEnableSchedulingExample {
                     			}
                     		}
                     		Car currentcar = carservice.getCarByDevice(deviceid, token);
-                    		currentcar.setTotaldistance(cours);
+                    		currentcar.setTotaldistance(cours+currentcar.getTotaldistance());
                     		carservice.updateCar(currentcar);
                     		System.out.println("Profile --> " + profile);
                         }
