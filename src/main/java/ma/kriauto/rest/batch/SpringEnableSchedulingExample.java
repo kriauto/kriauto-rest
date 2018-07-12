@@ -13,6 +13,8 @@ import ma.kriauto.rest.domain.Car;
 import ma.kriauto.rest.domain.Location;
 import ma.kriauto.rest.domain.Notification;
 import ma.kriauto.rest.domain.Profile;
+import ma.kriauto.rest.domain.Statistic;
+import ma.kriauto.rest.domain.StatisticValues;
 import ma.kriauto.rest.service.CarService;
 import ma.kriauto.rest.service.NotificationService;
 import ma.kriauto.rest.service.ProfileService;
@@ -79,13 +81,14 @@ public class SpringEnableSchedulingExample {
        }
     }
 	
-	/**** Empting kilometre ***/
-	@Scheduled(fixedDelay = 3600000)
-    public void EmptyKilometreNotifications() {
+	/**** Empting kilometre 
+	 * @throws ParseException ***/
+	@Scheduled(cron = "00 00 01 * * *")
+    public void EmptyKilometreNotifications() throws ParseException {
        List<Profile> profiles = profileservice.getAllProfiles();
        for(int i=0; i < profiles.size(); i++){
     	   Profile profile = profiles.get(i);
-    	   System.out.println("Profile --> " + profile);
+    	   //System.out.println("Profile --> " + profile);
     	   if(null != profile && null != profile.getLogin()){
     		   List<Car> cars = carservice.getAllCarsByUser(profile.getLogin());
     		   for(int j=0; j<cars.size(); j++){
@@ -96,23 +99,15 @@ public class SpringEnableSchedulingExample {
 					    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                         Integer deviceid = car.getDeviceid();
                         String token = profile.getToken();
-                        for(int k=0; k<200; k++){
-                        	calendar.add(Calendar.DATE, -(k+35));
+                        for(int k=1; k<=1; k++){
+                        	calendar = Calendar.getInstance();
+                        	calendar.add(Calendar.DATE, -k);
                         	String date = sdf.format(calendar.getTime());
-                        	double cours = 0.0;
-                        	List<Location> locations = carservice.getAllLocationsByCar(deviceid, date, token);
-                    		for(int v =0; v < locations.size(); v++){
-                    			if( v != 0){
-                    			  double dist = carservice.distance(locations.get(v-1).getLatitude(), locations.get(v-1).getLongitude(), locations.get(v).getLatitude(), locations.get(v).getLongitude(), 'K');
-                    			  if(dist <= 1){
-                    			    cours = cours + dist;
-                    			  }
-                    			}
-                    		}
+                        	Statistic statistic = carservice.getCarStatistic(deviceid, date, token);
                     		Car currentcar = carservice.getCarByDevice(deviceid, token);
-                    		currentcar.setTotaldistance(cours+currentcar.getTotaldistance());
+                    		currentcar.setTotaldistance(Double.valueOf(Math.round(statistic.getCourse()+currentcar.getTotaldistance())));
                     		carservice.updateCar(currentcar);
-                    		System.out.println("Profile --> " + profile);
+                    		//System.out.println("Profile --> " + profile+"course  "+statistic.getCourse()+" k"+k+"date "+date);
                         }
     			   }
     		   }

@@ -1,5 +1,6 @@
 package ma.kriauto.rest.controller;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,7 +79,7 @@ public class CarController {
 	
 	@RequestMapping(value = "/updateMaintenance", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseMessage updateMaintenance(@RequestHeader(value="Authorization") String authorization, @RequestBody Car car) {
+    public ResponseMessage updateMaintenance(@RequestHeader(value="Authorization") String authorization, @RequestBody Car car) throws ParseException {
     	System.out.println("Begin updateCar -->"+car);
     	String token = authorization.replaceAll("Basic", "");
     	Profile profile = profileService.getProfileByToken(token);
@@ -98,7 +99,7 @@ public class CarController {
 	
 	@RequestMapping(value = "/updateDaily", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseMessage updateDaily(@RequestHeader(value="Authorization") String authorization, @RequestBody Car car) {
+    public ResponseMessage updateDaily(@RequestHeader(value="Authorization") String authorization, @RequestBody Car car) throws ParseException {
     	System.out.println("Begin updateCar -->"+car);
     	String token = authorization.replaceAll("Basic", "");
     	Profile profile = profileService.getProfileByToken(token);
@@ -124,7 +125,7 @@ public class CarController {
 	
 	@RequestMapping(value = "/updateGeofence", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseMessage updateGeofence(@RequestHeader(value="Authorization") String authorization, @RequestBody Car car) {
+    public ResponseMessage updateGeofence(@RequestHeader(value="Authorization") String authorization, @RequestBody Car car) throws ParseException {
     	System.out.println("Begin updateCar -->"+car);
     	String token = authorization.replaceAll("Basic", "");
     	Profile profile = profileService.getProfileByToken(token);
@@ -150,7 +151,7 @@ public class CarController {
 	
 	@RequestMapping(value = "/updateCar", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseMessage updateCar(@RequestHeader(value="Authorization") String authorization, @RequestBody Car car) {
+    public ResponseMessage updateCar(@RequestHeader(value="Authorization") String authorization, @RequestBody Car car) throws ParseException {
     	System.out.println("Begin updateCar -->"+car);
     	String token = authorization.replaceAll("Basic", "");
     	Profile profile = profileService.getProfileByToken(token);
@@ -250,7 +251,7 @@ public class CarController {
 	
 	@RequestMapping(value = "/stopCar", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseMessage stopCar(@RequestHeader(value="Authorization") String authorization, @RequestBody Integer deviceid) {
+    public ResponseMessage stopCar(@RequestHeader(value="Authorization") String authorization, @RequestBody Integer deviceid) throws ParseException {
     	System.out.println("Begin stopCar -->"+deviceid);
     	int status;
     	String token = authorization.replaceAll("Basic", "");
@@ -292,7 +293,7 @@ public class CarController {
 	
 	@RequestMapping(value = "/startCar", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseMessage startCar(@RequestHeader(value="Authorization") String authorization, @RequestBody Integer deviceid) {
+    public ResponseMessage startCar(@RequestHeader(value="Authorization") String authorization, @RequestBody Integer deviceid) throws ParseException {
     	System.out.println("Begin startCar -->"+deviceid);
     	int status;
     	String token = authorization.replaceAll("Basic", "");

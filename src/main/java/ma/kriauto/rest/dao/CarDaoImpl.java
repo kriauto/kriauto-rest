@@ -1,10 +1,13 @@
 package ma.kriauto.rest.dao;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 import ma.kriauto.rest.domain.Car;
 import ma.kriauto.rest.domain.Consumption;
@@ -50,8 +53,11 @@ public class CarDaoImpl implements CarDao {
 	}
 	
 	@Override
-	public void updateCar(Car car) {
+	public void updateCar(Car car) throws ParseException {
 	     System.out.println("updateCar "+car);
+	     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE);
+	     Date technicaldate = ( null != car.getTechnicalcontroldate() ? sdf.parse(car.getTechnicalcontroldate()) : null);
+	     Date emptyingkilometredate = ( null != sdf.parse(car.getEmptyingkilometredate()) ? sdf.parse(car.getEmptyingkilometredate()) : null);
 	     jdbcTemplate.update("UPDATE car set agencyid =  ?, imei =  ?, simnumber =  ?"
 	     		+ ", immatriculation =  ?, vin =  ?, mark =  ?, model =  ?"
 	     		+ ", color =  ?, photo =  ?, status =  ?, deviceid =  ? "
@@ -70,8 +76,8 @@ public class CarDaoImpl implements CarDao {
 	     		, car.getMileage(), car.getFuel(), car.getLatitude1()
 	     		, car.getLongitude1(), car.getLatitude2(), car.getLongitude2(), car.getLatitude3()
 	     		, car.getLongitude3(), car.getLatitude4(), car.getLongitude4(), car.getLatitude5()
-	     		, car.getLongitude5(), car.getLatitude6(), car.getLongitude6(), car.getTechnicalcontroldate()
-	     		, car.getEmptyingkilometre(), car.getEmptyingkilometredate(), car.getInsuranceenddate()
+	     		, car.getLongitude5(), car.getLatitude6(), car.getLongitude6(), technicaldate
+	     		, car.getEmptyingkilometre(), emptyingkilometredate, car.getInsuranceenddate()
 	     		, car.getMaxspeed(), car.getMaxcourse(), car.getTotaldistance(), car.getMinlevelfuel(), car.getMaxenginetemperature()
 	     		, car.getMinfridgetemperature(), car.getMaxfridgetemperature(), car.getNotiftechnicalcontroldate()
 	     		, car.getEmptyingkilometre(), car.getNotifinsuranceenddate(), car.getNotifmaxspeed(), car.getNotifmaxcourse()

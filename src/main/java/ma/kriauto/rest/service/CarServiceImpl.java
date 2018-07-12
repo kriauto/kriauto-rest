@@ -1,6 +1,7 @@
 package ma.kriauto.rest.service;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,7 +34,7 @@ public class CarServiceImpl implements CarService {
 	}
 	
 	@Override
-	public void updateCar(Car car) {
+	public void updateCar(Car car) throws ParseException {
 		// TODO Auto-generated method stub
 		cardao.updateCar(car);
 	}

@@ -1,5 +1,6 @@
 package ma.kriauto.rest.dao;
 
+import java.text.ParseException;
 import java.util.List;
 
 import ma.kriauto.rest.domain.Car;
@@ -14,7 +15,7 @@ import ma.kriauto.rest.domain.Statistic;
 
 public interface CarDao {	
 	public Car getCarByDevice(Integer deviceid, String token);
-	public void updateCar(Car car);
+	public void updateCar(Car car) throws ParseException;
 	public List<Car> getAllCarsByToken(boolean group, String token);
 	public List<Car> getAllCarsByUser(String login);
 	public List<Item> getAllDatesByCar(Integer deviceid);
