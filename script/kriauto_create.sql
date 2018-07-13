@@ -82,6 +82,7 @@ ALTER TABLE car ADD COLUMN minlevelfuel decimal;
 ALTER TABLE car ADD COLUMN maxenginetemperature decimal;
 ALTER TABLE car ADD COLUMN minfridgetemperature decimal;
 ALTER TABLE car ADD COLUMN maxfridgetemperature decimal;
+ALTER TABLE car ADD COLUMN autorisationcirculationenddate date;
 
 ALTER TABLE car ADD COLUMN notiftechnicalcontroldate boolean;
 ALTER TABLE car ADD COLUMN notifemptyingkilometre boolean;
@@ -92,6 +93,7 @@ ALTER TABLE car ADD COLUMN notifminlevelfuel boolean;
 ALTER TABLE car ADD COLUMN notifmaxenginetemperature boolean;
 ALTER TABLE car ADD COLUMN notifminfridgetemperature boolean;
 ALTER TABLE car ADD COLUMN notifmaxfridgetemperature boolean;
+ALTER TABLE car ADD COLUMN notifautorisationcirculationenddate boolean;
 
 --
 -- Name: agency; Type: TABLE; Schema: public; Owner: postgres

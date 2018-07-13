@@ -13,6 +13,7 @@ import ma.kriauto.rest.domain.Car;
 import ma.kriauto.rest.domain.Location;
 import ma.kriauto.rest.domain.Notification;
 import ma.kriauto.rest.domain.Profile;
+import ma.kriauto.rest.domain.Speed;
 import ma.kriauto.rest.domain.Statistic;
 import ma.kriauto.rest.domain.StatisticValues;
 import ma.kriauto.rest.service.CarService;
@@ -41,19 +42,49 @@ public class SpringEnableSchedulingExample {
 	@Autowired
 	SenderService senderservice;
 	
+	/**** Empting kilometre * @throws ParseException ***/
+	@Scheduled(cron = "00 00 01 * * *")
+    public void calculateTotalDistance() throws ParseException {
+       List<Profile> profiles = profileservice.getAllProfiles();
+       for(int i=0; i < profiles.size(); i++){
+    	   Profile profile = profiles.get(i);
+    	   if(null != profile && null != profile.getLogin()){
+    		   List<Car> cars = carservice.getAllCarsByProfile(profile.getLogin());
+    		   for(int j=0; j<cars.size(); j++){
+    			   Car car = cars.get(j);
+    			   if(null != car){
+					    Calendar calendar = Calendar.getInstance();
+					    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        Integer deviceid = car.getDeviceid();
+                        String token = profile.getToken();
+                        for(int k=1; k<=1; k++){
+                        	calendar = Calendar.getInstance();
+                        	calendar.add(Calendar.DATE, -k);
+                        	String date = sdf.format(calendar.getTime());
+                        	Statistic statistic = carservice.getCarStatistic(deviceid, date, token);
+                    		Car currentcar = carservice.getCarByDevice(deviceid, token);
+                    		currentcar.setTotaldistance(Double.valueOf(Math.round(statistic.getCourse()+currentcar.getTotaldistance())));
+                    		currentcar.setEmptyingtotaldistance(Double.valueOf(Math.round(statistic.getCourse()+currentcar.getEmptyingtotaldistance())));
+                    		carservice.updateCar(currentcar);
+                        }
+    			   }
+    		   }
+    	   }
+       }
+    }
+	
 	/**** Technical Controle Notifications ***/
 	@Scheduled(cron = "00 00 12 * * *")
     public void technicalControleNotifications() throws IOException {
        List<Profile> profiles = profileservice.getAllProfiles();
        for(int i=0; i < profiles.size(); i++){
     	   Profile profile = profiles.get(i);
-    	   System.out.println("Profile --> " + profile);
     	   if(null != profile && null != profile.getLogin()){
-    		   List<Notification> notifications = notificationservice.getPushTokenByUser(profile.getLogin());
-    		   List<Car> cars = carservice.getAllCarsByUser(profile.getLogin());
+    		   List<Notification> notifications = notificationservice.getPushTokenByProfile(profile.getLogin());
+    		   List<Car> cars = carservice.getAllCarsByProfile(profile.getLogin());
     		   for(int j=0; j<cars.size(); j++){
     			   Car car = cars.get(j);
-    			   if(null != car && null != car.getTechnicalcontroldate()){
+    			   if(null != car && null != car.getTechnicalcontroldate() && true == car.getNotiftechnicalcontroldate()){
 						try {
 							 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE);
 							 Date now = new Date();
@@ -61,15 +92,16 @@ public class SpringEnableSchedulingExample {
 	    				     Date technicaldate = sdf.parse(car.getTechnicalcontroldate());
 							 long diffInMillies = technicaldate.getTime() - currentdate.getTime();
 		    				 long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-		    				 System.out.println("diff --> "+car.getTechnicalcontroldate()+" "+ diff);
-		    				 if(0<= diff && diff <=15 && car.getNotiftechnicalcontroldate()){
+		    				 String message = "La prochaine date de controle technique est dans "+diff+" jour(s) pour la voiture : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
+		    				 if(0<= diff && diff <=15){
 		    					 for(int k=0; k<notifications.size(); k++){
 		    					   Notification notification = notifications.get(k);
 		    					   if(null != notification && null != notification.getPushnotiftoken()){
-		    						  String message = "La prochain date de controle technique est dans "+diff+" jour(s) : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
-		    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), "");
+		    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
 		    					   }
 		    					 }
+		    					 Notification notif = new Notification(car.getDeviceid().toString(), message);
+		    					 notificationservice.addNotification(notif);
 		    				 }
 						} catch (ParseException e) {
 							// TODO Auto-generated catch block
@@ -81,65 +113,187 @@ public class SpringEnableSchedulingExample {
        }
     }
 	
-	/**** Empting kilometre * @throws ParseException ***/
-	@Scheduled(cron = "00 00 01 * * *")
-    public void calculateTotalDistance() throws ParseException {
+	
+	@Scheduled(cron = "00 00 14 * * *")
+    public void emptyKilometreNotifications() throws ParseException, IOException {
        List<Profile> profiles = profileservice.getAllProfiles();
        for(int i=0; i < profiles.size(); i++){
     	   Profile profile = profiles.get(i);
     	   //System.out.println("Profile --> " + profile);
     	   if(null != profile && null != profile.getLogin()){
-    		   List<Car> cars = carservice.getAllCarsByUser(profile.getLogin());
+    		   List<Notification> notifications = notificationservice.getPushTokenByProfile(profile.getLogin());
+    		   List<Car> cars = carservice.getAllCarsByProfile(profile.getLogin());
     		   for(int j=0; j<cars.size(); j++){
     			   Car car = cars.get(j);
-    			   if(null != car){
-    				    //System.out.println("car --> " + car);
-					    Calendar calendar = Calendar.getInstance();
-					    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                        Integer deviceid = car.getDeviceid();
-                        String token = profile.getToken();
-                        for(int k=1; k<=1; k++){
-                        	calendar = Calendar.getInstance();
-                        	calendar.add(Calendar.DATE, -k);
-                        	String date = sdf.format(calendar.getTime());
-                        	Statistic statistic = carservice.getCarStatistic(deviceid, date, token);
-                    		Car currentcar = carservice.getCarByDevice(deviceid, token);
-                    		currentcar.setTotaldistance(Double.valueOf(Math.round(statistic.getCourse()+currentcar.getTotaldistance())));
-                    		carservice.updateCar(currentcar);
-                    		//System.out.println("Profile --> " + profile+"course  "+statistic.getCourse()+" k"+k+"date "+date);
-                        }
+    			   String message = "Vous devriez faire le vidange pour la voiture : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
+    			   if(null != car && null != car.getNotifemptyingkilometre() && true == car.getNotifemptyingkilometre()){
+    				   if(Math.round(car.getEmptyingtotaldistance()/car.getMaxcourse()) > car.getEmptyingkilometreindex()){
+	    					 for(int k=0; k<notifications.size(); k++){
+	    					   Notification notification = notifications.get(k);
+	    					   if(null != notification && null != notification.getPushnotiftoken()){
+	    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
+	    					   }
+	    					 }
+	    					 Integer deviceid = car.getDeviceid();
+	                         String token = profile.getToken();
+	    					 Car currentcar = carservice.getCarByDevice(deviceid, token);
+	                    	 currentcar.setEmptyingkilometreindex(car.getEmptyingkilometreindex()+1);
+	                    	 carservice.updateCar(currentcar);
+	    					 Notification notif = new Notification(car.getDeviceid().toString(), message);
+	    					 notificationservice.addNotification(notif);
+	    				 }
     			   }
     		   }
     	   }
        }
     }
 	
-	@Scheduled(cron = "00 00 01 * * *")
-    public void emptyKilometreNotifications() throws ParseException {
+	/**** Insurance Notifications ***/
+	@Scheduled(cron = "00 00 16 * * *")
+    public void insuranceendNotifications() throws IOException {
        List<Profile> profiles = profileservice.getAllProfiles();
        for(int i=0; i < profiles.size(); i++){
     	   Profile profile = profiles.get(i);
-    	   //System.out.println("Profile --> " + profile);
+    	   System.out.println("Profile --> " + profile);
     	   if(null != profile && null != profile.getLogin()){
-    		   List<Car> cars = carservice.getAllCarsByUser(profile.getLogin());
+    		   List<Notification> notifications = notificationservice.getPushTokenByProfile(profile.getLogin());
+    		   List<Car> cars = carservice.getAllCarsByProfile(profile.getLogin());
     		   for(int j=0; j<cars.size(); j++){
     			   Car car = cars.get(j);
-    			   if(null != car && car.getNotifemptyingkilometre() == true && car.getTotaldistance() > 0 && car.getEmptyingkilometre() >0){
-    				   System.out.println("car --> " + car);
-					    Calendar calendar = Calendar.getInstance();
-					    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                        Integer deviceid = car.getDeviceid();
-                        String token = profile.getToken();
-                        for(int k=1; k<=1; k++){
-                        	calendar = Calendar.getInstance();
-                        	calendar.add(Calendar.DATE, -k);
-                        	String date = sdf.format(calendar.getTime());
-                        	Statistic statistic = carservice.getCarStatistic(deviceid, date, token);
-                    		Car currentcar = carservice.getCarByDevice(deviceid, token);
-                    		currentcar.setTotaldistance(Double.valueOf(Math.round(statistic.getCourse()+currentcar.getTotaldistance())));
-                    		carservice.updateCar(currentcar);
-                    		//System.out.println("Profile --> " + profile+"course  "+statistic.getCourse()+" k"+k+"date "+date);
-                        }
+    			   if(null != car && null != car.getInsuranceenddate() && true == car.getNotifinsuranceenddate()){
+						try {
+							 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE);
+							 Date now = new Date();
+	    				     Date currentdate = sdf.parse(sdf.format(now));
+	    				     Date insurancedate = sdf.parse(car.getInsuranceenddate());
+							 long diffInMillies = insurancedate.getTime() - currentdate.getTime();
+		    				 long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+		    				 String message = "L'assurance prendra fin dans "+diff+" jour(s) pour la voiture : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
+		    				 if(0<= diff && diff <=15){
+		    					 for(int k=0; k<notifications.size(); k++){
+		    					   Notification notification = notifications.get(k);
+		    					   if(null != notification && null != notification.getPushnotiftoken()){
+		    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
+		    					   }
+		    					 }
+		    					 Notification notif = new Notification(car.getDeviceid().toString(), message);
+		    					 notificationservice.addNotification(notif);
+		    				 }
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+    			   }
+    		   }
+    	   }
+       }
+    }
+	
+	/**** Circulation Notifications ***/
+	@Scheduled(cron = "00 00 18 * * *")
+    public void circulationendNotifications() throws IOException {
+       List<Profile> profiles = profileservice.getAllProfiles();
+       for(int i=0; i < profiles.size(); i++){
+    	   Profile profile = profiles.get(i);
+    	   System.out.println("Profile --> " + profile);
+    	   if(null != profile && null != profile.getLogin()){
+    		   List<Notification> notifications = notificationservice.getPushTokenByProfile(profile.getLogin());
+    		   List<Car> cars = carservice.getAllCarsByProfile(profile.getLogin());
+    		   for(int j=0; j<cars.size(); j++){
+    			   Car car = cars.get(j);
+    			   if(null != car && null != car.getAutorisationcirculationenddate() && true == car.getNotifautorisationcirculationenddate()){
+						try {
+							 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE);
+							 Date now = new Date();
+	    				     Date currentdate = sdf.parse(sdf.format(now));
+	    				     Date technicaldate = sdf.parse(car.getTechnicalcontroldate());
+							 long diffInMillies = technicaldate.getTime() - currentdate.getTime();
+		    				 long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+		    				 String message = "L'autorisation de circulation prendra fin dans "+diff+" jour(s) pour la voiture : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
+		    				 if(0<= diff && diff <=15){
+		    					 for(int k=0; k<notifications.size(); k++){
+		    					   Notification notification = notifications.get(k);
+		    					   if(null != notification && null != notification.getPushnotiftoken()){
+		    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
+		    					   }
+		    					 }
+		    					 Notification notif = new Notification(car.getDeviceid().toString(), message);
+		    					 notificationservice.addNotification(notif);
+		    				 }
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+    			   }
+    		   }
+    	   }
+       }
+    }
+	
+	/**** Max speed Notifications ***/
+	@Scheduled(fixedDelay = 3600000)
+    public void maxspeedNotifications() throws IOException {
+       List<Profile> profiles = profileservice.getAllProfiles();
+       for(int i=0; i < profiles.size(); i++){
+    	   Profile profile = profiles.get(i);
+    	   System.out.println("Profile --> " + profile);
+    	   if(null != profile && null != profile.getLogin()){
+    		   List<Notification> notifications = notificationservice.getPushTokenByProfile(profile.getLogin());
+    		   List<Car> cars = carservice.getAllCarsByProfile(profile.getLogin());
+    		   for(int j=0; j<cars.size(); j++){
+    			   Car car = cars.get(j);
+    			   if(null != car && null != car.getMaxspeed() && true == car.getNotifmaxspeed()){
+							 Calendar calendar = Calendar.getInstance();
+						     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH24:MM:SS");
+						     calendar.add(Calendar.MINUTE, -60);
+	                         String date = sdf.format(calendar.getTime());
+	                         Speed speed = carservice.getMaxSpeedByCarTime(car.getDeviceid(), date);
+		    				 if(null != speed && Double.valueOf(speed.getMaxSpeed()) > car.getMaxspeed()){
+		    					 String message = "La vitesse journalière maximale autorisée ("+car.getMaxspeed()+") est dépassée pour la voiture : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
+		    					 for(int k=0; k<notifications.size(); k++){
+		    					   Notification notification = notifications.get(k);
+		    					   if(null != notification && null != notification.getPushnotiftoken()){
+		    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
+		    					   }
+		    					 }
+		    					 Notification notif = new Notification(car.getDeviceid().toString(), message);
+		    					 notificationservice.addNotification(notif);
+		    				}
+    			   }
+    		   }
+    	   }
+       }
+    }
+	
+	/**** Max course Notifications ***/
+	@Scheduled(cron = "00 00 23 * * *")
+    public void maxcourseNotifications() throws IOException {
+       List<Profile> profiles = profileservice.getAllProfiles();
+       for(int i=0; i < profiles.size(); i++){
+    	   Profile profile = profiles.get(i);
+    	   System.out.println("Profile --> " + profile);
+    	   if(null != profile && null != profile.getLogin()){
+    		   List<Notification> notifications = notificationservice.getPushTokenByProfile(profile.getLogin());
+    		   List<Car> cars = carservice.getAllCarsByProfile(profile.getLogin());
+    		   for(int j=0; j<cars.size(); j++){
+    			   Car car = cars.get(j);
+    			   if(null != car && null != car.getMaxcourse() && true == car.getNotifmaxcourse() && null != profile && null != profile.getToken()){
+							 Calendar calendar = Calendar.getInstance();
+						     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+						     //calendar.add(Calendar.DATE, -35);
+	                         String date = sdf.format(calendar.getTime());
+	                         Statistic statistic = carservice.getCarStatistic(car.getDeviceid(), date, profile.getToken());
+		    				 if(null != statistic && statistic.getCourse() > car.getMaxcourse()){
+		    					 String message = "La distance journalière maximale autorisée ("+car.getMaxcourse()+") est dépassée pour la voiture : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
+		    					 for(int k=0; k<notifications.size(); k++){
+		    					   Notification notification = notifications.get(k);
+		    					   if(null != notification && null != notification.getPushnotiftoken()){
+		    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
+		    					   }
+		    					 }
+		    					 Notification notif = new Notification(car.getDeviceid().toString(), message);
+		    					 notificationservice.addNotification(notif);
+		    				}
     			   }
     		   }
     	   }

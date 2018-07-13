@@ -28,9 +28,9 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	@Override
-	public List<Notification> getPushTokenByUser(String login) {
+	public List<Notification> getPushTokenByProfile(String login) {
 		// TODO Auto-generated method stub
-		return notificationdao.getPushTokenByUser(login);
+		return notificationdao.getPushTokenByProfile(login);
 	}
 
 }

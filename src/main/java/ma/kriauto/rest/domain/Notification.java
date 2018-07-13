@@ -12,6 +12,12 @@ public class Notification {
 		super();
 	}
 	
+	public Notification(String deviceid, String texte) {
+		super();
+		this.deviceid = deviceid;
+		this.texte = texte;
+	}
+
 	public Notification(String login, String pushnotiftoken,
 			String pushplateforme, String deviceid, String texte) {
 		super();

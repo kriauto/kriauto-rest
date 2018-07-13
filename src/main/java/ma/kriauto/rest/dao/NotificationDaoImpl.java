@@ -25,7 +25,7 @@ public class NotificationDaoImpl implements NotificationDao {
 	public void addNotification(Notification notification) {
 		// TODO Auto-generated method stub
 		System.out.println("addNotification ");
-	    jdbcTemplate.update("INSERT INTO messages(deviceid, texte) VALUES (?,?)", new Object[] {notification.getDeviceid(),notification.getTexte()});
+	    jdbcTemplate.update("INSERT INTO messages(deviceid, texte) VALUES (?,?)", new Object[] {Integer.valueOf(notification.getDeviceid()),notification.getTexte()});
 		
 	}
 
@@ -46,7 +46,7 @@ public class NotificationDaoImpl implements NotificationDao {
 	}
 
 	@Override
-	public List<Notification> getPushTokenByUser(String login) {
+	public List<Notification> getPushTokenByProfile(String login) {
 		System.out.println("getPushTokenByUser " + login);
 		GregorianCalendar date = new GregorianCalendar();
 		date.add(Calendar.MONTH, -1);

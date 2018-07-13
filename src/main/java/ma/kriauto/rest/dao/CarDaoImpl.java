@@ -58,6 +58,8 @@ public class CarDaoImpl implements CarDao {
 	     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE);
 	     Date technicaldate = ( null != car.getTechnicalcontroldate() ? sdf.parse(car.getTechnicalcontroldate()) : null);
 	     Date emptyingkilometredate = ( null != sdf.parse(car.getEmptyingkilometredate()) ? sdf.parse(car.getEmptyingkilometredate()) : null);
+	     Date insurancedate = ( null != sdf.parse(car.getInsuranceenddate()) ? sdf.parse(car.getInsuranceenddate()) : null);
+	     Date circulationdate = ( null != sdf.parse(car.getAutorisationcirculationenddate()) ? sdf.parse(car.getAutorisationcirculationenddate()) : null);
 	     jdbcTemplate.update("UPDATE car set agencyid =  ?, imei =  ?, simnumber =  ?"
 	     		+ ", immatriculation =  ?, vin =  ?, mark =  ?, model =  ?"
 	     		+ ", color =  ?, photo =  ?, status =  ?, deviceid =  ? "
@@ -68,7 +70,8 @@ public class CarDaoImpl implements CarDao {
 	     		+ ", insuranceenddate = ?, maxspeed = ?, maxcourse = ?, totaldistance = ?, minlevelfuel = ?, maxenginetemperature = ?"
 	     		+ ", minfridgetemperature = ?, maxfridgetemperature = ?, notiftechnicalcontroldate = ?, notifemptyingkilometre = ?"
 	     		+ ", notifinsuranceenddate = ?, notifmaxspeed = ?, notifmaxcourse = ?"  
-	     		+ ", notifminlevelfuel = ?, notifmaxenginetemperature = ?, notifminfridgetemperature = ?, notifmaxfridgetemperature = ?"   
+	     		+ ", notifminlevelfuel = ?, notifmaxenginetemperature = ?, notifminfridgetemperature = ?"
+	     		+ ", notifmaxfridgetemperature = ?, emptyingkilometreindex = ?, autorisationcirculationenddate = ?"   
 	     		+ "  WHERE id = ?  "
 	     		, new Object[] { car.getAgencyid(), car.getImei(), car.getSimnumber()
 	     		, car.getImmatriculation(), car.getVin(), car.getMark(), car.getModel()
@@ -77,12 +80,12 @@ public class CarDaoImpl implements CarDao {
 	     		, car.getLongitude1(), car.getLatitude2(), car.getLongitude2(), car.getLatitude3()
 	     		, car.getLongitude3(), car.getLatitude4(), car.getLongitude4(), car.getLatitude5()
 	     		, car.getLongitude5(), car.getLatitude6(), car.getLongitude6(), technicaldate
-	     		, car.getEmptyingkilometre(), emptyingkilometredate, car.getInsuranceenddate()
+	     		, car.getEmptyingkilometre(), emptyingkilometredate, insurancedate
 	     		, car.getMaxspeed(), car.getMaxcourse(), car.getTotaldistance(), car.getMinlevelfuel(), car.getMaxenginetemperature()
 	     		, car.getMinfridgetemperature(), car.getMaxfridgetemperature(), car.getNotiftechnicalcontroldate()
-	     		, car.getEmptyingkilometre(), car.getNotifinsuranceenddate(), car.getNotifmaxspeed(), car.getNotifmaxcourse()
+	     		, car.getNotifemptyingkilometre(), car.getNotifinsuranceenddate(), car.getNotifmaxspeed(), car.getNotifmaxcourse()
 	     		, car.getNotifminlevelfuel(), car.getNotifmaxenginetemperature(), car.getNotifminfridgetemperature()
-	     		, car.getNotifmaxfridgetemperature()
+	     		, car.getNotifmaxfridgetemperature(), car.getEmptyingkilometreindex(), circulationdate
 	     		, car.getId()});
 	}
 
@@ -104,7 +107,7 @@ public class CarDaoImpl implements CarDao {
 	}
 	
 	@Override
-	public List<Car> getAllCarsByUser(String login) {
+	public List<Car> getAllCarsByProfile(String login) {
 		System.out.println("getAllCarsByUser " + login);
 		List<Car> cars = new ArrayList<Car>();
 		cars = jdbcTemplate.query("SELECT c.* "
@@ -784,4 +787,18 @@ public class CarDaoImpl implements CarDao {
 	 public double rad2deg(double rad) {
 	      return (rad * 180.0 / Math.PI);
 	    }
+
+	@Override
+	public Speed getMaxSpeedByCarTime(Integer deviceid, String date) {
+		System.out.println("getMaxSpeedByCarTime " + deviceid);
+		Speed speed = null ;
+		List<Speed> speeds = new ArrayList<Speed>();
+		speeds = jdbcTemplate.query("SELECT to_char(fixtime,'HH24:MI:SS') AS day, speed AS maxspeed FROM positions where speed = "
+				+ "(SELECT max(speed) FROM positions WHERE to_char(fixtime,'yyyy-MM-dd HH24:MI:SS') >= ? and deviceid = ? )", new Object[] { date,deviceid },new BeanPropertyRowMapper(Speed.class));
+			if(null != speeds && speeds.size() > 0){
+				speed = speeds.get(0);
+				speed.setMaxSpeed(String.valueOf(Math.round(Double.valueOf(speed.getMaxSpeed())*1.85)));
+			}
+			return speed;
+	}
 }

@@ -17,13 +17,14 @@ public interface CarDao {
 	public Car getCarByDevice(Integer deviceid, String token);
 	public void updateCar(Car car) throws ParseException;
 	public List<Car> getAllCarsByToken(boolean group, String token);
-	public List<Car> getAllCarsByUser(String login);
+	public List<Car> getAllCarsByProfile(String login);
 	public List<Item> getAllDatesByCar(Integer deviceid);
 	public List<Item> getAllDatesByToken(String token);
 	public List<Location> getAllLocationsByToken(String token, String date);
 	public List<Location> getAllLocationsByCar(Integer deviceid, String date, String token);
 	public List<Course> getTotalCourseByCar(Integer deviceid);
 	public List<Speed> getMaxSpeedByCar(Integer deviceid);
+	public Speed getMaxSpeedByCarTime(Integer deviceid, String date);
 	public List<Consumption> getTotalConsumptionByCar(Integer deviceid);
 	public Statistic getCarStatistic(Integer deviceid, String date, String token);
 	public List<Notification> getDataNotification(int type);

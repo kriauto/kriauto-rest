@@ -48,6 +48,7 @@ public class Car {
 	private Double maxenginetemperature;
 	private Double minfridgetemperature;
 	private Double maxfridgetemperature;
+	private String  autorisationcirculationenddate;
 	private Boolean notiftechnicalcontroldate;
 	private Boolean notifemptyingkilometre;
 	private Boolean notifemptyingkilometredate;
@@ -58,6 +59,7 @@ public class Car {
 	private Boolean notifmaxenginetemperature;
 	private Boolean notifminfridgetemperature;
 	private Boolean notifmaxfridgetemperature;
+	private Boolean notifautorisationcirculationenddate;
 	
 	public Car() {
 		super();
@@ -84,12 +86,14 @@ public class Car {
 			String emptyingkilometredate, String insuranceenddate,
 			Double maxspeed, Double maxcourse, Double minlevelfuel,
 			Double maxenginetemperature, Double minfridgetemperature,
-			Double maxfridgetemperature, Boolean notiftechnicalcontroldate,
-			Boolean notifemptyingkilometre, Boolean notifemptyingkilometredate,
-			Boolean notifinsuranceenddate, Boolean notifmaxspeed,
-			Boolean notifmaxcourse, Boolean notifminlevelfuel,
-			Boolean notifmaxenginetemperature,
-			Boolean notifminfridgetemperature, Boolean notifmaxfridgetemperature) {
+			Double maxfridgetemperature, String autorisationcirculationenddate,
+			Boolean notiftechnicalcontroldate, Boolean notifemptyingkilometre,
+			Boolean notifemptyingkilometredate, Boolean notifinsuranceenddate,
+			Boolean notifmaxspeed, Boolean notifmaxcourse,
+			Boolean notifminlevelfuel, Boolean notifmaxenginetemperature,
+			Boolean notifminfridgetemperature,
+			Boolean notifmaxfridgetemperature,
+			Boolean notifautorisationcirculationenddate) {
 		super();
 		this.id = id;
 		this.agencyid = agencyid;
@@ -137,6 +141,7 @@ public class Car {
 		this.maxenginetemperature = maxenginetemperature;
 		this.minfridgetemperature = minfridgetemperature;
 		this.maxfridgetemperature = maxfridgetemperature;
+		this.autorisationcirculationenddate = autorisationcirculationenddate;
 		this.notiftechnicalcontroldate = notiftechnicalcontroldate;
 		this.notifemptyingkilometre = notifemptyingkilometre;
 		this.notifemptyingkilometredate = notifemptyingkilometredate;
@@ -147,6 +152,7 @@ public class Car {
 		this.notifmaxenginetemperature = notifmaxenginetemperature;
 		this.notifminfridgetemperature = notifminfridgetemperature;
 		this.notifmaxfridgetemperature = notifmaxfridgetemperature;
+		this.notifautorisationcirculationenddate = notifautorisationcirculationenddate;
 	}
 
 	public Double getTotaldistance() {
@@ -691,6 +697,24 @@ public class Car {
 	public void setEmptyingkilometreindex(Integer emptyingkilometreindex) {
 		this.emptyingkilometreindex = emptyingkilometreindex;
 	}
+	
+	public String getAutorisationcirculationenddate() {
+		return autorisationcirculationenddate;
+	}
+
+	public void setAutorisationcirculationenddate(
+			String autorisationcirculationenddate) {
+		this.autorisationcirculationenddate = autorisationcirculationenddate;
+	}
+
+	public Boolean getNotifautorisationcirculationenddate() {
+		return notifautorisationcirculationenddate;
+	}
+
+	public void setNotifautorisationcirculationenddate(
+			Boolean notifautorisationcirculationenddate) {
+		this.notifautorisationcirculationenddate = notifautorisationcirculationenddate;
+	}
 
 	@Override
 	public String toString() {
@@ -720,6 +744,8 @@ public class Car {
 				+ ", maxenginetemperature=" + maxenginetemperature
 				+ ", minfridgetemperature=" + minfridgetemperature
 				+ ", maxfridgetemperature=" + maxfridgetemperature
+				+ ", autorisationcirculationenddate="
+				+ autorisationcirculationenddate
 				+ ", notiftechnicalcontroldate=" + notiftechnicalcontroldate
 				+ ", notifemptyingkilometre=" + notifemptyingkilometre
 				+ ", notifemptyingkilometredate=" + notifemptyingkilometredate
@@ -729,6 +755,9 @@ public class Car {
 				+ ", notifmaxenginetemperature=" + notifmaxenginetemperature
 				+ ", notifminfridgetemperature=" + notifminfridgetemperature
 				+ ", notifmaxfridgetemperature=" + notifmaxfridgetemperature
-				+ "]";
+				+ ", notifautorisationcirculationenddate="
+				+ notifautorisationcirculationenddate + "]";
 	}
+
+	
 }
