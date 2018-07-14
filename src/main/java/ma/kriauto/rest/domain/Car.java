@@ -22,6 +22,7 @@ public class Car {
 	private Double speed;
 	private Double consumption;
 	private String fuel;
+	private String address;
 	private Double latitude1;
 	private Double longitude1;
 	private Double latitude2;
@@ -76,7 +77,7 @@ public class Car {
 			String color, String photo, Integer status, Integer rolling,
 			Integer deviceid, Integer mileage, Double totaldistance,
 			Double emptyingtotaldistance, Double course, Double speed,
-			Double consumption, String fuel, Double latitude1,
+			Double consumption, String fuel, String address, Double latitude1,
 			Double longitude1, Double latitude2, Double longitude2,
 			Double latitude3, Double longitude3, Double latitude4,
 			Double longitude4, Double latitude5, Double longitude5,
@@ -115,6 +116,7 @@ public class Car {
 		this.speed = speed;
 		this.consumption = consumption;
 		this.fuel = fuel;
+		this.address = address;
 		this.latitude1 = latitude1;
 		this.longitude1 = longitude1;
 		this.latitude2 = latitude2;
@@ -514,6 +516,14 @@ public class Car {
 		this.fuel = fuel;
 	}
 
+	
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
 	public Double getLatitude1() {
 		return latitude1;
