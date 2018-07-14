@@ -556,7 +556,7 @@ public class CarDaoImpl implements CarDao {
         {
         	Location location = (Location) jdbcTemplate.queryForObject(" select distinct ps.longitude, ps.latitude, ps.speed, ps.course, ps.address, ps.fixtime -'1 hour'::interval AS servertime,ps.attributes , c.immatriculation, c.vin, c.mark, c.model, c.photo, c.color, c.deviceid, c.colorCode "
 				    + " from profile p, agency a, car c, positions ps "
-				    + " where   ps.id =  (select MAX(ps.id) from profile p, agency a, car c, positions ps where p.token = ? and p.agencyid = a.id and a.id = c.agencyid and c.deviceid = ps.deviceid and ps.deviceid = ?  and to_char(fixtime,'YYYY-MM-DD') <= ? and valid =true and network = 'null') "
+				    + " where   ps.id =  (select MAX(ps.id) from profile p, agency a, car c, positions ps where p.token = ? and p.agencyid = a.id and a.id = c.agencyid and c.deviceid = ps.deviceid and ps.deviceid = ?  and to_char(fixtime,'YYYY-MM-DD') <= ? and valid = true ) "
 				    + " and p.token = ? "
 				    + " and p.agencyid = a.id "
 				    + " and a.id = c.agencyid "
