@@ -57,7 +57,7 @@ public class SpringEnableSchedulingExample {
 					    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                         Integer deviceid = car.getDeviceid();
                         String token = profile.getToken();
-                        for(int k=1; k<=200; k++){
+                        for(int k=1; k<=1; k++){
                         	calendar = Calendar.getInstance();
                         	calendar.add(Calendar.DATE, -k);
                         	String date = sdf.format(calendar.getTime());
