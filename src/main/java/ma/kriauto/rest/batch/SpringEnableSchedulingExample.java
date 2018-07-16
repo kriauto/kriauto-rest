@@ -10,12 +10,10 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import ma.kriauto.rest.domain.Car;
-import ma.kriauto.rest.domain.Location;
 import ma.kriauto.rest.domain.Notification;
 import ma.kriauto.rest.domain.Profile;
 import ma.kriauto.rest.domain.Speed;
 import ma.kriauto.rest.domain.Statistic;
-import ma.kriauto.rest.domain.StatisticValues;
 import ma.kriauto.rest.service.CarService;
 import ma.kriauto.rest.service.NotificationService;
 import ma.kriauto.rest.service.ProfileService;
@@ -129,7 +127,7 @@ public class SpringEnableSchedulingExample {
     			   Car car = cars.get(j);
     			   String message = "Vous devriez faire le vidange pour la voiture : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
     			   if(null != car && null != car.getNotifemptyingkilometre() && true == car.getNotifemptyingkilometre()){
-    				   if(Math.round(car.getEmptyingtotaldistance()/car.getMaxcourse()) > car.getEmptyingkilometreindex()){
+    				   if(Math.round(car.getEmptyingtotaldistance()/car.getEmptyingkilometre()) > car.getEmptyingkilometreindex()){
 	    					 for(int k=0; k<notifications.size(); k++){
 	    					   Notification notification = notifications.get(k);
 	    					   if(null != notification && null != notification.getPushnotiftoken()){

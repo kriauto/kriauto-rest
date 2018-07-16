@@ -45,7 +45,7 @@ public class CarDaoImpl implements CarDao {
 	public Car getCarByDevice(Integer deviceid, String token) {
 		System.out.println("getCarByDevice "+deviceid);
 		try{
-		   Car car = (Car) jdbcTemplate.queryForObject("SELECT * FROM profile p, agency a, car c where p.token = ? and p.agencyid = a.id and a.id = c.agencyid and c.deviceid = ?", new Object[] {token,deviceid}, new BeanPropertyRowMapper(Car.class));
+		   Car car = (Car) jdbcTemplate.queryForObject("SELECT c.* FROM profile p, agency a, car c where p.token = ? and p.agencyid = a.id and a.id = c.agencyid and c.deviceid = ?", new Object[] {token,deviceid}, new BeanPropertyRowMapper(Car.class));
 		   return car;
 		} catch (EmptyResultDataAccessException e) {
 			return null;
@@ -57,21 +57,20 @@ public class CarDaoImpl implements CarDao {
 	     System.out.println("updateCar "+car);
 	     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE);
 	     Date technicaldate = ( null != car.getTechnicalcontroldate() ? sdf.parse(car.getTechnicalcontroldate()) : null);
-	     Date emptyingkilometredate = ( null != sdf.parse(car.getEmptyingkilometredate()) ? sdf.parse(car.getEmptyingkilometredate()) : null);
-	     Date insurancedate = ( null != sdf.parse(car.getInsuranceenddate()) ? sdf.parse(car.getInsuranceenddate()) : null);
-	     Date circulationdate = ( null != sdf.parse(car.getAutorisationcirculationenddate()) ? sdf.parse(car.getAutorisationcirculationenddate()) : null);
+	     Date insurancedate = ( null != car.getInsuranceenddate() ? sdf.parse(car.getInsuranceenddate()) : null);
+	     Date circulationdate = ( null != car.getAutorisationcirculationenddate() ? sdf.parse(car.getAutorisationcirculationenddate()) : null);
 	     jdbcTemplate.update("UPDATE car set agencyid =  ?, imei =  ?, simnumber =  ?"
 	     		+ ", immatriculation =  ?, vin =  ?, mark =  ?, model =  ?"
 	     		+ ", color =  ?, photo =  ?, status =  ?, deviceid =  ? "
 	     		+ ", mileage =  ? , fuel =  ?, latitude1 =  ?, longitude1 =  ?, latitude2 =  ?"
 	     		+ ", longitude2 =  ?, latitude3 =  ?, longitude3 =  ?, latitude4 =  ?"
 	     		+ ", longitude4 =  ?, latitude5 =  ?, longitude5 =  ?, latitude6 =  ?"
-	     		+ ", longitude6 =  ?, technicalcontroldate = ?, emptyingkilometre = ?, emptyingkilometredate = ?"
+	     		+ ", longitude6 =  ?, technicalcontroldate = ?, emptyingkilometre = ?"
 	     		+ ", insuranceenddate = ?, maxspeed = ?, maxcourse = ?, totaldistance = ?, minlevelfuel = ?, maxenginetemperature = ?"
 	     		+ ", minfridgetemperature = ?, maxfridgetemperature = ?, notiftechnicalcontroldate = ?, notifemptyingkilometre = ?"
 	     		+ ", notifinsuranceenddate = ?, notifmaxspeed = ?, notifmaxcourse = ?"  
-	     		+ ", notifminlevelfuel = ?, notifmaxenginetemperature = ?, notifminfridgetemperature = ?"
-	     		+ ", notifmaxfridgetemperature = ?, emptyingkilometreindex = ?, autorisationcirculationenddate = ?"   
+	     		+ ", notifminlevelfuel = ?, notifmaxenginetemperature = ?, notifminfridgetemperature = ?, notifautorisationcirculationenddate = ?"
+	     		+ ", notifmaxfridgetemperature = ?, emptyingkilometreindex = ?, autorisationcirculationenddate = ?, notifinzone = ?, notifoutzone = ?"   
 	     		+ "  WHERE id = ?  "
 	     		, new Object[] { car.getAgencyid(), car.getImei(), car.getSimnumber()
 	     		, car.getImmatriculation(), car.getVin(), car.getMark(), car.getModel()
@@ -80,12 +79,12 @@ public class CarDaoImpl implements CarDao {
 	     		, car.getLongitude1(), car.getLatitude2(), car.getLongitude2(), car.getLatitude3()
 	     		, car.getLongitude3(), car.getLatitude4(), car.getLongitude4(), car.getLatitude5()
 	     		, car.getLongitude5(), car.getLatitude6(), car.getLongitude6(), technicaldate
-	     		, car.getEmptyingkilometre(), emptyingkilometredate, insurancedate
+	     		, car.getEmptyingkilometre(), insurancedate
 	     		, car.getMaxspeed(), car.getMaxcourse(), car.getTotaldistance(), car.getMinlevelfuel(), car.getMaxenginetemperature()
 	     		, car.getMinfridgetemperature(), car.getMaxfridgetemperature(), car.getNotiftechnicalcontroldate()
 	     		, car.getNotifemptyingkilometre(), car.getNotifinsuranceenddate(), car.getNotifmaxspeed(), car.getNotifmaxcourse()
-	     		, car.getNotifminlevelfuel(), car.getNotifmaxenginetemperature(), car.getNotifminfridgetemperature()
-	     		, car.getNotifmaxfridgetemperature(), car.getEmptyingkilometreindex(), circulationdate
+	     		, car.getNotifminlevelfuel(), car.getNotifmaxenginetemperature(), car.getNotifminfridgetemperature(), car.getNotifautorisationcirculationenddate()
+	     		, car.getNotifmaxfridgetemperature(), car.getEmptyingkilometreindex(), circulationdate, car.getNotifinzone(), car.getNotifoutzone()
 	     		, car.getId()});
 	}
 

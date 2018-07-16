@@ -1,14 +1,15 @@
 package ma.kriauto.rest.controller;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import ma.kriauto.rest.domain.Car;
 import ma.kriauto.rest.domain.Consumption;
 import ma.kriauto.rest.domain.Course;
 import ma.kriauto.rest.domain.Device;
-import ma.kriauto.rest.domain.Event;
 import ma.kriauto.rest.domain.Item;
 import ma.kriauto.rest.domain.Location;
 import ma.kriauto.rest.domain.Notification;
@@ -87,13 +88,45 @@ public class CarController {
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
     	Car cartmp = carService.getCarByDevice(car.getDeviceid(),token);
-    	cartmp.setTechnicalcontroldate(car.getTechnicalcontroldate());
-    	cartmp.setNotiftechnicalcontroldate(car.getNotiftechnicalcontroldate());
-    	cartmp.setEmptyingkilometre(car.getEmptyingkilometre());
-    	cartmp.setNotifemptyingkilometre(car.getNotifemptyingkilometre());
-    	cartmp.setInsuranceenddate(car.getInsuranceenddate());
-    	cartmp.setNotifinsuranceenddate(car.getNotifinsuranceenddate());
-    	carService.updateCar(cartmp);
+    	if(null != cartmp){
+    	  if(null != car && null != car.getTechnicalcontroldate()){
+    		if(isThisDateValid(car.getTechnicalcontroldate(), "yyyy-MM-dd")){
+    		  cartmp.setTechnicalcontroldate(car.getTechnicalcontroldate());
+    	   }else{
+    		  throw new IllegalArgumentException("TECHDATE_FAILED");
+    	   }
+    		cartmp.setNotiftechnicalcontroldate(car.getNotiftechnicalcontroldate());
+    	 }
+    	 if(null != car && null != car.getEmptyingkilometre()){
+    		if(car.getEmptyingkilometre() > 0 && (car.getEmptyingkilometre() != cartmp.getEmptyingkilometre())){
+    			cartmp.setEmptyingkilometre(car.getEmptyingkilometre());
+    			cartmp.setEmptyingtotaldistance(0.0);
+    			cartmp.setEmptyingkilometreindex(1);
+    	   }else{
+    		  throw new IllegalArgumentException("EMPKILO_FAILED");
+    	   }
+    		cartmp.setNotifemptyingkilometre(car.getNotifemptyingkilometre());
+    	 }    	
+    	 if(null != car && null != car.getInsuranceenddate()){
+    		if(isThisDateValid(car.getInsuranceenddate(), "yyyy-MM-dd")){
+    			cartmp.setInsuranceenddate(car.getInsuranceenddate());
+    	   }else{
+    		  throw new IllegalArgumentException("INSDATE_FAILED");
+    	   }
+    		cartmp.setNotifinsuranceenddate(car.getNotifinsuranceenddate());
+    	 }   	
+    	 if(null != car && null != car.getAutorisationcirculationenddate()){
+    		if(isThisDateValid(car.getAutorisationcirculationenddate(), "yyyy-MM-dd")){
+    			cartmp.setAutorisationcirculationenddate(car.getAutorisationcirculationenddate());
+    	   }else{
+    		  throw new IllegalArgumentException("CIRDATE_FAILED");
+    	   }
+    	   cartmp.setNotifautorisationcirculationenddate(car.getNotifautorisationcirculationenddate());
+    	 }   	
+    	 carService.updateCar(cartmp);
+    	}else{
+    		throw new IllegalArgumentException("CAR_NOTFOUND");
+    	}
     	return new ResponseMessage(ResponseMessage.Type.success, "GEOFENCE_SUCCES",Constant.getLabels().get("GEOFENCE_SUCCES").toString());
     }
 	
@@ -107,19 +140,59 @@ public class CarController {
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
     	Car cartmp = carService.getCarByDevice(car.getDeviceid(),token);
-    	cartmp.setMaxspeed(car.getMaxspeed());
-    	cartmp.setNotifmaxspeed(car.getNotifmaxspeed());
-    	cartmp.setMaxcourse(car.getMaxcourse());
-    	cartmp.setNotifmaxcourse(car.getNotifmaxcourse());
-    	cartmp.setMinlevelfuel(car.getMinlevelfuel());
-    	cartmp.setNotifminlevelfuel(car.getNotifminlevelfuel());
-    	cartmp.setMaxenginetemperature(car.getMaxenginetemperature());
-    	cartmp.setNotifmaxenginetemperature(car.getNotifmaxenginetemperature());
-    	cartmp.setMaxfridgetemperature(car.getMaxfridgetemperature());
-    	cartmp.setNotifmaxfridgetemperature(car.getNotifmaxfridgetemperature());
-    	cartmp.setMinfridgetemperature(car.getMinfridgetemperature());
-    	cartmp.setNotifminfridgetemperature(car.getNotifminfridgetemperature());
+    	if(null != cartmp){
+    	if(null != car && null != car.getEmptyingkilometre()){
+    		if(car.getEmptyingkilometre() > 0){
+    			cartmp.setMaxspeed(car.getMaxspeed());
+    	   }else{
+    		  throw new IllegalArgumentException("SPEED_FAILED");
+    	   }
+    	   cartmp.setNotifmaxspeed(car.getNotifmaxspeed());
+    	}  
+    	if(null != car && null != car.getMaxcourse()){
+    		if(car.getMaxcourse() > 0){
+    			cartmp.setMaxcourse(car.getMaxcourse());
+    	   }else{
+    		  throw new IllegalArgumentException("COURSE_FAILED");
+    	   }
+    	   cartmp.setNotifmaxcourse(car.getNotifmaxcourse());
+    	} 
+    	if(null != car && null != car.getMinlevelfuel()){
+    		if(car.getMinlevelfuel() > 0){
+    			cartmp.setMinlevelfuel(car.getMinlevelfuel());
+    	   }else{
+    		  throw new IllegalArgumentException("FUEL_FAILED");
+    	   }
+    	   cartmp.setNotifminlevelfuel(car.getNotifminlevelfuel());
+    	}
+    	if(null != car && null != car.getMaxenginetemperature()){
+    		if(car.getMaxenginetemperature() > 0){
+    			cartmp.setMaxenginetemperature(car.getMaxenginetemperature());
+    	   }else{
+    		  throw new IllegalArgumentException("TEMENGINE_FAILED");
+    	   }
+    	   cartmp.setNotifmaxenginetemperature(car.getNotifmaxenginetemperature());
+    	}  
+    	if(null != car && null != car.getMaxfridgetemperature()){
+    		if(car.getMaxfridgetemperature() > 0){
+    			cartmp.setMaxfridgetemperature(car.getMaxfridgetemperature());
+    	   }else{
+    		  throw new IllegalArgumentException("FRIDGEMAX_FAILED");
+    	   }
+    	   cartmp.setNotifmaxfridgetemperature(car.getNotifmaxfridgetemperature());
+    	}  
+    	if(null != car && null != car.getMinfridgetemperature()){
+    		if(car.getMinfridgetemperature() > -100){
+    			cartmp.setMinfridgetemperature(car.getMinfridgetemperature());
+    	   }else{
+    		  throw new IllegalArgumentException("FRIDGEMIN_FAILED");
+    	   }
+    	   cartmp.setNotifminfridgetemperature(car.getNotifminfridgetemperature());
+    	}  
     	carService.updateCar(car);
+    	}else{
+    		throw new IllegalArgumentException("CAR_NOTFOUND");
+    	}
     	return new ResponseMessage(ResponseMessage.Type.success, "GEOFENCE_SUCCES",Constant.getLabels().get("GEOFENCE_SUCCES").toString());
     }
 	
@@ -133,19 +206,27 @@ public class CarController {
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
     	Car cartmp = carService.getCarByDevice(car.getDeviceid(),token);
-    	cartmp.setLongitude1(car.getLongitude1());
-    	cartmp.setLatitude1(car.getLatitude1());
-    	cartmp.setLongitude2(car.getLongitude2());
-    	cartmp.setLatitude2(car.getLatitude2());
-    	cartmp.setLongitude3(car.getLongitude3());
-    	cartmp.setLatitude3(car.getLatitude3());
-    	cartmp.setLongitude4(car.getLongitude4());
-    	cartmp.setLatitude4(car.getLatitude4());
-    	cartmp.setLongitude5(car.getLongitude5());
-    	cartmp.setLatitude5(car.getLatitude5());
-    	cartmp.setLongitude6(car.getLongitude6());
-    	cartmp.setLatitude6(car.getLatitude6());
-    	carService.updateCar(car);
+    	if(null != cartmp){
+    	 if(null != car){
+    	   cartmp.setLongitude1(car.getLongitude1());
+    	   cartmp.setLatitude1(car.getLatitude1());
+    	   cartmp.setLongitude2(car.getLongitude2());
+    	   cartmp.setLatitude2(car.getLatitude2());
+    	   cartmp.setLongitude3(car.getLongitude3());
+    	   cartmp.setLatitude3(car.getLatitude3());
+    	   cartmp.setLongitude4(car.getLongitude4());
+    	   cartmp.setLatitude4(car.getLatitude4());
+    	   cartmp.setLongitude5(car.getLongitude5());
+    	   cartmp.setLatitude5(car.getLatitude5());
+    	   cartmp.setLongitude6(car.getLongitude6());
+    	   cartmp.setLatitude6(car.getLatitude6());
+    	   cartmp.setNotifinzone(car.getNotifinzone());
+    	   cartmp.setNotifoutzone(car.getNotifoutzone());
+    	 }
+    	 carService.updateCar(car);
+    	}else{
+    		throw new IllegalArgumentException("CAR_NOTFOUND");
+    	}
     	return new ResponseMessage(ResponseMessage.Type.success, "GEOFENCE_SUCCES",Constant.getLabels().get("GEOFENCE_SUCCES").toString());
     }
 	
@@ -351,4 +432,27 @@ public class CarController {
     	locations = carService.getAllLocationsByCar(Integer.valueOf(search.getDeviceid()), search.getDate(),token);
     	return locations;
     }
+	
+   public boolean isThisDateValid(String dateToValidate, String dateFromat){
+		
+		if(dateToValidate == null){
+			return false;
+		}
+		
+		SimpleDateFormat sdf = new SimpleDateFormat(dateFromat);
+		sdf.setLenient(false);
+		
+		try {
+			//if not valid, it will throw ParseException
+			Date date = sdf.parse(dateToValidate);
+			System.out.println(date);
+		
+		} catch (ParseException e) {
+			
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}
 }

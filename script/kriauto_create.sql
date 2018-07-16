@@ -94,6 +94,9 @@ ALTER TABLE car ADD COLUMN notifmaxenginetemperature boolean;
 ALTER TABLE car ADD COLUMN notifminfridgetemperature boolean;
 ALTER TABLE car ADD COLUMN notifmaxfridgetemperature boolean;
 ALTER TABLE car ADD COLUMN notifautorisationcirculationenddate boolean;
+ALTER TABLE car ADD COLUMN notifinzone boolean;
+ALTER TABLE car ADD COLUMN notifoutzone boolean;
+ALTER TABLE car ADD COLUMN inzone boolean;
 
 --
 -- Name: agency; Type: TABLE; Schema: public; Owner: postgres
