@@ -68,19 +68,13 @@ public class CarServiceImpl implements CarService {
 				cars.get(j).setSpeed((double)Math.round((speed*1.85)*100)/100);
 				cars.get(j).setCourse((double)Math.round((cours)*100)/100);
 				cars.get(j).setRolling(1);
-				cars.get(j).setEnable(true);
-				cars.get(j).setAddress("161 boulevard la victoire Tanger");
-				//cars.get(j).setAddress(getGoodleAdresse(last.getLatitude(), last.getLongitude()));
-				cars.get(j).setTotaldistance(110.0);
+				cars.get(j).setAddress(getGoodleAdresse(last.getLatitude(), last.getLongitude()));
 			}else{
 				cars.get(j).setConsumption(0.0);
 				cars.get(j).setSpeed(0.0);
 				cars.get(j).setCourse(0.0);
 				cars.get(j).setRolling(0);
-				cars.get(j).setEnable(false);
-				cars.get(j).setAddress("161 boulevard la victoire Rabat");
-				//cars.get(j).setAddress(getGoodleAdresse(last.getLatitude(), last.getLongitude()));
-				cars.get(j).setTotaldistance(200.0);
+				cars.get(j).setAddress(getGoodleAdresse(last.getLatitude(), last.getLongitude()));
 			}
 		}
 		return cars;

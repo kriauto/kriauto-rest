@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import ma.kriauto.rest.domain.Car;
 import ma.kriauto.rest.domain.Consumption;
@@ -189,7 +191,7 @@ public class CarDaoImpl implements CarDao {
 		List<Location> tmplocations = new ArrayList<Location>();
 		List<Event> events = new ArrayList<Event>();
 		
-		locations = jdbcTemplate.query(" select distinct ps.longitude, ps.latitude, ps.speed, ps.course, ps.fixtime -'1 hour'::interval AS servertime,ps.attributes, c.immatriculation, c.vin, c.mark, c.model, c.photo, c.color, ps.deviceid, c.colorCode" 
+		locations = jdbcTemplate.query(" select distinct ps.longitude, ps.latitude, ps.speed, ps.course, ps.fixtime -'1 hour'::interval AS servertime, to_char(ps.fixtime -'1 hour'::interval,'HH24:MI:SS') AS fixtime,ps.attributes, c.immatriculation, c.vin, c.mark, c.model, c.photo, c.color, ps.deviceid, c.colorCode" 
 				+ " from profile p, agency a,car c , positions ps "
 				+ " where p.token = ? "
 				+ " and   p.agencyid = a.id "
@@ -470,12 +472,37 @@ public class CarDaoImpl implements CarDao {
 		System.out.println("getCarStatistic " + deviceid+date);
 		Statistic statistic = new Statistic();
 		double speed = 0, cours=0;
+		String hour;
+		StatisticValues maximalspeed = new StatisticValues();
+		StatisticValues maximalcourse = new StatisticValues();
+		StatisticValues fuelconsommation = new StatisticValues();
+		StatisticValues enginetemperature = new StatisticValues();
+		StatisticValues fridgetemperature = new StatisticValues();
+		StatisticValues fuellevel = new StatisticValues();
+		Map<String,Double> maxspeed = new HashMap<String,Double>();
+		Map<String,Double> maxcourse = new HashMap<String,Double>();
 		Car car = getCarByDevice(deviceid,token);		
-		List<Location> locations = getAllLocationsByCar(deviceid, date, token);
-		
+		List<Location> locations = getAllLocationsByCar(deviceid, date, token);		
 		for(int i =0; i < locations.size(); i++){
-			if(locations.get(i).getSpeed() < 97 && locations.get(i).getSpeed() > speed){
-				speed = locations.get(i).getSpeed();
+			Location location = locations.get(i);
+			if(null != location){
+				hour = location.getFixtime().split(":", 0)[0];
+				if(null != location.getFixtime() && null != maxspeed.get(hour)){
+					if(maxspeed.get(hour) < location.getSpeed())
+					   maxcourse.put(hour, location.getSpeed());
+				}else{
+					   maxspeed.put(hour, location.getSpeed());
+				}
+				if(null != location.getFixtime() && null != maxcourse.get(hour)){
+					   Double distance = maxcourse.get(hour)+location.getCourse();
+					   maxcourse.put(hour, distance);
+				}else{
+					   maxcourse.put(hour, location.getCourse());
+				}
+			}
+			
+			if(location.getSpeed() < 97 && location.getSpeed() > speed){
+				speed = location.getSpeed();
 			}
 			if( i != 0){
 			  double dist = distance(locations.get(i-1).getLatitude(), locations.get(i-1).getLongitude(), locations.get(i).getLatitude(), locations.get(i).getLongitude(), 'K');
@@ -495,32 +522,31 @@ public class CarDaoImpl implements CarDao {
 		   statistic.setCourse(0.0);
 		}
 		statistic.setEnable(car.getEnable());
-		StatisticValues maximalspeed = new StatisticValues();
 		maximalspeed.setV00(20.0);maximalspeed.setV01(15.3);maximalspeed.setV02(23.0);maximalspeed.setV03(23.5);maximalspeed.setV04(45.0);maximalspeed.setV05(63.0);
 		maximalspeed.setV06(12.0);maximalspeed.setV07(52.0);maximalspeed.setV08(63.0);maximalspeed.setV09(45.0);maximalspeed.setV10(63.0);maximalspeed.setV11(63.2);
 		maximalspeed.setV12(14.0);maximalspeed.setV13(21.0);maximalspeed.setV14(63.0);maximalspeed.setV15(45.0);maximalspeed.setV16(63.0);maximalspeed.setV17(45.3);
 		maximalspeed.setV18(23.0);maximalspeed.setV19(52.0);maximalspeed.setV20(36.2);maximalspeed.setV21(36.5);maximalspeed.setV22(12.0);maximalspeed.setV23(63.0);
-		StatisticValues maximalcourse = new StatisticValues();
+		
 		maximalcourse.setV00(20.0);maximalcourse.setV01(15.3);maximalcourse.setV02(23.0);maximalcourse.setV03(23.5);maximalcourse.setV04(45.0);maximalcourse.setV05(63.0);
 		maximalcourse.setV06(12.0);maximalcourse.setV07(52.0);maximalcourse.setV08(63.0);maximalcourse.setV09(45.0);maximalcourse.setV10(63.0);maximalcourse.setV11(63.2);
 		maximalcourse.setV12(14.0);maximalcourse.setV13(21.0);maximalcourse.setV14(63.0);maximalcourse.setV15(45.0);maximalcourse.setV16(63.0);maximalcourse.setV17(45.3);
 		maximalcourse.setV18(23.0);maximalcourse.setV19(52.0);maximalcourse.setV20(36.2);maximalcourse.setV21(36.5);maximalcourse.setV22(12.0);maximalcourse.setV23(63.0);
-		StatisticValues fuelconsommation = new StatisticValues();
+		
 		fuelconsommation.setV00(20.0);fuelconsommation.setV01(15.3);fuelconsommation.setV02(23.0);fuelconsommation.setV03(23.5);fuelconsommation.setV04(45.0);fuelconsommation.setV05(63.0);
 		fuelconsommation.setV06(1.0);fuelconsommation.setV07(52.0);fuelconsommation.setV08(63.0);fuelconsommation.setV09(45.0);fuelconsommation.setV10(63.0);fuelconsommation.setV11(63.2);
 		fuelconsommation.setV12(14.0);fuelconsommation.setV13(21.0);fuelconsommation.setV14(63.0);fuelconsommation.setV15(45.0);fuelconsommation.setV16(63.0);fuelconsommation.setV17(45.3);
 		fuelconsommation.setV18(23.0);fuelconsommation.setV19(52.0);fuelconsommation.setV20(36.2);fuelconsommation.setV21(36.5);fuelconsommation.setV22(12.0);fuelconsommation.setV23(63.0);
-		StatisticValues fuellevel = new StatisticValues();
+		
 		fuellevel.setV00(20.0);fuellevel.setV01(15.3);fuellevel.setV02(23.0);fuellevel.setV03(23.5);fuellevel.setV04(45.0);fuellevel.setV05(63.0);
 		fuellevel.setV06(12.0);fuellevel.setV07(52.0);fuellevel.setV08(63.0);fuellevel.setV09(45.0);fuellevel.setV10(63.0);fuellevel.setV11(63.2);
 		fuellevel.setV12(14.0);fuellevel.setV13(21.0);fuellevel.setV14(63.0);fuellevel.setV15(45.0);fuellevel.setV16(63.0);fuellevel.setV17(45.3);
 		fuellevel.setV18(23.0);fuellevel.setV19(52.0);fuellevel.setV20(36.2);fuellevel.setV21(36.5);fuellevel.setV22(12.0);fuellevel.setV23(63.0);
-		StatisticValues enginetemperature = new StatisticValues();
+		
 		enginetemperature.setV00(20.0);enginetemperature.setV01(15.3);enginetemperature.setV02(23.0);enginetemperature.setV03(23.5);enginetemperature.setV04(45.0);enginetemperature.setV05(63.0);
 		enginetemperature.setV06(12.0);enginetemperature.setV07(52.0);enginetemperature.setV08(63.0);enginetemperature.setV09(45.0);enginetemperature.setV10(63.0);enginetemperature.setV11(63.2);
 		enginetemperature.setV12(14.0);enginetemperature.setV13(21.0);enginetemperature.setV14(63.0);enginetemperature.setV15(45.0);enginetemperature.setV16(63.0);enginetemperature.setV17(45.3);
 		enginetemperature.setV18(23.0);enginetemperature.setV19(53.0);enginetemperature.setV20(36.2);enginetemperature.setV21(36.5);enginetemperature.setV22(12.0);enginetemperature.setV23(63.0);
-		StatisticValues fridgetemperature = new StatisticValues();
+		
 		fridgetemperature.setV00(20.0);fridgetemperature.setV01(15.3);fridgetemperature.setV02(23.0);fridgetemperature.setV03(23.5);fridgetemperature.setV04(45.0);fridgetemperature.setV05(63.0);
 		fridgetemperature.setV06(12.0);fridgetemperature.setV07(52.0);fridgetemperature.setV08(66.0);fridgetemperature.setV09(40.0);fridgetemperature.setV10(63.0);fridgetemperature.setV11(63.2);
 		fridgetemperature.setV12(14.0);fridgetemperature.setV13(21.0);fridgetemperature.setV14(63.0);fridgetemperature.setV15(40.0);fridgetemperature.setV16(63.0);fridgetemperature.setV17(45.3);
