@@ -224,16 +224,16 @@ public class CarController {
 	
 	@RequestMapping(value = "/getNotification", method = RequestMethod.POST)
     @ResponseBody
-    public List<Notification> getNotification(@RequestHeader(value="Authorization") String authorization, @RequestBody Integer deviceid) {
-    	System.out.println("Begin getNotification -->"+deviceid);
+    public List<Notification> getNotification(@RequestHeader(value="Authorization") String authorization, @RequestBody Notification notification) {
+    	System.out.println("Begin getNotification -->");
     	String token = authorization.replaceAll("Basic", "");
     	Profile profile = profileService.getProfileByToken(token);
     	if(null == profile){
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
-    	List<Notification> notification = new ArrayList<Notification>();
-    	notification = notificationService.getNotificationByDevice(deviceid,null);
-    	return notification;
+    	List<Notification> notifications = new ArrayList<Notification>();
+    	notifications = notificationService.getNotificationByDevice(Integer.valueOf(notification.getDeviceid()),notification.getCreationdate());
+    	return notifications;
     }
 	
 	@RequestMapping(value = "/getStatistic", method = RequestMethod.POST)

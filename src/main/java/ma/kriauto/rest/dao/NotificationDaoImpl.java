@@ -40,8 +40,8 @@ public class NotificationDaoImpl implements NotificationDao {
 		notifications = jdbcTemplate.query(" select to_char(creationdate , 'YYYY-MM-DD HH24:MI:SS') AS creationdate, texte "
 						+ "  from  messages" 
 				        + "  where deviceid = ? "
-						+ "  and   to_char(creationdate,'YYYY-MM-DD') >= '"
-						+ day + "'" + " order by creationdate desc",new Object[] { deviceid }, new BeanPropertyRowMapper(Notification.class));
+						+ "  and   to_char(creationdate,'YYYY-MM-DD') = '"
+						+ date + "'" + " order by creationdate desc",new Object[] { deviceid }, new BeanPropertyRowMapper(Notification.class));
 		return notifications;
 	}
 

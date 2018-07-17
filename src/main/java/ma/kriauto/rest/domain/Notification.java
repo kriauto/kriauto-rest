@@ -7,6 +7,7 @@ public class Notification {
 	private String pushplateforme;
 	private String deviceid;
 	private String texte;
+	private String creationdate;
 	
 	public Notification() {
 		super();
@@ -19,13 +20,14 @@ public class Notification {
 	}
 
 	public Notification(String login, String pushnotiftoken,
-			String pushplateforme, String deviceid, String texte) {
+			String pushplateforme, String deviceid, String texte, String ceationdate) {
 		super();
 		this.login = login;
 		this.pushnotiftoken = pushnotiftoken;
 		this.pushplateforme = pushplateforme;
 		this.deviceid = deviceid;
 		this.texte = texte;
+		this.creationdate = creationdate;
 	}
 
 	public String getLogin() {
@@ -67,11 +69,19 @@ public class Notification {
 	public void setTexte(String texte) {
 		this.texte = texte;
 	}
+	
+	public String getCreationdate() {
+		return creationdate;
+	}
+
+	public void setCreationdate(String creationdate) {
+		this.creationdate = creationdate;
+	}
 
 	@Override
 	public String toString() {
 		return "Notification [login=" + login + ", pushnotiftoken="
 				+ pushnotiftoken + ", pushplateforme=" + pushplateforme
-				+ ", deviceid=" + deviceid + ", texte=" + texte + "]";
+				+ ", deviceid=" + deviceid + ", texte=" + texte + ", creationdate=" + creationdate + "]";
 	}
 }
