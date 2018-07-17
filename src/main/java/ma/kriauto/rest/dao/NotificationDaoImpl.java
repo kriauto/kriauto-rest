@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import ma.kriauto.rest.domain.Item;
 import ma.kriauto.rest.domain.Notification;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +38,22 @@ public class NotificationDaoImpl implements NotificationDao {
 		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
 		String day = formater.format(currentdate.getTime());
 		List<Notification> notifications = new ArrayList<Notification>();
-		notifications = jdbcTemplate.query(" select to_char(creationdate , 'YYYY-MM-DD HH24:MI:SS') AS creationdate, texte "
+		notifications = jdbcTemplate.query(" select to_char(creationdate , 'HH24:MI:SS') AS creationdate, texte "
 						+ "  from  messages" 
 				        + "  where deviceid = ? "
 						+ "  and   to_char(creationdate,'YYYY-MM-DD') = '"
 						+ date + "'" + " order by creationdate desc",new Object[] { deviceid }, new BeanPropertyRowMapper(Notification.class));
 		return notifications;
+	}
+	
+	@Override
+	public List<Item> getDatesNotificationByDevice(Integer deviceid) {
+		System.out.println("getDatesNotificationByDevice " + deviceid);
+		List<Item> items = new ArrayList<Item>();
+		items = jdbcTemplate.query(" select distinct to_char(creationdate , 'YYYY-MM-DD') AS code, to_char(creationdate , 'YYYY-MM-DD') AS label "
+						+ "  from  messages" 
+				        + "  where deviceid = ?  order by code desc",new Object[] { deviceid }, new BeanPropertyRowMapper(Item.class));
+		return items;
 	}
 
 	@Override

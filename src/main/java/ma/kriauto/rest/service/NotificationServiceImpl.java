@@ -3,6 +3,7 @@ package ma.kriauto.rest.service;
 import java.util.List;
 
 import ma.kriauto.rest.dao.NotificationDao;
+import ma.kriauto.rest.domain.Item;
 import ma.kriauto.rest.domain.Notification;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,12 @@ public class NotificationServiceImpl implements NotificationService {
 	public List<Notification> getPushTokenByProfile(String login) {
 		// TODO Auto-generated method stub
 		return notificationdao.getPushTokenByProfile(login);
+	}
+
+	@Override
+	public List<Item> getDatesNotificationByDevice(Integer deviceid) {
+		// TODO Auto-generated method stub
+		return notificationdao.getDatesNotificationByDevice(deviceid);
 	}
 
 }

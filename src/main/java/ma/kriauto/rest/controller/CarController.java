@@ -261,6 +261,20 @@ public class CarController {
     	return dates;
     }
 	
+	@RequestMapping(value = "/getDatesNotification", method = RequestMethod.POST)
+    @ResponseBody
+    public List<Item> getDatesNotification(@RequestHeader(value="Authorization") String authorization, @RequestBody Integer deviceid) {
+    	System.out.println("Begin getDatesNotification -->"+deviceid);
+    	String token = authorization.replaceAll("Basic", "");
+    	Profile profile = profileService.getProfileByToken(token);
+    	if(null == profile){
+    		throw new IllegalArgumentException("ACTION_FAILED");
+    	}
+    	List<Item> dates = new ArrayList<Item>();
+    	dates = notificationService.getDatesNotificationByDevice(deviceid);
+    	return dates;
+    }
+	
 	@RequestMapping(value = "/getTotalCours", method = RequestMethod.POST)
     @ResponseBody
     public List<Course> getTotalCours(@RequestHeader(value="Authorization") String authorization, @RequestBody Integer deviceid) {
