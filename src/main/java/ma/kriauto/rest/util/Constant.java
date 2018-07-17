@@ -35,6 +35,16 @@ public class Constant {
 		labels.put("START_CAR","la demande de démarrage est encours, veuillez attendre 2 minutes.");
 		labels.put("GEOFENCE_SUCCES", "Les coordonnées sont enregistrées avec succès");
 		labels.put("ACTION_FAILED", "cette action n'est pas autorisée");
-
+		labels.put("TECHDATE_FAILED", "Veuillez saisir une date de controle technique valide Ex : 2000-01-31");
+		labels.put("EMPKILO_FAILED", "Veuillez saisir un kilométrage pour vidange valide Ex : 5000");
+		labels.put("INSDATE_FAILED", "Veuillez saisir une date de fin d'assurance valide Ex : 2000-01-31");
+		labels.put("CIRDATE_FAILED", "Veuillez saisir une date de fin d'autorisation de circulation valide Ex : 2000-01-31");
+		labels.put("SPEED_FAILED", "Veuillez saisir une vitesse maximale valide Ex : 120");
+		labels.put("COURSE_FAILED", "Veuillez saisir une distance maximale valide Ex : 120");
+		labels.put("FUEL_FAILED", "Veuillez saisir un niveau de carburant minimel valide Ex : 10");
+		labels.put("TEMENGINE_FAILED", "Veuillez saisir une température du moteur maximale valide Ex : 100");
+		labels.put("FRIDGEMIN_FAILED", "Veuillez saisir une température du frigot minimale valide Ex : -10");
+		labels.put("FRIDGEMAX_FAILED", "Veuillez saisir une température du frigot maximale valide Ex : 25");
+		labels.put("CAR_NOTFOUND", "Voiture n'existe pas");
 	}
 }

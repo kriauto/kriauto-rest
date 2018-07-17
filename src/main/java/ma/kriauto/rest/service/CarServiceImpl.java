@@ -50,7 +50,7 @@ public class CarServiceImpl implements CarService {
 			double speed = 0, cours=0;
 			Car car = getCarByDevice(cars.get(j).getDeviceid(),token);		
 			List<Location> locations = getAllLocationsByCar(cars.get(j).getDeviceid(),date, token);
-			
+			Location last = getLastLocationByCar(cars.get(j).getDeviceid(), token);
 			for(int i =0; i < locations.size(); i++){
 				if(locations.get(i).getSpeed() < 97 && locations.get(i).getSpeed() > speed){
 					speed = locations.get(i).getSpeed();
@@ -70,6 +70,7 @@ public class CarServiceImpl implements CarService {
 				cars.get(j).setRolling(1);
 				cars.get(j).setEnable(true);
 				cars.get(j).setAddress("161 boulevard la victoire Tanger");
+				//cars.get(j).setAddress(getGoodleAdresse(last.getLatitude(), last.getLongitude()));
 				cars.get(j).setTotaldistance(110.0);
 			}else{
 				cars.get(j).setConsumption(0.0);
@@ -78,6 +79,7 @@ public class CarServiceImpl implements CarService {
 				cars.get(j).setRolling(0);
 				cars.get(j).setEnable(false);
 				cars.get(j).setAddress("161 boulevard la victoire Rabat");
+				//cars.get(j).setAddress(getGoodleAdresse(last.getLatitude(), last.getLongitude()));
 				cars.get(j).setTotaldistance(200.0);
 			}
 		}

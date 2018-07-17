@@ -61,6 +61,9 @@ public class Car {
 	private Boolean notifminfridgetemperature;
 	private Boolean notifmaxfridgetemperature;
 	private Boolean notifautorisationcirculationenddate;
+	private Boolean notifinzone;
+	private Boolean notifoutzone;
+	private Boolean inzone;
 	
 	public Car() {
 		super();
@@ -94,7 +97,10 @@ public class Car {
 			Boolean notifminlevelfuel, Boolean notifmaxenginetemperature,
 			Boolean notifminfridgetemperature,
 			Boolean notifmaxfridgetemperature,
-			Boolean notifautorisationcirculationenddate) {
+			Boolean notifautorisationcirculationenddate,
+			Boolean notifinzone,
+			Boolean notifoutzone,
+			Boolean inzone) {
 		super();
 		this.id = id;
 		this.agencyid = agencyid;
@@ -155,6 +161,9 @@ public class Car {
 		this.notifminfridgetemperature = notifminfridgetemperature;
 		this.notifmaxfridgetemperature = notifmaxfridgetemperature;
 		this.notifautorisationcirculationenddate = notifautorisationcirculationenddate;
+		this.notifinzone = notifautorisationcirculationenddate;
+		this.notifoutzone = notifautorisationcirculationenddate;
+		this.inzone= notifautorisationcirculationenddate;
 	}
 
 	public Double getTotaldistance() {
@@ -725,6 +734,30 @@ public class Car {
 			Boolean notifautorisationcirculationenddate) {
 		this.notifautorisationcirculationenddate = notifautorisationcirculationenddate;
 	}
+	
+	public Boolean getNotifinzone() {
+		return notifinzone;
+	}
+
+	public void setNotifinzone(Boolean notifinzone) {
+		this.notifinzone = notifinzone;
+	}
+
+	public Boolean getNotifoutzone() {
+		return notifoutzone;
+	}
+
+	public void setNotifoutzone(Boolean notifoutzone) {
+		this.notifoutzone = notifoutzone;
+	}
+
+	public Boolean getInzone() {
+		return inzone;
+	}
+
+	public void setInzone(Boolean inzone) {
+		this.inzone = inzone;
+	}
 
 	@Override
 	public String toString() {
@@ -737,24 +770,24 @@ public class Car {
 				+ totaldistance + ", emptyingtotaldistance="
 				+ emptyingtotaldistance + ", course=" + course + ", speed="
 				+ speed + ", consumption=" + consumption + ", fuel=" + fuel
-				+ ", latitude1=" + latitude1 + ", longitude1=" + longitude1
-				+ ", latitude2=" + latitude2 + ", longitude2=" + longitude2
-				+ ", latitude3=" + latitude3 + ", longitude3=" + longitude3
-				+ ", latitude4=" + latitude4 + ", longitude4=" + longitude4
-				+ ", latitude5=" + latitude5 + ", longitude5=" + longitude5
-				+ ", latitude6=" + latitude6 + ", longitude6=" + longitude6
-				+ ", colorcode=" + colorcode + ", devicetype=" + devicetype
-				+ ", enable=" + enable + ", technicalcontroldate="
-				+ technicalcontroldate + ", emptyingkilometre="
-				+ emptyingkilometre + ", emptyingkilometreindex="
-				+ emptyingkilometreindex + ", emptyingkilometredate="
-				+ emptyingkilometredate + ", insuranceenddate="
-				+ insuranceenddate + ", maxspeed=" + maxspeed + ", maxcourse="
-				+ maxcourse + ", minlevelfuel=" + minlevelfuel
-				+ ", maxenginetemperature=" + maxenginetemperature
-				+ ", minfridgetemperature=" + minfridgetemperature
-				+ ", maxfridgetemperature=" + maxfridgetemperature
-				+ ", autorisationcirculationenddate="
+				+ ", address=" + address + ", latitude1=" + latitude1
+				+ ", longitude1=" + longitude1 + ", latitude2=" + latitude2
+				+ ", longitude2=" + longitude2 + ", latitude3=" + latitude3
+				+ ", longitude3=" + longitude3 + ", latitude4=" + latitude4
+				+ ", longitude4=" + longitude4 + ", latitude5=" + latitude5
+				+ ", longitude5=" + longitude5 + ", latitude6=" + latitude6
+				+ ", longitude6=" + longitude6 + ", colorcode=" + colorcode
+				+ ", devicetype=" + devicetype + ", enable=" + enable
+				+ ", technicalcontroldate=" + technicalcontroldate
+				+ ", emptyingkilometre=" + emptyingkilometre
+				+ ", emptyingkilometreindex=" + emptyingkilometreindex
+				+ ", emptyingkilometredate=" + emptyingkilometredate
+				+ ", insuranceenddate=" + insuranceenddate + ", maxspeed="
+				+ maxspeed + ", maxcourse=" + maxcourse + ", minlevelfuel="
+				+ minlevelfuel + ", maxenginetemperature="
+				+ maxenginetemperature + ", minfridgetemperature="
+				+ minfridgetemperature + ", maxfridgetemperature="
+				+ maxfridgetemperature + ", autorisationcirculationenddate="
 				+ autorisationcirculationenddate
 				+ ", notiftechnicalcontroldate=" + notiftechnicalcontroldate
 				+ ", notifemptyingkilometre=" + notifemptyingkilometre
@@ -766,8 +799,9 @@ public class Car {
 				+ ", notifminfridgetemperature=" + notifminfridgetemperature
 				+ ", notifmaxfridgetemperature=" + notifmaxfridgetemperature
 				+ ", notifautorisationcirculationenddate="
-				+ notifautorisationcirculationenddate + "]";
+				+ notifautorisationcirculationenddate + ", notifinzone="
+				+ notifinzone + ", notifoutzone=" + notifoutzone + ", inzone="
+				+ inzone + "]";
 	}
-
 	
 }
