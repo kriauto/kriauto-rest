@@ -34,7 +34,7 @@ public final static String API_URL_FCM = "https://fcm.googleapis.com/fcm/send";
         	 
             json.put("to", deviceToken.trim());
             JSONObject info = new JSONObject();
-            //info.put("title", "notification title"); // Notification title
+            info.put("sound", "default"); // Notification title
             info.put("body", "ceci est un test de notifications toto titiceci est un test de notifications toto titiceci est un test de notifications toto titiceci est un test de notifications toto titi"); // Notification
                                                                     // body
             json.put("notification", info);
@@ -61,8 +61,9 @@ public final static String API_URL_FCM = "https://fcm.googleapis.com/fcm/send";
         return result;
 }
     public static void main(String[] args){
-    	String token = "dhUF18ynK_U:APA91bF-7O1HmueduVCl3HWIIW7yKXGW7z5DfM4z7Er698zTdgd0cWT_Q3newSCCWV_WHVOVQeOmiH0b9E8uCBm9G58z2pq2L6jKS4BKZu3SI9xKoqvPaouIEPt-Y7xd3"
-                       +"JxdxpxjyLVxPJaCQ4qVh0l29TSjw-PNvg";
+    	String token = "dBcZ-8QWw1w:APA91bF6y6ARs9FtdFjks7ceReXGxHxgAm1f2NPrNHiiZYp-gy35JJQ"
++"wUgwr0YoCGvgXmvBrxPSNTcSXg_1A9mdJUR7lsR1JLHN9TLxj51Z8sO9gmER50FOnbeDANVM3ozedXgS"
++"LxOSZfkghbEa2CVDmy_EC0_8dnQ";
 //    	String token = "8e44805c397a33b88b340730361b9bd674fd64a582219ee78cc57d597ba4a625";
     	try {
 			sendPushNotification(token);

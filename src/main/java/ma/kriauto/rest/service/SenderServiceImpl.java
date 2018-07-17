@@ -122,7 +122,7 @@ public class SenderServiceImpl implements SenderService {
         	 
             json.put("to", pushToken.trim());
             JSONObject info = new JSONObject();
-            //info.put("title", "notification title"); // Notification title
+            info.put("sound", "notification tit"); // Notification title
             info.put("body", message); // Notification
                                                                     // body
             json.put("notification", info);
