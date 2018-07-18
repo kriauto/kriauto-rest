@@ -203,58 +203,13 @@ public class CarDaoImpl implements CarDao {
 				+ " and   to_char(ps.fixtime -'1 hour'::interval,'YYYY-MM-DD') = '"+ date + "'"
 				+ " order by servertime ",new Object[] {token,deviceid}, new BeanPropertyRowMapper(Location.class));
 
-//		events = jdbcTemplate.query(" select distinct positionid, attributes,servertime from events where to_char(servertime - interval '1 hour', 'yyyy-mm-dd') = ? and deviceid = ? and attributes like '%powerO%' order by positionid ",new Object[] {date, deviceid}, new BeanPropertyRowMapper(Event.class));
-//		if(events.size() > 0){
-//		  for(int i = 0; i < events.size() ; i++){
-//			Event event1 = (null != events.get(i) ? events.get(i) : null);
-//			if(null != event1 &&  "{\"alarm\":\"powerOff\"}".equals(event1.getAttributes()) && i == 0){
-//				tmplocations = getLocationsBefore(deviceid,event1.getPositionid(), date);
-//				locations.addAll(tmplocations);
-//				tmplocations.clear();
-//			}
-//			if(null != event1 && "{\"alarm\":\"powerOn\"}".equals(event1.getAttributes())){
-//				boolean exist = false;
-//				for(int j = i+1 ; j < events.size(); j++){
-//					Event event2 = (j < events.size() ? events.get(j) : null);
-//					Event event22 = ((j+1) < events.size() ? events.get(j+1) : null);
-//					if(null != event2 && "{\"alarm\":\"powerOff\"}".equals(event2.getAttributes()) && ((null != event22 && "{\"alarm\":\"powerOn\"}".equals(event22.getAttributes())) || null == event22)){
-//						tmplocations = getLocationsBetween(deviceid,event1.getPositionid(),event2.getPositionid(), date);
-//						locations.addAll(tmplocations);
-//						tmplocations.clear();
-//						i = j ;
-//						exist = true;
-//						break;
-//					}
-//				}
-//				if(!exist){
-//					tmplocations = getLocationsAfter(deviceid, event1.getPositionid(), date);
-//					locations.addAll(tmplocations);
-//					tmplocations.clear();
-//				}
-//				
-//			}
-//		 }
-//		}else{
-//			 Event event3 = getLastEvent(deviceid, date);
-//			  if(null != event3 && "{\"alarm\":\"powerOff\"}".equals(event3.getAttributes())){
-//				  Location location = getLocationById(event3.getPositionid());
-//				  locations.add(location);
-//			  }else if(null != event3 && "{\"alarm\":\"powerOn\"}".equals(event3.getAttributes())) {
-//				  locations = getLocationsAfter(deviceid, event3.getPositionid(), date);
-//				  if(locations.size() == 0){
-//					  Location location = getLocationById(event3.getPositionid());
-//					  locations.add(location);
-//				  }
-//			  }else{
-//				  locations = getLocationsByDate(deviceid,date);
-//			  }
-//		}
 		double log = 0,lat = 0;
 		if(locations.size() > 0){
 		  for(int i = 0 ; i< locations.size(); i++){
 			if(0 == i){
 				log = locations.get(i).getLongitude();
 				lat = locations.get(i).getLatitude();
+				locations.get(i).setSpeed((double)Math.round((locations.get(i).getSpeed()*1.85)*10)/10);				
 				if(null != locations.get(i).getAttributes() && locations.get(i).getAttributes().indexOf("temp1") == 0  && getDistance(locations.get(i).getAttributes()) <= 500){
 				   locations1.add(locations.get(i));
 				}
@@ -268,9 +223,6 @@ public class CarDaoImpl implements CarDao {
 					  if(dist <= 1){
 						  locations1.add(locations.get(i));
 					  }
-//					if(null != locations.get(i).getAttributes() && getDistance(locations.get(i).getAttributes()) <= 500){
-//						   locations1.add(locations.get(i));
-//					}
 				}
 			  }
 			}
@@ -481,6 +433,7 @@ public class CarDaoImpl implements CarDao {
 		StatisticValues fuellevel = new StatisticValues();
 		Map<String,Double> maxspeed = new HashMap<String,Double>();
 		Map<String,Double> maxcourse = new HashMap<String,Double>();
+		Map<String,Double> maxfuel = new HashMap<String,Double>();
 		Car car = getCarByDevice(deviceid,token);		
 		List<Location> locations = getAllLocationsByCar(deviceid, date, token);		
 		for(int i =0; i < locations.size(); i++){
@@ -488,16 +441,22 @@ public class CarDaoImpl implements CarDao {
 			if(null != location){
 				hour = location.getFixtime().split(":", 0)[0];
 				if(null != location.getFixtime() && null != maxspeed.get(hour)){
-					if(maxspeed.get(hour) < location.getSpeed())
-					   maxcourse.put(hour, location.getSpeed());
+					if(location.getSpeed() < 97 && maxspeed.get(hour) < location.getSpeed())
+						maxspeed.put(hour, location.getSpeed());
 				}else{
-					   maxspeed.put(hour, location.getSpeed());
+					if(location.getSpeed() < 97)
+					    maxspeed.put(hour, location.getSpeed());
 				}
 				if(null != location.getFixtime() && null != maxcourse.get(hour)){
-					   Double distance = maxcourse.get(hour)+location.getCourse();
-					   maxcourse.put(hour, distance);
+					  if( i != 0){
+						  double dist = distance(locations.get(i-1).getLatitude(), locations.get(i-1).getLongitude(), locations.get(i).getLatitude(), locations.get(i).getLongitude(), 'K');
+						  if(dist <= 1){
+							  Double distance = maxcourse.get(hour)+dist;
+							  maxcourse.put(hour, distance);
+						  }
+					   }
 				}else{
-					   maxcourse.put(hour, location.getCourse());
+					   maxcourse.put(hour, 0.0);
 				}
 			}
 			
@@ -513,29 +472,89 @@ public class CarDaoImpl implements CarDao {
 		}
 
 		if(cours > 0){
-		   statistic.setConsumption((double)Math.round(((cours/100)*car.getConsumption())*100)/100);
-		   statistic.setSpeed((double)Math.round((speed*1.85)*100)/100);
-		   statistic.setCourse((double)Math.round((cours)*100)/100);
+		   statistic.setConsumption((double)Math.round((cours*car.getConsumption()/100)*10)/10);
+		   statistic.setSpeed((double)Math.round((speed*1.85)*10)/10);
+		   statistic.setCourse((double)Math.round((cours)*10)/10);
 		}else{
 		   statistic.setConsumption(0.0);
 		   statistic.setSpeed(0.0);
 		   statistic.setCourse(0.0);
 		}
 		statistic.setEnable(car.getEnable());
-		maximalspeed.setV00(20.0);maximalspeed.setV01(15.3);maximalspeed.setV02(23.0);maximalspeed.setV03(23.5);maximalspeed.setV04(45.0);maximalspeed.setV05(63.0);
-		maximalspeed.setV06(12.0);maximalspeed.setV07(52.0);maximalspeed.setV08(63.0);maximalspeed.setV09(45.0);maximalspeed.setV10(63.0);maximalspeed.setV11(63.2);
-		maximalspeed.setV12(14.0);maximalspeed.setV13(21.0);maximalspeed.setV14(63.0);maximalspeed.setV15(45.0);maximalspeed.setV16(63.0);maximalspeed.setV17(45.3);
-		maximalspeed.setV18(23.0);maximalspeed.setV19(52.0);maximalspeed.setV20(36.2);maximalspeed.setV21(36.5);maximalspeed.setV22(12.0);maximalspeed.setV23(63.0);
+		maximalspeed.setV00(null != maxspeed.get("00") ? (double)Math.round((maxspeed.get("00")*1.85)*10)/10 : 0.0);
+		maximalspeed.setV01(null != maxspeed.get("01") ? (double)Math.round((maxspeed.get("01")*1.85)*10)/10 : 0.0);
+		maximalspeed.setV02(null != maxspeed.get("02") ? (double)Math.round((maxspeed.get("02")*1.85)*10)/10 : 0.0);
+		maximalspeed.setV03(null != maxspeed.get("03") ? (double)Math.round((maxspeed.get("03")*1.85)*10)/10 : 0.0);
+		maximalspeed.setV04(null != maxspeed.get("04") ? (double)Math.round((maxspeed.get("04")*1.85)*10)/10 : 0.0);
+		maximalspeed.setV05(null != maxspeed.get("05") ? (double)Math.round((maxspeed.get("05")*1.85)*10)/10 : 0.0);
+		maximalspeed.setV06(null != maxspeed.get("06") ? (double)Math.round((maxspeed.get("06")*1.85)*10)/10 : 0.0);
+		maximalspeed.setV07(null != maxspeed.get("07") ? (double)Math.round((maxspeed.get("07")*1.85)*10)/10 : 0.0);
+		maximalspeed.setV08(null != maxspeed.get("08") ? (double)Math.round((maxspeed.get("08")*1.85)*10)/10 : 0.0);
+		maximalspeed.setV09(null != maxspeed.get("09") ? (double)Math.round((maxspeed.get("09")*1.85)*10)/10 : 0.0);
+		maximalspeed.setV10(null != maxspeed.get("10") ? (double)Math.round((maxspeed.get("10")*1.85)*10)/10 : 0.0);
+		maximalspeed.setV11(null != maxspeed.get("11") ? (double)Math.round((maxspeed.get("11")*1.85)*10)/10 : 0.0);
+		maximalspeed.setV12(null != maxspeed.get("12") ? (double)Math.round((maxspeed.get("12")*1.85)*10)/10 : 0.0);
+		maximalspeed.setV13(null != maxspeed.get("13") ? (double)Math.round((maxspeed.get("13")*1.85)*10)/10 : 0.0);
+		maximalspeed.setV14(null != maxspeed.get("14") ? (double)Math.round((maxspeed.get("14")*1.85)*10)/10 : 0.0);
+		maximalspeed.setV15(null != maxspeed.get("15") ? (double)Math.round((maxspeed.get("15")*1.85)*10)/10 : 0.0);
+		maximalspeed.setV16(null != maxspeed.get("16") ? (double)Math.round((maxspeed.get("16")*1.85)*10)/10 : 0.0);
+		maximalspeed.setV17(null != maxspeed.get("17") ? (double)Math.round((maxspeed.get("17")*1.85)*10)/10 : 0.0);
+		maximalspeed.setV18(null != maxspeed.get("18") ? (double)Math.round((maxspeed.get("18")*1.85)*10)/10 : 0.0);
+		maximalspeed.setV19(null != maxspeed.get("19") ? (double)Math.round((maxspeed.get("19")*1.85)*10)/10 : 0.0);
+		maximalspeed.setV20(null != maxspeed.get("20") ? (double)Math.round((maxspeed.get("20")*1.85)*10)/10 : 0.0);
+		maximalspeed.setV21(null != maxspeed.get("21") ? (double)Math.round((maxspeed.get("21")*1.85)*10)/10 : 0.0);
+		maximalspeed.setV22(null != maxspeed.get("22") ? (double)Math.round((maxspeed.get("22")*1.85)*10)/10 : 0.0);
+		maximalspeed.setV23(null != maxspeed.get("23") ? (double)Math.round((maxspeed.get("23")*1.85)*10)/10 : 0.0);
 		
-		maximalcourse.setV00(20.0);maximalcourse.setV01(15.3);maximalcourse.setV02(23.0);maximalcourse.setV03(23.5);maximalcourse.setV04(45.0);maximalcourse.setV05(63.0);
-		maximalcourse.setV06(12.0);maximalcourse.setV07(52.0);maximalcourse.setV08(63.0);maximalcourse.setV09(45.0);maximalcourse.setV10(63.0);maximalcourse.setV11(63.2);
-		maximalcourse.setV12(14.0);maximalcourse.setV13(21.0);maximalcourse.setV14(63.0);maximalcourse.setV15(45.0);maximalcourse.setV16(63.0);maximalcourse.setV17(45.3);
-		maximalcourse.setV18(23.0);maximalcourse.setV19(52.0);maximalcourse.setV20(36.2);maximalcourse.setV21(36.5);maximalcourse.setV22(12.0);maximalcourse.setV23(63.0);
+		maximalcourse.setV00(null != maxcourse.get("00") ? (double) Math.round(maxcourse.get("00")*10)/10 : 0.0);
+		maximalcourse.setV01(null != maxcourse.get("01") ? (double) Math.round(maxcourse.get("01")*10)/10 : 0.0);
+		maximalcourse.setV02(null != maxcourse.get("02") ? (double) Math.round(maxcourse.get("02")*10)/10 : 0.0);
+		maximalcourse.setV03(null != maxcourse.get("03") ? (double) Math.round(maxcourse.get("03")*10)/10 : 0.0);
+		maximalcourse.setV04(null != maxcourse.get("04") ? (double) Math.round(maxcourse.get("04")*10)/10 : 0.0);
+		maximalcourse.setV05(null != maxcourse.get("05") ? (double) Math.round(maxcourse.get("05")*10)/10 : 0.0);
+		maximalcourse.setV06(null != maxcourse.get("06") ? (double) Math.round(maxcourse.get("06")*10)/10 : 0.0);
+		maximalcourse.setV07(null != maxcourse.get("07") ? (double) Math.round(maxcourse.get("07")*10)/10 : 0.0);
+		maximalcourse.setV08(null != maxcourse.get("08") ? (double) Math.round(maxcourse.get("08")*10)/10 : 0.0);
+		maximalcourse.setV09(null != maxcourse.get("09") ? (double) Math.round(maxcourse.get("09")*10)/10 : 0.0);
+		maximalcourse.setV10(null != maxcourse.get("10") ? (double) Math.round(maxcourse.get("10")*10)/10 : 0.0);
+		maximalcourse.setV11(null != maxcourse.get("11") ? (double) Math.round(maxcourse.get("11")*10)/10 : 0.0);
+		maximalcourse.setV12(null != maxcourse.get("12") ? (double) Math.round(maxcourse.get("12")*10)/10 : 0.0);
+		maximalcourse.setV13(null != maxcourse.get("13") ? (double) Math.round(maxcourse.get("13")*10)/10 : 0.0);
+		maximalcourse.setV14(null != maxcourse.get("14") ? (double) Math.round(maxcourse.get("14")*10)/10 : 0.0);
+		maximalcourse.setV15(null != maxcourse.get("15") ? (double) Math.round(maxcourse.get("15")*10)/10 : 0.0);
+		maximalcourse.setV16(null != maxcourse.get("16") ? (double) Math.round(maxcourse.get("16")*10)/10 : 0.0);
+		maximalcourse.setV17(null != maxcourse.get("17") ? (double) Math.round(maxcourse.get("17")*10)/10 : 0.0);
+		maximalcourse.setV18(null != maxcourse.get("18") ? (double) Math.round(maxcourse.get("18")*10)/10 : 0.0);
+		maximalcourse.setV19(null != maxcourse.get("19") ? (double) Math.round(maxcourse.get("19")*10)/10 : 0.0);
+		maximalcourse.setV20(null != maxcourse.get("20") ? (double) Math.round(maxcourse.get("20")*10)/10 : 0.0);
+		maximalcourse.setV21(null != maxcourse.get("21") ? (double) Math.round(maxcourse.get("21")*10)/10 : 0.0);
+		maximalcourse.setV22(null != maxcourse.get("22") ? (double) Math.round(maxcourse.get("22")*10)/10 : 0.0);
+		maximalcourse.setV23(null != maxcourse.get("23") ? (double) Math.round(maxcourse.get("23")*10)/10 : 0.0);
 		
-		fuelconsommation.setV00(20.0);fuelconsommation.setV01(15.3);fuelconsommation.setV02(23.0);fuelconsommation.setV03(23.5);fuelconsommation.setV04(45.0);fuelconsommation.setV05(63.0);
-		fuelconsommation.setV06(1.0);fuelconsommation.setV07(52.0);fuelconsommation.setV08(63.0);fuelconsommation.setV09(45.0);fuelconsommation.setV10(63.0);fuelconsommation.setV11(63.2);
-		fuelconsommation.setV12(14.0);fuelconsommation.setV13(21.0);fuelconsommation.setV14(63.0);fuelconsommation.setV15(45.0);fuelconsommation.setV16(63.0);fuelconsommation.setV17(45.3);
-		fuelconsommation.setV18(23.0);fuelconsommation.setV19(52.0);fuelconsommation.setV20(36.2);fuelconsommation.setV21(36.5);fuelconsommation.setV22(12.0);fuelconsommation.setV23(63.0);
+		fuelconsommation.setV00(null != maxcourse.get("00") ? (double)Math.round((maxcourse.get("00")*car.getConsumption()/100)*10)/10 : 0.0);
+		fuelconsommation.setV01(null != maxcourse.get("01") ? (double)Math.round((maxcourse.get("01")*car.getConsumption()/100)*10)/10 : 0.0);
+		fuelconsommation.setV02(null != maxcourse.get("02") ? (double)Math.round((maxcourse.get("02")*car.getConsumption()/100)*10)/10 : 0.0);
+		fuelconsommation.setV03(null != maxcourse.get("03") ? (double)Math.round((maxcourse.get("03")*car.getConsumption()/100)*10)/10 : 0.0);
+		fuelconsommation.setV04(null != maxcourse.get("04") ? (double)Math.round((maxcourse.get("04")*car.getConsumption()/100)*10)/10 : 0.0);
+		fuelconsommation.setV05(null != maxcourse.get("05") ? (double)Math.round((maxcourse.get("05")*car.getConsumption()/100)*10)/10 : 0.0);
+		fuelconsommation.setV06(null != maxcourse.get("06") ? (double)Math.round((maxcourse.get("06")*car.getConsumption()/100)*10)/10 : 0.0);
+		fuelconsommation.setV07(null != maxcourse.get("07") ? (double)Math.round((maxcourse.get("07")*car.getConsumption()/100)*10)/10 : 0.0);
+		fuelconsommation.setV08(null != maxcourse.get("08") ? (double)Math.round((maxcourse.get("08")*car.getConsumption()/100)*10)/10 : 0.0);
+		fuelconsommation.setV09(null != maxcourse.get("09") ? (double)Math.round((maxcourse.get("09")*car.getConsumption()/100)*10)/10 : 0.0);
+		fuelconsommation.setV10(null != maxcourse.get("10") ? (double)Math.round((maxcourse.get("10")*car.getConsumption()/100)*10)/10 : 0.0);
+		fuelconsommation.setV11(null != maxcourse.get("11") ? (double)Math.round((maxcourse.get("11")*car.getConsumption()/100)*10)/10 : 0.0);
+		fuelconsommation.setV12(null != maxcourse.get("12") ? (double)Math.round((maxcourse.get("12")*car.getConsumption()/100)*10)/10 : 0.0);
+		fuelconsommation.setV13(null != maxcourse.get("13") ? (double)Math.round((maxcourse.get("13")*car.getConsumption()/100)*10)/10 : 0.0);
+		fuelconsommation.setV14(null != maxcourse.get("14") ? (double)Math.round((maxcourse.get("14")*car.getConsumption()/100)*10)/10 : 0.0);
+		fuelconsommation.setV15(null != maxcourse.get("15") ? (double)Math.round((maxcourse.get("15")*car.getConsumption()/100)*10)/10 : 0.0);
+		fuelconsommation.setV16(null != maxcourse.get("16") ? (double)Math.round((maxcourse.get("16")*car.getConsumption()/100)*10)/10 : 0.0);
+		fuelconsommation.setV17(null != maxcourse.get("17") ? (double)Math.round((maxcourse.get("17")*car.getConsumption()/100)*10)/10 : 0.0);
+		fuelconsommation.setV18(null != maxcourse.get("18") ? (double)Math.round((maxcourse.get("18")*car.getConsumption()/100)*10)/10 : 0.0);
+		fuelconsommation.setV19(null != maxcourse.get("19") ? (double)Math.round((maxcourse.get("19")*car.getConsumption()/100)*10)/10 : 0.0);
+		fuelconsommation.setV20(null != maxcourse.get("20") ? (double)Math.round((maxcourse.get("20")*car.getConsumption()/100)*10)/10 : 0.0);
+		fuelconsommation.setV21(null != maxcourse.get("21") ? (double)Math.round((maxcourse.get("21")*car.getConsumption()/100)*10)/10 : 0.0);
+		fuelconsommation.setV22(null != maxcourse.get("22") ? (double)Math.round((maxcourse.get("22")*car.getConsumption()/100)*10)/10 : 0.0);
+		fuelconsommation.setV23(null != maxcourse.get("23") ? (double)Math.round((maxcourse.get("23")*car.getConsumption()/100)*10)/10 : 0.0);
 		
 		fuellevel.setV00(20.0);fuellevel.setV01(15.3);fuellevel.setV02(23.0);fuellevel.setV03(23.5);fuellevel.setV04(45.0);fuellevel.setV05(63.0);
 		fuellevel.setV06(12.0);fuellevel.setV07(52.0);fuellevel.setV08(63.0);fuellevel.setV09(45.0);fuellevel.setV10(63.0);fuellevel.setV11(63.2);

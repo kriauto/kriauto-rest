@@ -81,6 +81,49 @@ public class CarServiceImpl implements CarService {
 	}
 	
 	@Override
+	public List<Car> getCarsWithAddress(boolean group, String token, boolean withaddress) {
+		// TODO Auto-generated method stub
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		Date today = Calendar.getInstance().getTime();        
+		String date = df.format(today);
+		List<Car> cars = cardao.getAllCarsByToken(group, token);
+		for(int j = 0; j < cars.size() ; j++){
+			double speed = 0, cours=0;
+			Car car = getCarByDevice(cars.get(j).getDeviceid(),token);		
+			List<Location> locations = getAllLocationsByCar(cars.get(j).getDeviceid(),date, token);
+			Location last = getLastLocationByCar(cars.get(j).getDeviceid(), token);
+			for(int i =0; i < locations.size(); i++){
+				if(locations.get(i).getSpeed() < 97 && locations.get(i).getSpeed() > speed){
+					speed = locations.get(i).getSpeed();
+				}
+				if( i != 0){
+				  double dist = cardao.distance(locations.get(i-1).getLatitude(), locations.get(i-1).getLongitude(), locations.get(i).getLatitude(), locations.get(i).getLongitude(), 'K');
+				  if(dist <= 1){
+				    cours = cours + dist;
+				  }
+				}
+			}
+
+			if(cours > 0){
+				cars.get(j).setConsumption((double)Math.round(((cours/100)*car.getConsumption())*100)/100);
+				cars.get(j).setSpeed((double)Math.round((speed*1.85)*100)/100);
+				cars.get(j).setCourse((double)Math.round((cours)*100)/100);
+				cars.get(j).setRolling(1);
+				if(withaddress)
+				  cars.get(j).setAddress(getGoodleAdresse(last.getLatitude(), last.getLongitude()));
+			}else{
+				cars.get(j).setConsumption(0.0);
+				cars.get(j).setSpeed(0.0);
+				cars.get(j).setCourse(0.0);
+				cars.get(j).setRolling(0);
+				if(withaddress)
+				  cars.get(j).setAddress(getGoodleAdresse(last.getLatitude(), last.getLongitude()));
+			}
+		}
+		return cars;
+	}
+	
+	@Override
 	public List<Car> getAllCarsByProfile(String login) {
 		// TODO Auto-generated method stub
 		return cardao.getAllCarsByProfile(login);

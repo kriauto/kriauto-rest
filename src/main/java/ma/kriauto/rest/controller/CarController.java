@@ -65,6 +65,21 @@ public class CarController {
     	return cars;
     }
 	
+	@RequestMapping(value = "/getCarsWithAddress", method = RequestMethod.POST)
+    @ResponseBody
+    public List<Car> getCarsWithAddress(@RequestHeader(value="Authorization") String authorization, @RequestBody Boolean withaddress) {
+    	System.out.println("Begin getAllCarsByToken -->"+authorization);
+    	List<Car> cars = new ArrayList<Car>();
+    	String token = authorization.replaceAll("Basic", "");
+    	Profile profile = profileService.getProfileByToken(token);
+    	if(null == profile){
+    		throw new IllegalArgumentException("ACTION_FAILED");
+    	}
+    	boolean isgroup = false ;
+    	cars = carService.getCarsWithAddress(isgroup, token,withaddress);
+    	return cars;
+    }
+	
 	@RequestMapping(value = "/getCarByDevice", method = RequestMethod.POST)
     @ResponseBody
     public Car getCarByDevice(@RequestHeader(value="Authorization") String authorization, @RequestBody Integer deviceid) {
