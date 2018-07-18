@@ -164,16 +164,10 @@ public class CarDaoImpl implements CarDao {
 		List<Car> cars = getAllCarsByToken(false, token);
 		for(int i = 0; i<cars.size(); i++){
 			Car car = cars.get(i);
-//			Event event3 = getLastEvent(car.getDeviceid(), date);
-//			  if(null != event3 && "{\"alarm\":\"powerOff\"}".equals(event3.getAttributes())){
-//				  Location location = getLocationById(event3.getPositionid());
-//				  locations.add(location);
-//			  }else{
 				  Location location = getLastLocationByCar(car.getDeviceid(),date,token);
 				  if(null != location){
 				     locations.add(location);
 				  }
-//			  }
 		}
 				
 		for(int i = 0; i<locations.size(); i++){

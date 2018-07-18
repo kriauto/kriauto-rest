@@ -92,6 +92,7 @@ public class CarServiceImpl implements CarService {
 			Car car = getCarByDevice(cars.get(j).getDeviceid(),token);		
 			List<Location> locations = getAllLocationsByCar(cars.get(j).getDeviceid(),date, token);
 			Location last = getLastLocationByCar(cars.get(j).getDeviceid(), token);
+			Event event = getLastEvent(cars.get(j).getDeviceid());
 			for(int i =0; i < locations.size(); i++){
 				if(locations.get(i).getSpeed() < 97 && locations.get(i).getSpeed() > speed){
 					speed = locations.get(i).getSpeed();
@@ -108,16 +109,25 @@ public class CarServiceImpl implements CarService {
 				cars.get(j).setConsumption((double)Math.round(((cours/100)*car.getConsumption())*100)/100);
 				cars.get(j).setSpeed((double)Math.round((speed*1.85)*100)/100);
 				cars.get(j).setCourse((double)Math.round((cours)*100)/100);
-				cars.get(j).setRolling(1);
+				if(null != event && event.getAttributes().indexOf("powerOn") == -1){
+					cars.get(j).setRolling(0);
+				}else{
+					cars.get(j).setRolling(1);
+				}
+				
 				if(withaddress)
-				  cars.get(j).setAddress(getGoodleAdresse(last.getLatitude(), last.getLongitude()));
+				    cars.get(j).setAddress(getGoodleAdresse(last.getLatitude(), last.getLongitude()));
 			}else{
 				cars.get(j).setConsumption(0.0);
 				cars.get(j).setSpeed(0.0);
 				cars.get(j).setCourse(0.0);
-				cars.get(j).setRolling(0);
+				if(null != event && event.getAttributes().indexOf("powerOn") == -1){
+					cars.get(j).setRolling(0);
+				}else{
+					cars.get(j).setRolling(1);
+				}
 				if(withaddress)
-				  cars.get(j).setAddress(getGoodleAdresse(last.getLatitude(), last.getLongitude()));
+				    cars.get(j).setAddress(getGoodleAdresse(last.getLatitude(), last.getLongitude()));
 			}
 		}
 		return cars;
