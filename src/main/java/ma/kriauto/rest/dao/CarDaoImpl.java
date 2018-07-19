@@ -432,7 +432,7 @@ public class CarDaoImpl implements CarDao {
 		List<Location> locations = getAllLocationsByCar(deviceid, date, token);		
 		for(int i =0; i < locations.size(); i++){
 			Location location = locations.get(i);
-			if(null != location){
+			if(null != location && null != location.getFixtime()){
 				hour = location.getFixtime().split(":", 0)[0];
 				if(null != location.getFixtime() && null != maxspeed.get(hour)){
 					if(location.getSpeed() < 97 && maxspeed.get(hour) < location.getSpeed())
@@ -474,7 +474,8 @@ public class CarDaoImpl implements CarDao {
 		   statistic.setSpeed(0.0);
 		   statistic.setCourse(0.0);
 		}
-		statistic.setEnable(car.getEnable());
+		if(null != car)
+		  statistic.setEnable(car.getEnable());
 		maximalspeed.setV00(null != maxspeed.get("00") ? (double)Math.round((maxspeed.get("00")*1.85)*10)/10 : 0.0);
 		maximalspeed.setV01(null != maxspeed.get("01") ? (double)Math.round((maxspeed.get("01")*1.85)*10)/10 : 0.0);
 		maximalspeed.setV02(null != maxspeed.get("02") ? (double)Math.round((maxspeed.get("02")*1.85)*10)/10 : 0.0);
