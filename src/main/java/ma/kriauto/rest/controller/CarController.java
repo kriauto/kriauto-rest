@@ -375,11 +375,10 @@ public class CarController {
     		if(car.getDevicetype().equals("TK103")){
     			status = senderService.sendSms("KriAuto.ma", car.getSimnumber(), "stop135791");
     	    }else{
-    	    	status = senderService.sendSms("KriAuto.ma", car.getSimnumber(), "  setdigout 00");
+    	    	status = senderService.sendSms("KriAuto.ma", car.getSimnumber(), "kauto 13579 setdigout 00");
     	    }
     		
     		if(status == 0){
-    		    //senderService.sendSms("KriAuto.ma", profile.getPhone(), "Voiture+Arrete+"+car.getMark()+"+"+car.getModel()+"+"+car.getColor()+"+"+car.getImmatriculation());
     		    car.setStatus(1);
     		    try {
 					Thread.sleep(10000);
@@ -415,7 +414,7 @@ public class CarController {
     	if(car.getDevicetype().equals("TK103")){
     	  status = senderService.sendSms("KriAuto.ma", car.getSimnumber(), "resume135791");
     	}else{
-    	  status = senderService.sendSms("KriAuto.ma", car.getSimnumber(), "  setdigout 11");
+    	  status = senderService.sendSms("KriAuto.ma", car.getSimnumber(), "kauto 13579 setdigout 11");
     	}
     	if(status == 0){
     	  //senderService.sendSms("KriAuto.ma", profile.getPhone(), "Voiture+Demarre+"+car.getMark()+"+"+car.getModel()+"+"+car.getColor()+"+"+car.getImmatriculation());

@@ -64,9 +64,9 @@ public class CarServiceImpl implements CarService {
 			}
 
 			if(cours > 0){
-				cars.get(j).setConsumption((double)Math.round(((cours/100)*car.getConsumption())*100)/100);
-				cars.get(j).setSpeed((double)Math.round((speed*1.85)*100)/100);
-				cars.get(j).setCourse((double)Math.round((cours)*100)/100);
+				cars.get(j).setConsumption((double)Math.round((cours*car.getConsumption()/100)*10)/10);
+				cars.get(j).setSpeed((double)Math.round((speed*1.85)*10)/10);
+				cars.get(j).setCourse((double)Math.round((cours)*10)/10);
 				cars.get(j).setRolling(1);
 				cars.get(j).setAddress(getGoodleAdresse(last.getLatitude(), last.getLongitude()));
 			}else{
@@ -106,9 +106,9 @@ public class CarServiceImpl implements CarService {
 			}
 
 			if(cours > 0){
-				cars.get(j).setConsumption((double)Math.round(((cours/100)*car.getConsumption())*100)/100);
-				cars.get(j).setSpeed((double)Math.round((speed*1.85)*100)/100);
-				cars.get(j).setCourse((double)Math.round((cours)*100)/100);
+				cars.get(j).setConsumption((double)Math.round(((cours/100)*car.getConsumption())*10)/10);
+				cars.get(j).setSpeed((double)Math.round((speed*1.85)*10)/10);
+				cars.get(j).setCourse((double)Math.round((cours)*10)/10);
 				if(null != event && event.getAttributes().indexOf("powerOn") == -1){
 					cars.get(j).setRolling(0);
 				}else{
