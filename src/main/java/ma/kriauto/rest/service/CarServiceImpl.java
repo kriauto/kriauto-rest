@@ -94,7 +94,7 @@ public class CarServiceImpl implements CarService {
 			Location last = getLastLocationByCar(cars.get(j).getDeviceid(), token);
 			Event event = getLastEvent(cars.get(j).getDeviceid());
 			for(int i =0; i < locations.size(); i++){
-				if(locations.get(i).getSpeed() < 97 && locations.get(i).getSpeed() > speed){
+				if(locations.get(i).getSpeed() < 150 && locations.get(i).getSpeed() > speed){
 					speed = locations.get(i).getSpeed();
 				}
 				if( i != 0){
@@ -107,9 +107,9 @@ public class CarServiceImpl implements CarService {
 
 			if(cours > 0){
 				cars.get(j).setConsumption((double)Math.round(((cours/100)*car.getConsumption())*10)/10);
-				cars.get(j).setSpeed((double)Math.round((speed*1.85)*10)/10);
+				cars.get(j).setSpeed(speed);
 				cars.get(j).setCourse((double)Math.round((cours)*10)/10);
-				if(null != event && event.getAttributes().indexOf("powerOn") == -1){
+				if(null != last && last.getSpeed() == 0.0){
 					cars.get(j).setRolling(0);
 				}else{
 					cars.get(j).setRolling(1);
@@ -121,7 +121,7 @@ public class CarServiceImpl implements CarService {
 				cars.get(j).setConsumption(0.0);
 				cars.get(j).setSpeed(0.0);
 				cars.get(j).setCourse(0.0);
-				if(null != event && event.getAttributes().indexOf("powerOn") == -1){
+				if(null != last && last.getSpeed() == 0.0){
 					cars.get(j).setRolling(0);
 				}else{
 					cars.get(j).setRolling(1);

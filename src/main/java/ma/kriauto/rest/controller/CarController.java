@@ -237,8 +237,9 @@ public class CarController {
     	   cartmp.setLatitude6(car.getLatitude6());
     	   cartmp.setNotifinzone(car.getNotifinzone());
     	   cartmp.setNotifoutzone(car.getNotifoutzone());
+    	   cartmp.setInzone(null);
     	 }
-    	 carService.updateCar(car);
+    	 carService.updateCar(cartmp);
     	}else{
     		throw new IllegalArgumentException("CAR_NOTFOUND");
     	}
@@ -254,6 +255,7 @@ public class CarController {
     	if(null == profile){
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
+    	car.setInzone(null);
     	carService.updateCar(car);
     	return new ResponseMessage(ResponseMessage.Type.success, "GEOFENCE_SUCCES",Constant.getLabels().get("GEOFENCE_SUCCES").toString());
     }
