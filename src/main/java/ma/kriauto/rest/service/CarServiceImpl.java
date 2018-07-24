@@ -52,7 +52,7 @@ public class CarServiceImpl implements CarService {
 			List<Location> locations = getAllLocationsByCar(cars.get(j).getDeviceid(),date, token);
 			Location last = getLastLocationByCar(cars.get(j).getDeviceid(), token);
 			for(int i =0; i < locations.size(); i++){
-				if(locations.get(i).getSpeed() < 97 && locations.get(i).getSpeed() > speed){
+				if(locations.get(i).getSpeed() < 80 && locations.get(i).getSpeed() > speed){
 					speed = locations.get(i).getSpeed();
 				}
 				if( i != 0){

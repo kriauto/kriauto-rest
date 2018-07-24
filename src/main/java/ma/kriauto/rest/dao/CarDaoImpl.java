@@ -200,25 +200,28 @@ public class CarDaoImpl implements CarDao {
 		double log = 0,lat = 0;
 		if(locations.size() > 0){
 		  for(int i = 0 ; i< locations.size(); i++){
-			if(0 == i){
+			if(null != locations.get(i)){
+			 if(0 == i){
+				if(null != locations.get(i))
 				log = locations.get(i).getLongitude();
 				lat = locations.get(i).getLatitude();
-				locations.get(i).setSpeed((double)Math.round((locations.get(i).getSpeed()*1.85)*10)/10);				
-				if(null != locations.get(i).getAttributes() && locations.get(i).getAttributes().indexOf("temp1") == 0  && getDistance(locations.get(i).getAttributes()) <= 500){
+				//locations.get(i).setSpeed((double)Math.round((locations.get(i).getSpeed()*1.85)*10)/10);				
+				if(null != locations.get(i).getAttributes() && getDistance(locations.get(i).getAttributes()) <= 500){
 				   locations1.add(locations.get(i));
 				}
-			}else{
+			  }else{
 				if(log == locations.get(i).getLongitude() && lat == locations.get(i).getLatitude()){
-
-				}else{
+				  }else{
 					log = locations.get(i).getLongitude();
 					lat = locations.get(i).getLatitude();
+					//locations.get(i).setSpeed((double)Math.round((locations.get(i).getSpeed()*1.85)*10)/10);				
 					double dist = distance(locations.get(i-1).getLatitude(), locations.get(i-1).getLongitude(), locations.get(i).getLatitude(), locations.get(i).getLongitude(), 'K');
 					  if(dist <= 1){
 						  locations1.add(locations.get(i));
 					  }
-				}
-			  }
+				   }
+			    }
+		      }
 			}
 		  }else{
 			  Location location = getLastLocationByCar(deviceid,date,token);
@@ -749,21 +752,24 @@ public class CarDaoImpl implements CarDao {
 	@Override
 	public double getDistance(String distance) {
 		// TODO Auto-generated method stub
-		if(distance.indexOf("alarm") >= 0 && distance.indexOf("io1") == -1 ){
+		if(distance.indexOf("temp1") == 0){
+		  if(distance.indexOf("alarm") >= 0 && distance.indexOf("io1") == -1 ){
 		   distance.replace("\"", "");
 		   return Double.valueOf(distance.replace(',',':').split(":", 0)[5]);
-		}else if(distance.indexOf("alarm") >= 0 && distance.indexOf("io1") >= 0 ){
+		  }else if(distance.indexOf("alarm") >= 0 && distance.indexOf("io1") >= 0 ){
 			distance.replace("\"", "");
 			return Double.valueOf(distance.replace(',',':').split(":", 0)[11]);
-	    }else if(distance.indexOf("io1") >= 0 && distance.indexOf("alarm") == -1){
+	      }else if(distance.indexOf("io1") >= 0 && distance.indexOf("alarm") == -1){
 			distance.replace("\"", "");
 			return Double.valueOf(distance.replace(',',':').split(":", 0)[7]);
-		}else if(distance.indexOf("distance") >= 0 ){
+		  }else if(distance.indexOf("distance") >= 0 ){
 			distance.replace("\"", "");
 			return Double.valueOf(distance.replace(',',':').split(":", 0)[1]);
-		}else{
+		  }else{
 		   return 0;
+		  }
 		}
+		return 0;
 	}
 
 	@Override
