@@ -23,9 +23,9 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	@Override
-	public List<Notification> getNotificationByDevice(Integer deviceid, String date) {
+	public List<Notification> getNotificationByDevice(Integer deviceid, String date, String token) {
 		// TODO Auto-generated method stub
-		return notificationdao.getNotificationByDevice(deviceid,date);
+		return notificationdao.getNotificationByDevice(deviceid,date,token);
 	}
 
 	@Override

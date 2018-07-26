@@ -31,18 +31,21 @@ public class NotificationDaoImpl implements NotificationDao {
 	}
 
 	@Override
-	public List<Notification> getNotificationByDevice(Integer deviceid, String date) {
+	public List<Notification> getNotificationByDevice(Integer deviceid, String date, String token) {
 		System.out.println("getNotificationByDevice " + deviceid);
 		GregorianCalendar currentdate = new GregorianCalendar();
 		currentdate.add(Calendar.MONTH, -1);
 		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
 		String day = formater.format(currentdate.getTime());
 		List<Notification> notifications = new ArrayList<Notification>();
-		notifications = jdbcTemplate.query(" select to_char(creationdate , 'HH24:MI:SS') AS creationdate, texte "
-						+ "  from  messages" 
-				        + "  where deviceid = ? "
-						+ "  and   to_char(creationdate,'YYYY-MM-DD') = '"
-						+ date + "'" + " order by creationdate desc",new Object[] { deviceid }, new BeanPropertyRowMapper(Notification.class));
+		notifications = jdbcTemplate.query(" select to_char(m.creationdate , 'HH24:MI:SS') AS creationdate, m.texte "
+						+ " from  profile p, agency a, car c, messages m" 
+						+ " where p.token = ? "
+					    + " and   p.agencyid = a.id "
+					    + " and   a.id = c.agencyid "
+					    + " and   c.deviceid = m.deviceid "
+					    + " and   m.deviceid = ? "
+						+ " and   to_char(creationdate,'YYYY-MM-DD') = ? order by creationdate desc",new Object[] {token,deviceid,date}, new BeanPropertyRowMapper(Notification.class));
 		return notifications;
 	}
 	

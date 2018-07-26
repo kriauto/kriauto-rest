@@ -99,7 +99,8 @@ public class CarDaoImpl implements CarDao {
 			cars.add(new Car("Toutes", 111111));
 		}
 		carstmp = jdbcTemplate.query("select c.* "
-				+ " from profile p, agency a, car c " + " where p.token = ? "
+				+ " from profile p, agency a, car c " 
+				+ " where p.token = ? "
 				+ " and p.agencyid = a.id " 
 				+ " and a.id = c.agencyid order by c.immatriculation",
 				new Object[] { token }, new BeanPropertyRowMapper(Car.class));
@@ -170,8 +171,9 @@ public class CarDaoImpl implements CarDao {
 				  }
 		}
 				
-		for(int i = 0; i<locations.size(); i++){
-			Location loc = locations.get(i);
+		for(int j = 0; j<locations.size(); j++){
+			Location loc = locations.get(j);
+			loc.setSpeed((double)Math.round((loc.getSpeed()*1.85)*10)/10);
 			loc.setAddress(getGoodleAdresse(loc.getLatitude(), loc.getLongitude()));
 		}
 		return locations;
@@ -598,11 +600,12 @@ public class CarDaoImpl implements CarDao {
         {
         	Location location = (Location) jdbcTemplate.queryForObject(" select distinct ps.longitude, ps.latitude, ps.speed, ps.course, ps.address, ps.fixtime -'1 hour'::interval AS servertime,ps.attributes , c.immatriculation, c.vin, c.mark, c.model, c.photo, c.color, c.deviceid, c.colorCode "
 				    + " from profile p, agency a, car c, positions ps "
-				    + " where   ps.id =  (select MAX(ps.id) from profile p, agency a, car c, positions ps where p.token = ? and p.agencyid = a.id and a.id = c.agencyid and c.deviceid = ps.deviceid and ps.deviceid = ?  and to_char(fixtime,'YYYY-MM-DD') <= ? and valid = true ) "
-				    + " and p.token = ? "
+				    + " where p.token = ? "
 				    + " and p.agencyid = a.id "
 				    + " and a.id = c.agencyid "
-				    + " and c.deviceid = ps.deviceid ",new Object[] {token, deviceid, date, token}, new BeanPropertyRowMapper(Location.class));
+				    + " and c.deviceid = ? "
+				    + " and c.deviceid = ps.deviceid "
+				    + " and ps.id =  (select MAX(ps.id) from profile p, agency a, car c, positions ps where p.token = ? and p.agencyid = a.id and a.id = c.agencyid and c.deviceid = ps.deviceid and ps.deviceid = ?  and to_char(fixtime,'YYYY-MM-DD') <= ? and valid = true )",new Object[] {token, deviceid, token, deviceid, date}, new BeanPropertyRowMapper(Location.class));
         	return location;
         } catch (EmptyResultDataAccessException e) {
 			return null;

@@ -222,7 +222,7 @@ public class CarController {
     	}
     	Car cartmp = carService.getCarByDevice(car.getDeviceid(),token);
     	if(null != cartmp){
-    	 if(null != car){
+    	 if(null != car && null != car.getLongitude1() && null != car.getLatitude1()){
     	   cartmp.setLongitude1(car.getLongitude1());
     	   cartmp.setLatitude1(car.getLatitude1());
     	   cartmp.setLongitude2(car.getLongitude2());
@@ -238,6 +238,22 @@ public class CarController {
     	   cartmp.setNotifinzone(car.getNotifinzone());
     	   cartmp.setNotifoutzone(car.getNotifoutzone());
     	   cartmp.setInzone(null);
+    	 }else{
+    	   cartmp.setLongitude1(-7.492703);
+      	   cartmp.setLatitude1(36.075559);
+      	   cartmp.setLongitude2(-1.010775);
+      	   cartmp.setLatitude2(36.376890);
+      	   cartmp.setLongitude3(-0.175819);
+      	   cartmp.setLatitude3(31.905359);
+      	   cartmp.setLongitude4(-12.436567);
+      	   cartmp.setLatitude4(21.197021);
+      	   cartmp.setLongitude5(-17.413379);
+      	   cartmp.setLatitude5(20.612029);
+      	   cartmp.setLongitude6(-13.524224);
+      	   cartmp.setLatitude6(32.063787);
+      	   cartmp.setNotifinzone(true);
+      	   cartmp.setNotifoutzone(true);
+      	   cartmp.setInzone(true);
     	 }
     	 carService.updateCar(cartmp);
     	}else{
@@ -245,7 +261,7 @@ public class CarController {
     	}
     	return new ResponseMessage(ResponseMessage.Type.success, "GEOFENCE_SUCCES",Constant.getLabels().get("GEOFENCE_SUCCES").toString());
     }
-	
+
 	@RequestMapping(value = "/updateCar", method = RequestMethod.POST)
     @ResponseBody
     public ResponseMessage updateCar(@RequestHeader(value="Authorization") String authorization, @RequestBody Car car) throws ParseException {
@@ -344,7 +360,7 @@ public class CarController {
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
     	List<Notification> notifications = new ArrayList<Notification>();
-    	notifications = notificationService.getNotificationByDevice(Integer.valueOf(notification.getDeviceid()),notification.getCreationdate());
+    	notifications = notificationService.getNotificationByDevice(Integer.valueOf(notification.getDeviceid()),notification.getCreationdate(),token);
     	return notifications;
     }
 	
