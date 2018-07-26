@@ -92,7 +92,6 @@ public class CarServiceImpl implements CarService {
 			Car car = getCarByDevice(cars.get(j).getDeviceid(),token);		
 			List<Location> locations = getAllLocationsByCar(cars.get(j).getDeviceid(),date, token);
 			Location last = getLastLocationByCar(cars.get(j).getDeviceid(), token);
-			Event event = getLastEvent(cars.get(j).getDeviceid());
 			for(int i =0; i < locations.size(); i++){
 				if(locations.get(i).getSpeed() < 150 && locations.get(i).getSpeed() > speed){
 					speed = locations.get(i).getSpeed();
