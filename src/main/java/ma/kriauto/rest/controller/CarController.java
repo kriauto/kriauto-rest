@@ -156,8 +156,8 @@ public class CarController {
     	}
     	Car cartmp = carService.getCarByDevice(car.getDeviceid(),token);
     	if(null != cartmp){
-    	if(null != car && null != car.getEmptyingkilometre()){
-    		if(car.getEmptyingkilometre() > 0){
+    	if(null != car && null != car.getMaxspeed()){
+    		if(car.getMaxspeed() > 0){
     			cartmp.setMaxspeed(car.getMaxspeed());
     	   }else{
     		  throw new IllegalArgumentException("SPEED_FAILED");
