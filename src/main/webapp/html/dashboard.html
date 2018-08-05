@@ -94,7 +94,7 @@
             <div class="panel-heading">
                 <h3 class="panel-title">Notifications</h3>
                 <div class="pull-right">
-                    <select id="style-selector" ng-selected="$first" class="selector-control" ng-model="car.deviceid4" ng-change="ajaxnotification()">
+                    <select id="style-selector" ng-selected="$first" class="selector-control" ng-model="notification.deviceid" ng-change="ajaxnotification()">
                       <option value="">Voiture</option>
                       <option ng-repeat="car in cars" value="{{car.deviceid}}">{{car.immatriculation}}</option>
                     </select>
@@ -108,7 +108,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="notification in notification">
+                    <tr ng-repeat="notification in notifications">
                         <td>{{notification.creationdate}}</td>
                         <td>{{notification.texte}}</td>
                     </tr>

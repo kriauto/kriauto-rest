@@ -68,13 +68,15 @@ public class CarServiceImpl implements CarService {
 				cars.get(j).setSpeed((double)Math.round((speed*1.85)*10)/10);
 				cars.get(j).setCourse((double)Math.round((cours)*10)/10);
 				cars.get(j).setRolling(1);
-				cars.get(j).setAddress(getGoodleAdresse(last.getLatitude(), last.getLongitude()));
+				if(null != last)
+				  cars.get(j).setAddress(getGoodleAdresse(last.getLatitude(), last.getLongitude()));
 			}else{
 				cars.get(j).setConsumption(0.0);
 				cars.get(j).setSpeed(0.0);
 				cars.get(j).setCourse(0.0);
 				cars.get(j).setRolling(0);
-				cars.get(j).setAddress(getGoodleAdresse(last.getLatitude(), last.getLongitude()));
+				if(null != last)
+				  cars.get(j).setAddress(getGoodleAdresse(last.getLatitude(), last.getLongitude()));
 			}
 		}
 		return cars;
@@ -163,21 +165,21 @@ public class CarServiceImpl implements CarService {
 	}
 
 	@Override
-	public List<Course> getTotalCourseByCar(Integer deviceid) {
+	public List<Course> getTotalCourseByCar(Integer deviceid, String token) {
 		// TODO Auto-generated method stub
-		return cardao.getTotalCourseByCar(deviceid);
+		return cardao.getTotalCourseByCar(deviceid,token);
 	}
 
 	@Override
-	public List<Speed> getMaxSpeedByCar(Integer deviceid) {
+	public List<Speed> getMaxSpeedByCar(Integer deviceid, String token) {
 		// TODO Auto-generated method stub
-		return cardao.getMaxSpeedByCar(deviceid);
+		return cardao.getMaxSpeedByCar(deviceid,token);
 	}
 
 	@Override
-	public List<Consumption> getTotalConsumptionByCar(Integer deviceid) {
+	public List<Consumption> getTotalConsumptionByCar(Integer deviceid, String token) {
 		// TODO Auto-generated method stub
-		return cardao.getTotalConsumptionByCar(deviceid);
+		return cardao.getTotalConsumptionByCar(deviceid,token);
 	}
 
 	@Override

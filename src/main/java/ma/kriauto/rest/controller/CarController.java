@@ -222,7 +222,7 @@ public class CarController {
     	}
     	Car cartmp = carService.getCarByDevice(car.getDeviceid(),token);
     	if(null != cartmp){
-    	 if(null != car && null != car.getLongitude1() && null != car.getLatitude1()){
+    	 if(null != car && null != car.getLongitude1() && car.getLongitude1() != 0.0 && null != car.getLatitude1() && car.getLatitude1() != 0.0){
     	   cartmp.setLongitude1(car.getLongitude1());
     	   cartmp.setLatitude1(car.getLatitude1());
     	   cartmp.setLongitude2(car.getLongitude2());
@@ -318,7 +318,7 @@ public class CarController {
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
     	List<Course> cours = new ArrayList<Course>();
-    	cours = carService.getTotalCourseByCar(deviceid);
+    	cours = carService.getTotalCourseByCar(deviceid, token);
     	return cours;
     }
 	
@@ -332,7 +332,7 @@ public class CarController {
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
     	List<Speed> speed = new ArrayList<Speed>();
-    	speed = carService.getMaxSpeedByCar(deviceid);
+    	speed = carService.getMaxSpeedByCar(deviceid, token);
     	return speed;
     }
 	
@@ -346,7 +346,7 @@ public class CarController {
     		throw new IllegalArgumentException("ACTION_FAILED");
     	}
     	List<Consumption> consumption = new ArrayList<Consumption>();
-    	consumption = carService.getTotalConsumptionByCar(deviceid);
+    	consumption = carService.getTotalConsumptionByCar(deviceid, token);
     	return consumption;
     }
 	

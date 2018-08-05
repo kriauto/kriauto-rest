@@ -34,9 +34,11 @@ public class NotificationDaoImpl implements NotificationDao {
 	public List<Notification> getNotificationByDevice(Integer deviceid, String date, String token) {
 		System.out.println("getNotificationByDevice " + deviceid);
 		GregorianCalendar currentdate = new GregorianCalendar();
-		currentdate.add(Calendar.MONTH, -1);
+		//currentdate.add(Calendar.MONTH, -1);
 		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
 		String day = formater.format(currentdate.getTime());
+		if(null == date)
+			 date = day ;
 		List<Notification> notifications = new ArrayList<Notification>();
 		notifications = jdbcTemplate.query(" select to_char(m.creationdate , 'HH24:MI:SS') AS creationdate, m.texte "
 						+ " from  profile p, agency a, car c, messages m" 

@@ -8,6 +8,7 @@
     	 $scope.maxspeed = {};
     	 $scope.consumption = {};
     	 $scope.notification = {};
+    	 $scope.notifications = {};
     	 
     	 var ajaxgetcars = function () {
          	$http.post('action/getCars/',false).then(function (response) {
@@ -47,11 +48,11 @@
           };
           
           $scope.ajaxnotification = function () {
-         	 if(angular.equals($scope.car.deviceid4,"")){
-         		  $scope.notification = null;
+         	 if(angular.equals($scope.notification.deviceid,"")){
+         		  $scope.notifications = null;
          	 }else{
-           	      $http.post('action/getNotification/',$scope.car.deviceid4).then(function (response) {
-           		    $scope.notification = response.data;
+           	      $http.post('action/getNotification/',$scope.notification).then(function (response) {
+           		    $scope.notifications = response.data;
                    });
          	 }
            };

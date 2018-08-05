@@ -22,10 +22,10 @@ public interface CarService {
 	public List<Item> getAllDatesByToken(String token);
 	public List<Location> getAllLocationsByToken(String token, String date);
 	public List<Location> getAllLocationsByCar(Integer deviceid, String date, String token);
-	public List<Course> getTotalCourseByCar(Integer deviceid);
-	public List<Speed> getMaxSpeedByCar(Integer deviceid);
+	public List<Course> getTotalCourseByCar(Integer deviceid, String token);
+	public List<Speed> getMaxSpeedByCar(Integer deviceid, String token);
 	public Speed getMaxSpeedByCarTime(Integer deviceid, String date);
-	public List<Consumption> getTotalConsumptionByCar(Integer deviceid);
+	public List<Consumption> getTotalConsumptionByCar(Integer deviceid, String token);
 	public Statistic getCarStatistic(Integer deviceid, String date, String token);
 	public List<Notification> getDataNotification(int type);
 	//public Location getLastPositionByCar(Integer deviceid);

@@ -340,82 +340,57 @@ public class CarDaoImpl implements CarDao {
 	}
 
 	@Override
-	public List<Course> getTotalCourseByCar(Integer deviceid) {
+	public List<Course> getTotalCourseByCar(Integer deviceid, String token) {
 		System.out.println("getTotalCourseByCar " + deviceid);
-		GregorianCalendar date = new GregorianCalendar();
-		date.add(Calendar.MONTH, -1);
-		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
-		String day = formater.format(date.getTime());
 		List<Course> cours = new ArrayList<Course>();
-		cours = jdbcTemplate
-				.query(" select distinct to_char(servertime,'YYYY-MM-DD') AS day, SUM(course) AS totalCourse "
-						+ " from positions "
-						+ " where deviceid = ? "
-						+ " and   to_char(servertime,'YYYY-MM-DD') >= '"
-						+ day
-						+ "' "
-						+ " and   valid = true "
-						+ " group by deviceid,to_char(servertime,'YYYY-MM-DD') "
-						+ " order by day desc", new Object[] { deviceid },
-						new BeanPropertyRowMapper(Course.class));
-		for(int i = 0; i<cours.size(); i++){
-			Course cor = cours.get(i);
-			cor.setTotalCourse(String.valueOf(Double.valueOf(cor.getTotalCourse())/1000));
+		for(int i =1; i<30; i++){
+			GregorianCalendar date = new GregorianCalendar();
+			date.add(Calendar.DATE, -i);
+			SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+			String day = formater.format(date.getTime());
+			Statistic stat = getCarStatistic(deviceid, day, token);
+			Course cor = new Course();
+			cor.setDay(day);
+			cor.setTotalCourse(String.valueOf(stat.getCourse()));
+			cours.add(cor);
 		}
 		return cours;
 	}
 
 	@Override
-	public List<Speed> getMaxSpeedByCar(Integer deviceid) {
+	public List<Speed> getMaxSpeedByCar(Integer deviceid, String token) {
 		System.out.println("getMaxSpeedByCar " + deviceid);
-		GregorianCalendar date = new GregorianCalendar();
-		date.add(Calendar.MONTH, -1);
-		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
-		String day = formater.format(date.getTime());
-		List<Speed> speed = new ArrayList<Speed>();
-		speed = jdbcTemplate
-				.query(" select distinct to_char(servertime,'YYYY-MM-DD') AS day, MAX(speed) AS maxSpeed "
-						+ " from positions ps "
-						+ " where deviceid = ? "
-						+ " and speed < 100 "
-						+ " and   to_char(servertime,'YYYY-MM-DD') >= '"
-						+ day
-						+ "' "
-						+ " and   valid = true "
-						+ " group by to_char(servertime,'YYYY-MM-DD') "
-						+ " order by day desc", new Object[] { deviceid },
-						new BeanPropertyRowMapper(Speed.class));
-		for(int i = 0; i<speed.size(); i++){
-			Speed spe = speed.get(i);
-			spe.setMaxSpeed(String.valueOf(Double.valueOf(spe.getMaxSpeed())*1.85));
+		List<Speed> speeds = new ArrayList<Speed>();
+		for(int i =1; i<30; i++){
+			GregorianCalendar date = new GregorianCalendar();
+			date.add(Calendar.DATE, -i);
+			SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+			String day = formater.format(date.getTime());
+			Statistic stat = getCarStatistic(deviceid, day, token);
+			Speed speed = new Speed();
+			speed.setDay(day);
+			speed.setMaxSpeed(String.valueOf(stat.getSpeed()));
+			speeds.add(speed);
 		}
-		return speed;
+		return speeds;
 	}
 
 	@Override
-	public List<Consumption> getTotalConsumptionByCar(Integer deviceid) {
+	public List<Consumption> getTotalConsumptionByCar(Integer deviceid, String token) {
 		System.out.println("getTotalConsumptionByCar " + deviceid);
-		GregorianCalendar date = new GregorianCalendar();
-		date.add(Calendar.MONTH, -1);
-		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
-		String day = formater.format(date.getTime());
-		List<Consumption> consumption = new ArrayList<Consumption>();
-		consumption = jdbcTemplate
-				.query(" select distinct to_char(servertime,'YYYY-MM-DD') AS day, SUM(course) AS consumption "
-						+ " from positions ps "
-						+ " where deviceid = ? "
-						+ " and   to_char(servertime,'YYYY-MM-DD') >= '"
-						+ day
-						+ "' "
-						+ " and   valid = true "
-						+ " group by to_char(servertime,'YYYY-MM-DD') "
-						+ " order by day desc", new Object[] { deviceid },
-						new BeanPropertyRowMapper(Consumption.class));
-		for(int i = 0; i<consumption.size(); i++){
-			Consumption con = consumption.get(i);
-			con.setConsumption(String.valueOf((Float.valueOf(con.getConsumption())/100000)*5));
+		List<Consumption> consumptions = new ArrayList<Consumption>();
+		for(int i =1; i<30; i++){
+			GregorianCalendar date = new GregorianCalendar();
+			date.add(Calendar.DATE, -i);
+			SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+			String day = formater.format(date.getTime());
+			Statistic stat = getCarStatistic(deviceid, day, token);
+			Consumption consumption = new Consumption();
+			consumption.setDay(day);
+			consumption.setConsumption(String.valueOf(stat.getConsumption()));
+			consumptions.add(consumption);
 		}
-		return consumption;
+		return consumptions;
 	}
 	
 	@Override
