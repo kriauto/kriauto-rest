@@ -113,10 +113,12 @@ public class CarController {
     		cartmp.setNotiftechnicalcontroldate(car.getNotiftechnicalcontroldate());
     	 }
     	 if(null != car && null != car.getEmptyingkilometre()){
-    		if(car.getEmptyingkilometre() > 0 && (car.getEmptyingkilometre() != cartmp.getEmptyingkilometre())){
+    		if(car.getEmptyingkilometre() >= 0){
+    			if((car.getEmptyingkilometre() != cartmp.getEmptyingkilometre())){
     			cartmp.setEmptyingkilometre(car.getEmptyingkilometre());
     			cartmp.setEmptyingtotaldistance(0.0);
     			cartmp.setEmptyingkilometreindex(1);
+    			}
     	   }else{
     		  throw new IllegalArgumentException("EMPKILO_FAILED");
     	   }
@@ -157,7 +159,7 @@ public class CarController {
     	Car cartmp = carService.getCarByDevice(car.getDeviceid(),token);
     	if(null != cartmp){
     	if(null != car && null != car.getMaxspeed()){
-    		if(car.getMaxspeed() > 0){
+    		if(car.getMaxspeed() >= 0){
     			cartmp.setMaxspeed(car.getMaxspeed());
     	   }else{
     		  throw new IllegalArgumentException("SPEED_FAILED");
@@ -165,7 +167,7 @@ public class CarController {
     	   cartmp.setNotifmaxspeed(car.getNotifmaxspeed());
     	}  
     	if(null != car && null != car.getMaxcourse()){
-    		if(car.getMaxcourse() > 0){
+    		if(car.getMaxcourse() >= 0){
     			cartmp.setMaxcourse(car.getMaxcourse());
     	   }else{
     		  throw new IllegalArgumentException("COURSE_FAILED");
@@ -173,7 +175,7 @@ public class CarController {
     	   cartmp.setNotifmaxcourse(car.getNotifmaxcourse());
     	} 
     	if(null != car && null != car.getMinlevelfuel()){
-    		if(car.getMinlevelfuel() > 0){
+    		if(car.getMinlevelfuel() >= 0){
     			cartmp.setMinlevelfuel(car.getMinlevelfuel());
     	   }else{
     		  throw new IllegalArgumentException("FUEL_FAILED");
@@ -181,7 +183,7 @@ public class CarController {
     	   cartmp.setNotifminlevelfuel(car.getNotifminlevelfuel());
     	}
     	if(null != car && null != car.getMaxenginetemperature()){
-    		if(car.getMaxenginetemperature() > 0){
+    		if(car.getMaxenginetemperature() >= 0){
     			cartmp.setMaxenginetemperature(car.getMaxenginetemperature());
     	   }else{
     		  throw new IllegalArgumentException("TEMENGINE_FAILED");
@@ -189,7 +191,7 @@ public class CarController {
     	   cartmp.setNotifmaxenginetemperature(car.getNotifmaxenginetemperature());
     	}  
     	if(null != car && null != car.getMaxfridgetemperature()){
-    		if(car.getMaxfridgetemperature() > 0){
+    		if(car.getMaxfridgetemperature() >= 0){
     			cartmp.setMaxfridgetemperature(car.getMaxfridgetemperature());
     	   }else{
     		  throw new IllegalArgumentException("FRIDGEMAX_FAILED");
@@ -197,7 +199,7 @@ public class CarController {
     	   cartmp.setNotifmaxfridgetemperature(car.getNotifmaxfridgetemperature());
     	}  
     	if(null != car && null != car.getMinfridgetemperature()){
-    		if(car.getMinfridgetemperature() > -100){
+    		if(car.getMinfridgetemperature() >= -100){
     			cartmp.setMinfridgetemperature(car.getMinfridgetemperature());
     	   }else{
     		  throw new IllegalArgumentException("FRIDGEMIN_FAILED");
