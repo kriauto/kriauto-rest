@@ -61,20 +61,28 @@ public class CarServiceImpl implements CarService {
 				    cours = cours + dist;
 				  }
 				}
+				if(i == locations.size()-1){
+					int diffs = cardao.getDifferenceInSecondes(locations.get(i).getServertime());
+					if(diffs>3660){
+						cars.get(j).setRolling(0);
+					}else{
+						cars.get(j).setRolling(1); 
+					}
+				}
 			}
 
 			if(cours > 0){
 				cars.get(j).setConsumption((double)Math.round((cours*car.getConsumption()/100)*10)/10);
 				cars.get(j).setSpeed((double)Math.round((speed*1.85)*10)/10);
 				cars.get(j).setCourse((double)Math.round((cours)*10)/10);
-				cars.get(j).setRolling(1);
+				//cars.get(j).setRolling(1);
 				if(null != last)
 				  cars.get(j).setAddress(getGoodleAdresse(last.getLatitude(), last.getLongitude()));
 			}else{
 				cars.get(j).setConsumption(0.0);
 				cars.get(j).setSpeed(0.0);
 				cars.get(j).setCourse(0.0);
-				cars.get(j).setRolling(0);
+				//cars.get(j).setRolling(0);
 				if(null != last)
 				  cars.get(j).setAddress(getGoodleAdresse(last.getLatitude(), last.getLongitude()));
 			}
@@ -104,17 +112,26 @@ public class CarServiceImpl implements CarService {
 				    cours = cours + dist;
 				  }
 				}
+				if(i == locations.size()-1){
+					int diffs = cardao.getDifferenceInSecondes(locations.get(i).getServertime());
+					if(diffs>3660){
+						cars.get(j).setRolling(0);
+					}else{
+						cars.get(j).setRolling(1); 
+					}
+				}
+				
 			}
 
 			if(cours > 0){
 				cars.get(j).setConsumption((double)Math.round(((cours/100)*car.getConsumption())*10)/10);
 				cars.get(j).setSpeed(speed);
 				cars.get(j).setCourse((double)Math.round((cours)*10)/10);
-				if(null != last && last.getSpeed() == 0.0){
-					cars.get(j).setRolling(0);
-				}else{
-					cars.get(j).setRolling(1);
-				}
+//				if(null != last && last.getSpeed() == 0.0){
+//					cars.get(j).setRolling(0);
+//				}else{
+//					cars.get(j).setRolling(1);
+//				}
 				
 				if(withaddress)
 				    cars.get(j).setAddress(getGoodleAdresse(last.getLatitude(), last.getLongitude()));
@@ -122,11 +139,18 @@ public class CarServiceImpl implements CarService {
 				cars.get(j).setConsumption(0.0);
 				cars.get(j).setSpeed(0.0);
 				cars.get(j).setCourse(0.0);
-				if(null != last && last.getSpeed() == 0.0){
+//				if(null != last && last.getSpeed() == 0.0){
+//					cars.get(j).setRolling(0);
+//				}else{
+//					cars.get(j).setRolling(1);
+//				}
+				int diffs = cardao.getDifferenceInSecondes(last.getServertime());
+				if(diffs>3660){
 					cars.get(j).setRolling(0);
 				}else{
-					cars.get(j).setRolling(1);
+					cars.get(j).setRolling(1); 
 				}
+	
 				if(withaddress)
 				    cars.get(j).setAddress(getGoodleAdresse(last.getLatitude(), last.getLongitude()));
 			}

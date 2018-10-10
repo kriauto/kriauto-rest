@@ -102,7 +102,7 @@ public class CarDaoImpl implements CarDao {
 				+ " from profile p, agency a, car c " 
 				+ " where p.token = ? "
 				+ " and p.agencyid = a.id " 
-				+ " and a.id = c.agencyid order by c.immatriculation",
+				+ " and a.id = c.agencyid order by c.mark, c.model, c.color, c.immatriculation",
 				new Object[] { token }, new BeanPropertyRowMapper(Car.class));
 		cars.addAll(carstmp);
 		return cars;
@@ -167,15 +167,23 @@ public class CarDaoImpl implements CarDao {
 			Car car = cars.get(i);
 				  Location location = getLastLocationByCar(car.getDeviceid(),date,token);
 				  if(null != location){
+					 int diffs = getDifferenceInSecondes(location.getServertime());
+					 if(diffs>3660){
+						 location.setSpeed(0.0);
+						 location.setAddress(getGoodleAdresse(location.getLatitude(), location.getLongitude()));
+					 }else{
+						 location.setSpeed((double)Math.round((location.getSpeed()*1.85)*10)/10);
+						 location.setAddress(getGoodleAdresse(location.getLatitude(), location.getLongitude()));
+					 }
 				     locations.add(location);
 				  }
 		}
 				
-		for(int j = 0; j<locations.size(); j++){
-			Location loc = locations.get(j);
-			loc.setSpeed((double)Math.round((loc.getSpeed()*1.85)*10)/10);
-			loc.setAddress(getGoodleAdresse(loc.getLatitude(), loc.getLongitude()));
-		}
+//		for(int j = 0; j<locations.size(); j++){
+//			Location loc = locations.get(j);
+//			loc.setSpeed((double)Math.round((loc.getSpeed()*1.85)*10)/10);
+//			loc.setAddress(getGoodleAdresse(loc.getLatitude(), loc.getLongitude()));
+//		}
 		return locations;
 	}
 
@@ -204,19 +212,34 @@ public class CarDaoImpl implements CarDao {
 		  for(int i = 0 ; i< locations.size(); i++){
 			if(null != locations.get(i)){
 			 if(0 == i){
-				if(null != locations.get(i))
-				log = locations.get(i).getLongitude();
-				lat = locations.get(i).getLatitude();
-				locations.get(i).setSpeed((double)Math.round((locations.get(i).getSpeed()*1.85)*10)/10);				
-				if(null != locations.get(i).getAttributes() && getDistance(locations.get(i).getAttributes()) <= 500){
+				if(null != locations.get(i)){
+				  log = locations.get(i).getLongitude();
+				  lat = locations.get(i).getLatitude();
+				  int diffs = getDifferenceInSecondes(locations.get(i).getServertime());
+					if(diffs>3660){
+					    locations.get(i).setSpeed(0.0);
+					}else{
+						locations.get(i).setSpeed((double)Math.round((locations.get(i).getSpeed()*1.85)*10)/10); 
+					}			
+				  if(null != locations.get(i).getAttributes() && getDistance(locations.get(i).getAttributes()) <= 500){
 				   locations1.add(locations.get(i));
+				  }
 				}
 			  }else{
 				if(log == locations.get(i).getLongitude() && lat == locations.get(i).getLatitude()){
 				  }else{
 					log = locations.get(i).getLongitude();
 					lat = locations.get(i).getLatitude();
-					locations.get(i).setSpeed((double)Math.round((locations.get(i).getSpeed()*1.85)*10)/10);				
+					if(i == locations.size()-1){
+						int diffs = getDifferenceInSecondes(locations.get(i).getServertime());
+						if(diffs>3660){
+						    locations.get(i).setSpeed(0.0);
+						}else{
+							locations.get(i).setSpeed((double)Math.round((locations.get(i).getSpeed()*1.85)*10)/10); 
+						}
+					}else{
+					   locations.get(i).setSpeed((double)Math.round((locations.get(i).getSpeed()*1.85)*10)/10);
+					}
 					double dist = distance(locations.get(i-1).getLatitude(), locations.get(i-1).getLongitude(), locations.get(i).getLatitude(), locations.get(i).getLongitude(), 'K');
 					  if(dist <= 1){
 						  locations1.add(locations.get(i));
@@ -228,6 +251,12 @@ public class CarDaoImpl implements CarDao {
 		  }else{
 			  Location location = getLastLocationByCar(deviceid,date,token);
 			  if(null != location){
+				  int diffs = getDifferenceInSecondes(location.getServertime());
+				  if(diffs>3660){
+					  location.setSpeed(0.0);
+				  }else{
+					  location.setSpeed((double)Math.round((location.getSpeed()*1.85)*10)/10); 
+				  }
 			    locations1.add(location);
 			  }
 		  }
@@ -561,11 +590,13 @@ public class CarDaoImpl implements CarDao {
 		try 
 		  {
 		    gResp = GeocodingApi.newRequest(gtx).latlng(new LatLng(Lat, Lng)).await();
-		    System.out.println(gResp[0].formattedAddress);
+		    if(null != gResp && gResp[0] != null)
+		      System.out.println(gResp[0].formattedAddress);
 		  } catch (Exception e) {
 		    e.printStackTrace();
 		  }
-	    return gResp[0].formattedAddress;
+		String address = (null != gResp && gResp[0] != null ? gResp[0].formattedAddress : "Unnamed Road, Morocco");
+	    return address;
 	}
 	
 	@Override
@@ -580,7 +611,7 @@ public class CarDaoImpl implements CarDao {
 				    + " and a.id = c.agencyid "
 				    + " and c.deviceid = ? "
 				    + " and c.deviceid = ps.deviceid "
-				    + " and ps.id =  (select MAX(ps.id) from profile p, agency a, car c, positions ps where p.token = ? and p.agencyid = a.id and a.id = c.agencyid and c.deviceid = ps.deviceid and ps.deviceid = ?  and to_char(fixtime,'YYYY-MM-DD') <= ? and valid = true )",new Object[] {token, deviceid, token, deviceid, date}, new BeanPropertyRowMapper(Location.class));
+				    + " and ps.fixtime =  (select MAX(ps.fixtime) from profile p, agency a, car c, positions ps where p.token = ? and p.agencyid = a.id and a.id = c.agencyid and c.deviceid = ps.deviceid and ps.deviceid = ? and  ps.attributes not like '%alarm%'  and to_char(fixtime,'YYYY-MM-DD') <= ? and valid = true )",new Object[] {token, deviceid, token, deviceid, date}, new BeanPropertyRowMapper(Location.class));
         	return location;
         } catch (EmptyResultDataAccessException e) {
 			return null;
@@ -823,5 +854,29 @@ public class CarDaoImpl implements CarDao {
 				speed.setMaxSpeed(String.valueOf(Math.round(Double.valueOf(speed.getMaxSpeed())*1.85)));
 			}
 			return speed;
+	}
+	
+	@Override
+	public int getDifferenceInSecondes(String date){
+		// Custom date format
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+
+		Date d1 = null;
+		Date d2 = new Date();
+		try {
+		    d1 = format.parse(date);
+		} catch (ParseException e) {
+		    e.printStackTrace();
+		}    
+
+		// Get msec from each, and subtract.
+		long diff = d2.getTime() - d1.getTime();
+		long diffSeconds = diff / 1000;         
+		//long diffMinutes = diff / (60 * 1000);         
+		//long diffHours = diff / (60 * 60 * 1000);                      
+		//System.out.println("Time in seconds: " + diffSeconds + " seconds.");         
+		//System.out.println("Time in minutes: " + diffMinutes + " minutes.");         
+		//System.out.println("Time in hours: " + diffHours + " hours."); 
+		return (int) diffSeconds;
 	}
 }
