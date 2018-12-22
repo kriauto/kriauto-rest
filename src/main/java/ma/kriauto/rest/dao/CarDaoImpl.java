@@ -604,14 +604,14 @@ public class CarDaoImpl implements CarDao {
 		System.out.println("getAllLocationsByCar " + deviceid);
         try
         {
-        	Location location = (Location) jdbcTemplate.queryForObject(" select distinct ps.longitude, ps.latitude, ps.speed, ps.course, ps.address, ps.fixtime -'1 hour'::interval AS servertime, c.immatriculation, c.vin, c.mark, c.model, c.photo, c.color, c.deviceid, c.colorCode "
+        	Location location = (Location) jdbcTemplate.queryForObject(" select distinct ps.longitude, ps.latitude, ps.speed, ps.course, ps.address, ps.fixtime -'1 hour'::interval AS servertime,ps.attributes , c.immatriculation, c.vin, c.mark, c.model, c.photo, c.color, c.deviceid, c.colorCode "
 				    + " from profile p, agency a, car c, positions ps "
 				    + " where p.token = ? "
 				    + " and p.agencyid = a.id "
 				    + " and a.id = c.agencyid "
 				    + " and c.deviceid = ? "
 				    + " and c.deviceid = ps.deviceid "
-				    + " and ps.fixtime =  (select distinct MAX(ps.fixtime) from profile p, agency a, car c, positions ps where p.token = ? and p.agencyid = a.id and a.id = c.agencyid and c.deviceid = ps.deviceid and ps.deviceid = ? and  ps.attributes not like '%alarm%'  and to_char(fixtime,'YYYY-MM-DD') <= ? and valid = true )",new Object[] {token, deviceid, token, deviceid, date}, new BeanPropertyRowMapper(Location.class));
+				    + " and ps.fixtime =  (select MAX(ps.fixtime) from profile p, agency a, car c, positions ps where p.token = ? and p.agencyid = a.id and a.id = c.agencyid and c.deviceid = ps.deviceid and ps.deviceid = ? and  ps.attributes not like '%alarm%'  and to_char(fixtime,'YYYY-MM-DD') <= ? and valid = true )",new Object[] {token, deviceid, token, deviceid, date}, new BeanPropertyRowMapper(Location.class));
         	return location;
         } catch (EmptyResultDataAccessException e) {
 			return null;
@@ -655,13 +655,13 @@ public class CarDaoImpl implements CarDao {
 		System.out.println("getAllLocationsByCar " + deviceid);
         try
         {
-        	Location location = (Location) jdbcTemplate.queryForObject(" select distinct ps.longitude, ps.latitude, ps.speed, ps.course, ps.address, ps.fixtime -'1 hour'::interval AS servertime, c.immatriculation, c.vin, c.mark, c.model, c.photo, c.color, c.deviceid, c.colorCode "
+        	Location location = (Location) jdbcTemplate.queryForObject(" select distinct ps.longitude, ps.latitude, ps.speed, ps.course, ps.address, ps.fixtime -'1 hour'::interval AS servertime,ps.attributes , c.immatriculation, c.vin, c.mark, c.model, c.photo, c.color, c.deviceid, c.colorCode "
 				    + " from profile p, agency a, car c, positions ps "
 				    + " where p.token = ? "
 				    + " and   p.agencyid = a.id "
 				    + " and   a.id = c.agencyid "
 				    + " and   c.deviceid = ps.deviceid "
-				    + " and   ps.fixtime =  (select MAX(fixtime) from positions where deviceid = ? and   attributes not like '%alarm%' and network = 'null')",new Object[] {token,deviceid}, new BeanPropertyRowMapper(Location.class));
+				    + " and   ps.id =  (select MAX(id) from positions where deviceid = ? and   attributes not like '%alarm%' and network = 'null')",new Object[] {token,deviceid}, new BeanPropertyRowMapper(Location.class));
         	return location;
         } catch (EmptyResultDataAccessException e) {
 			return null;
