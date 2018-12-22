@@ -16,7 +16,7 @@
         //configure the rounting of ng-view
         $routeProvider.when('/login', { controller: 'LoginController', templateUrl: 'html/login.html'})
                       .when('/geolocation', { controller: 'CarteController', templateUrl: 'html/carte.html'})
-                      .when('/aboutus', { controller: 'AboutUsController', templateUrl: 'html/aboutus.html'})
+                      .when('/aboutus2', { controller: 'AboutUsController', templateUrl: 'html/aboutus2.html'})
                       .when('/contactus', { controller: 'ContactController', templateUrl: 'html/contactus.html'})
                       .when('/myaccount', { controller: 'AccountController', templateUrl: 'html/myaccount.html'})
                       .when('/logout', { controller: 'LogOutController', templateUrl: 'html/logout.html'})

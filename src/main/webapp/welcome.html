@@ -26,6 +26,9 @@
 <!-- enerique css kriauto -->
 <link href="css/kriauto.css" rel="stylesheet">
 
+<!-- Custom styles for this template -->
+<link href="bootstrap/css/carousel.css" rel="stylesheet">
+
 <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
 <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
 <script src="bootstrap/js/ie-emulation-modes-warning.js"></script>
@@ -55,7 +58,7 @@
 			<div>
 				<div class="collapse navbar-collapse" id="example-navbar-collapse">
 					<ul class="nav navbar-nav navbar-right">
-						<li class="collapsed"><a href="#!/aboutus">Qui Sommes Nous</a></li>
+						<li class="collapsed"><a href="#!/aboutus2">Qui Sommes Nous</a></li>
 						<li class="collapsed"><a href="#!/contactus">Nous Contacter</a></li>
 						<li class="dropdown" ng-show="loggedIn"><a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Mon Compte<span class="caret"></span></a>
                          <ul class="dropdown-menu">
@@ -72,10 +75,10 @@
 			</div>
 		</nav>
 	</header>
+	</br>
 	<!-- End Header -->
-	<div style="width: 100%; height: 10px; margin-top:30px; margin-bottom:-40px;">
-	</div>
 	<!-- Begin Body -->
+	<div ng-view></div>
 	<div class="container">
 		<!-- Modal -->
 		<div class="modal fade modal-fullscreen" id="myModal" tabindex="-1"
@@ -90,7 +93,6 @@
 			</div>
 		</div>
 		<div id="controller1" ng-controller="CarteController"></div>
-		<div ng-view></div>
 	</div>
 	<!-- End Body -->
 	<!-- Begin Footer -->
@@ -117,6 +119,7 @@
 <script type="text/javascript" src="js/contactcontroller.js"></script>
 <script type="text/javascript" src="js/i18n.js" charset="utf-8"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+<!-- <script type="text/javascript" src="bootstrap/js/holder.min.js"></script> -->
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-w27Lhidw00LPBW7UWHp1TBPv4O3v650"></script>
 
 	<script type="text/javascript">
